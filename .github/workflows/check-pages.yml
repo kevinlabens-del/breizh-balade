@@ -1,0 +1,29 @@
+name: Check GitHub Pages status
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/check-pages.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Pages endpoint
+        shell: bash
+        run: |
+          CODE=$(curl -sS -L -o pages-status-response.json -w '%{http_code}' -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")
+          printf '%s\n' "$CODE" > pages-status-http.txt
+      - name: Save result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pages-status-http.txt pages-status-response.json
+          git commit -m 'Record GitHub Pages status' || exit 0
+          git push origin HEAD:main
