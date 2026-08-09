@@ -38,7 +38,7 @@
   const loadAnonymousAnalytics = () => {
     if (document.querySelector('script[data-breizh-analytics]')) return;
     const script = document.createElement('script');
-    script.src = 'js/analytics.js?v=234';
+    script.src = 'js/analytics.js?v=235';
     script.async = true;
     script.dataset.breizhAnalytics = '1';
     document.head.appendChild(script);
