@@ -27,7 +27,7 @@ Important pour GitHub Pages :
   <!-- Métadonnées générales : encodage, affichage mobile, titre, thème et fichiers liés. -->
   <meta charset="utf-8" />
   <!-- viewport : indispensable pour que l’application s’adapte correctement aux téléphones. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <script>
     (() => {
@@ -64,9 +64,9 @@ Important pour GitHub Pages :
 
         if (phone) {
           const phoneWidth = Math.round(Math.max(360, Math.min(430, sw || 390)));
-          getViewportMeta().setAttribute('content', `width=${phoneWidth}, initial-scale=1, maximum-scale=1, viewport-fit=cover`);
+          getViewportMeta().setAttribute('content', `width=${phoneWidth}, initial-scale=1, viewport-fit=cover`);
         } else {
-          getViewportMeta().setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover');
+          getViewportMeta().setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
         }
 
         root.classList.remove('bb-phone','bb-tablet','bb-desktop','bb-browser','bb-installed','bb-portrait','bb-landscape');
@@ -93,7 +93,7 @@ Important pour GitHub Pages :
       // Nettoyage des anciens caches : important pour tester la vraie nouvelle version.
       if ('caches' in window) {
         caches.keys().then(keys => keys
-          .filter(key => key.includes('breizh-balade') && !key.includes('v2.1.6.11'))
+          .filter(key => key.includes('breizh-balade') && !key.includes('v2.3.0'))
           .forEach(key => caches.delete(key))
         ).catch(() => {});
       }
@@ -101,18 +101,27 @@ Important pour GitHub Pages :
   </script>
 
   <meta name="theme-color" content="#fff8ed" />
-  <meta name="description" content="Breizh’ Balade V2.1.6.11 — Application pour découvrir les plus beaux lieux, balades nature, plages, forêts et monuments historiques de Bretagne.">
-  <title>Breizh’ Balade V2.1.6.11 — by cr3@tix dev’</title>
+  <link rel="canonical" href="https://kevinlabens-del.github.io/breizh-balade/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta property="og:title" content="Breizh’ Balade — 71 idées de sorties en Bretagne" />
+  <meta property="og:description" content="Explore 71 lieux bretons : mer, forêt, patrimoine, villages, îles, balades et spots photo." />
+  <meta property="og:url" content="https://kevinlabens-del.github.io/breizh-balade/" />
+  <meta property="og:image" content="https://kevinlabens-del.github.io/breizh-balade/assets/icons/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="description" content="Breizh’ Balade V2.3.0 — 71 lieux, balades nature, patrimoine, plages, forêts et découvertes en Bretagne.">
+  <title>Breizh’ Balade V2.3.0 — by cr3@tix dev’</title>
 
   <!-- manifest : fichier qui permet au navigateur de proposer l’installation de l’application. -->
-  <link rel="manifest" href="manifest.webmanifest?v=21611" />
+  <link rel="manifest" href="manifest.webmanifest?v=230" />
   <meta name="apple-mobile-web-app-title" content="Breizh’ Balade">
   <link rel="icon" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=21611" />
-  <link rel="stylesheet" href="css/map.css?v=21611" />
-  <link rel="stylesheet" href="css/responsive.css?v=21611" />
+  <link rel="stylesheet" href="css/style.css?v=230" />
+  <link rel="stylesheet" href="css/map.css?v=230" />
+  <link rel="stylesheet" href="css/responsive.css?v=230" />
 </head>
 <body class="is-guest">
   <!-- Bannière hors ligne : apparaît si le navigateur détecte une perte de connexion. -->
@@ -163,18 +172,18 @@ Important pour GitHub Pages :
         <div>
           <strong>Breizh’ Balade</strong>
           <small>Navigation</small>
-          <small class="account-status-mini" id="accountStatusMini">Compte local non connecté</small>
+          <small class="account-status-mini" id="accountStatusMini">Navigation libre • compte optionnel</small>
         </div>
         <button class="side-menu__close" id="menuClose" type="button" aria-label="Fermer le menu">×</button>
       </div>
 
       <nav class="side-tabs" aria-label="Menu latéral Breizh Balade">
-        <button class="tab side-tab is-active" data-view="explore" data-access="private">🏞️ Explorer</button>
-        <button class="tab side-tab" data-view="map" data-access="private">🗺️ Carte</button>
+        <button class="tab side-tab is-active" data-view="explore" data-access="public">🏞️ Explorer</button>
+        <button class="tab side-tab" data-view="map" data-access="public">🗺️ Carte</button>
         <button class="tab side-tab" data-view="favorites" data-access="private">❤️ Favoris</button>
         <button class="tab side-tab" data-view="later" data-access="private">📌 À visiter</button>
         <button class="tab side-tab" data-view="visited" data-access="private">✅ Visités</button>
-        <button class="tab side-tab" data-view="about" data-access="private">ℹ️ Infos</button>
+        <button class="tab side-tab" data-view="about" data-access="public">ℹ️ Infos</button>
         <button class="tab side-tab" data-view="login" id="accountMenuTab" data-access="public">🔐 Connexion</button>
         <button class="tab side-tab" data-view="signup" id="signupMenuTab" data-access="public">📝 Inscription</button>
         <button class="tab side-tab" data-view="profile" id="profileMenuTab" data-access="private">🪪 Profil</button>
@@ -254,7 +263,7 @@ Important pour GitHub Pages :
         <p class="status-line" id="statusLine">Chargement des lieux…</p>
       </section>
 
-      <section class="view" id="view-explore">
+      <section class="view is-visible" id="view-explore">
         <div class="section-title">
           <div>
             <p class="eyebrow">Sélection Bretagne</p>
@@ -350,10 +359,10 @@ Important pour GitHub Pages :
         </div>
       </section>
 
-      <section class="view is-visible" id="view-login">
+      <section class="view" id="view-login">
         <div class="auth-required-banner">
-          <strong>Accès protégé</strong>
-          <span>Connecte-toi ou crée un compte local pour accéder à Breizh’ Balade.</span>
+          <strong>Compte optionnel</strong>
+          <span>Explorer et la carte sont accessibles sans compte. Connecte-toi seulement pour enregistrer tes favoris, notes et listes personnelles.</span>
         </div>
         <div class="section-title">
           <div>
@@ -366,7 +375,7 @@ Important pour GitHub Pages :
           <article class="panel auth-card auth-main-card">
             <p class="eyebrow">Se connecter</p>
             <h3>J’ai déjà un compte local</h3>
-            <p class="auth-note">Cette page permet de tester la connexion sans serveur. Le compte reste enregistré uniquement dans ce navigateur.</p>
+            <p class="auth-note">Compte local facultatif : il sert uniquement à conserver tes favoris, notes et listes sur cet appareil et dans ce navigateur.</p>
 
             <form id="loginForm" class="auth-form">
               <label>
@@ -391,9 +400,9 @@ Important pour GitHub Pages :
             <p class="eyebrow">Connexion rapide</p>
             <h3>Google / Facebook</h3>
             <div class="oauth-box">
-              <button class="oauth-btn" type="button" data-oauth="google">🔴 Continuer avec Google</button>
-              <button class="oauth-btn" type="button" data-oauth="facebook">🔵 Continuer avec Facebook</button>
-              <small>Mode test : ces boutons sont préparés visuellement. Ils fonctionneront réellement avec Firebase, Supabase ou un serveur sécurisé.</small>
+              <button class="oauth-btn" type="button" disabled aria-disabled="true">🔴 Google — bientôt disponible</button>
+              <button class="oauth-btn" type="button" disabled aria-disabled="true">🔵 Facebook — bientôt disponible</button>
+              <small>Connexion Google/Facebook non disponible dans cette version.</small>
             </div>
           </article>
 
@@ -410,7 +419,7 @@ Important pour GitHub Pages :
         <article class="panel tide-credit-info-card">
           <p class="eyebrow">Sources marées</p>
           <h3>Données de marée</h3>
-          <p>Données de marée calculées via api-maree.fr, à partir de composantes harmoniques issues de l’atlas Ifremer / PREVIMER.</p>
+          <p>Estimation locale indicative des marées. Vérifie toujours les horaires officiels avant une sortie littorale.</p>
           <p class="muted">Ces informations sont fournies à titre indicatif et ne remplacent pas les consignes officielles de sécurité maritime.</p>
         </article>
 
@@ -439,11 +448,11 @@ Important pour GitHub Pages :
               </label>
               <label>
                 Mot de passe
-                <input type="password" id="signupPassword" autocomplete="new-password" placeholder="4 caractères minimum" minlength="4" required />
+                <input type="password" id="signupPassword" autocomplete="new-password" placeholder="8 caractères minimum" minlength="8" required />
               </label>
               <label>
                 Confirmer le mot de passe
-                <input type="password" id="signupPasswordConfirm" autocomplete="new-password" placeholder="Répète le mot de passe" minlength="4" required />
+                <input type="password" id="signupPasswordConfirm" autocomplete="new-password" placeholder="Répète le mot de passe" minlength="8" required />
               </label>
               <button class="btn btn-primary" type="submit">Créer mon compte local</button>
             </form>
@@ -610,17 +619,17 @@ Important pour GitHub Pages :
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <!-- Données des lieux : doit être chargé avant app.js pour que l’application connaisse les balades. -->
-  <script src="data/places.js?v=21611"></script>
+  <script src="data/places.js?v=230"></script>
   <!-- Stockage local : favoris, lieux à visiter, lieux visités. -->
-  <script src="js/storage.js?v=21611"></script>
+  <script src="js/storage.js?v=230"></script>
   <!-- Géolocalisation : position utilisateur + calcul des distances. -->
-  <script src="js/geolocation.js?v=21611"></script>
+  <script src="js/geolocation.js?v=230"></script>
   <!-- Cartes : affichage Leaflet / OpenStreetMap. -->
-  <script src="js/map.js?v=21611"></script>
-  <!-- Compte local : inscription, connexion et profil sans serveur pour la V2.1.6.11. -->
-  <script src="js/auth-local.js?v=21611"></script>
+  <script src="js/map.js?v=230"></script>
+  <!-- Compte local : inscription, connexion et profil sans serveur pour la V2.3.0. -->
+  <script src="js/auth-local.js?v=230"></script>
   <!-- Logique principale : navigation, filtres, fiches, boutons et rendu de l’application. -->
-  <script src="js/app.js?v=21611"></script>
-  <script src="js/tide-credit.js?v=21611"></script>
+  <script src="js/app.js?v=230"></script>
+  <script src="js/tide-credit.js?v=230"></script>
 </body>
 </html>

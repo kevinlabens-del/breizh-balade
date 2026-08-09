@@ -24,8 +24,9 @@ const BreizhAuth = (() => {
   const prefix = 'breizhAuth:';
   const accountsKey = `${prefix}accounts`;
   const sessionKey = `${prefix}sessionEmail`;
-  const publicViews = new Set(['login', 'signup']);
-  const guestDefaultView = 'login';
+  const publicViews = new Set(['explore', 'map', 'about', 'login', 'signup']);
+  const authViews = new Set(['login', 'signup']);
+  const guestDefaultView = 'explore';
   const afterLoginView = 'explore';
 
   const $ = id => document.getElementById(id);
@@ -69,10 +70,9 @@ const BreizhAuth = (() => {
 
   const setMessage = (message, type = 'info') => {
     const box = $('authMessage');
-    if (!box) return;
-    box.textContent = message;
-    box.dataset.type = type;
-    box.classList.add('is-visible');
+    if (box) { box.textContent = message; box.dataset.type = type; box.classList.add('is-visible'); }
+    const loginVisible = document.getElementById('view-login')?.classList.contains('is-visible');
+    if (!loginVisible && typeof window.showToast === 'function') window.showToast(message);
   };
 
   const showToast = message => {
@@ -148,7 +148,7 @@ const BreizhAuth = (() => {
     });
 
     const label = document.getElementById('currentViewLabel');
-    if (label) label.textContent = target === 'signup' ? 'Inscription' : 'Connexion';
+    if (label) { const labels={explore:'Explorer',map:'Carte',about:'Infos',login:'Connexion',signup:'Inscription'}; label.textContent=labels[target]||'Explorer'; }
   };
 
   const guardRoute = () => {
@@ -159,7 +159,7 @@ const BreizhAuth = (() => {
       window.location.hash = 'login';
       setTimeout(() => {
         enforceVisibleAuthView();
-        setMessage('Connexion obligatoire : connecte-toi ou crée un compte local pour accéder à l’application.', 'info');
+        setMessage('Cette section personnelle nécessite un compte local sur cet appareil.', 'info');
       }, 60);
       return false;
     }
@@ -217,7 +217,7 @@ const BreizhAuth = (() => {
     if (accountStatusMini) {
       accountStatusMini.textContent = connected
         ? `Connecté : ${(account.profile?.pseudo || account.email)}`
-        : 'Connexion obligatoire';
+        : 'Navigation libre • compte optionnel';
     }
 
     const accountMenuTab = $('accountMenuTab');
@@ -274,8 +274,8 @@ const BreizhAuth = (() => {
       return;
     }
 
-    if (password.length < 4) {
-      setMessage('Le mot de passe local doit contenir au moins 4 caractères.', 'error');
+    if (password.length < 8) {
+      setMessage('Le mot de passe local doit contenir au moins 8 caractères.', 'error');
       return;
     }
 
@@ -384,7 +384,8 @@ const BreizhAuth = (() => {
 
   const logout = () => {
     setSession('');
-    setMessage('Déconnexion locale effectuée. Connexion obligatoire pour accéder à l’application.', 'info');
+    try { if (typeof Geo !== 'undefined') Geo.clearUserPosition(); } catch (_) {}
+    setMessage('Déconnexion effectuée. Explorer et la carte restent accessibles sans compte.', 'info');
     go('login');
   };
 
@@ -434,7 +435,7 @@ const BreizhAuth = (() => {
         event.preventDefault();
         event.stopPropagation();
         go('login');
-        setTimeout(() => setMessage('Connexion obligatoire : crée un compte ou connecte-toi pour accéder à l’application.', 'info'), 60);
+        setTimeout(() => setMessage('Connecte-toi pour accéder à cette section personnelle.', 'info'), 60);
       }
     }, true);
 
@@ -466,7 +467,7 @@ const BreizhAuth = (() => {
       return;
     }
 
-    if (!requestedView || publicViews.has(requestedView)) {
+    if (!requestedView || authViews.has(requestedView)) {
       window.location.replace(`${window.location.pathname}${window.location.search}#${afterLoginView}`);
       return;
     }

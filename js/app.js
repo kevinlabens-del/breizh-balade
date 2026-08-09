@@ -26,9 +26,9 @@ Il gère notamment :
   const routeTimeCache = new Map();
 
   const API_MAREE_CONFIG = {
-    enabled: true,
+    enabled: false,
     baseUrl: 'https://api-maree.fr',
-    key: '479a92fa8d6e995646aff4a4ca7043e5',
+    key: '',
     tz: 'Europe/Paris',
     stepMinutes: 10,
     cacheMinutes: 120
@@ -385,6 +385,7 @@ Il gère notamment :
     clearTimeout(showToast.timer);
     showToast.timer = setTimeout(() => els.toast.classList.remove('show'), 2200);
   };
+  window.showToast = showToast;
 
   const locationPromptStorageKey = 'breizh.locationPromptDismissed';
 
@@ -574,7 +575,7 @@ Il gère notamment :
     return `
       <article class="place-card place-card--premium" data-place-id="${place.id}">
         <div class="card-art">
-          <img class="place-image" src="${escapeHTML(normalizeImagePath(place.image))}" alt="Croquis noir et blanc de ${escapeHTML(place.name)}" decoding="async" fetchpriority="auto" ${imgFallback} />
+          <img class="place-image" src="${escapeHTML(normalizeImagePath(place.image))}" alt="Croquis noir et blanc de ${escapeHTML(place.name)}" loading="lazy" decoding="async" fetchpriority="low" ${imgFallback} />
           <div class="badge-row">${badges}</div>
           <div class="card-distance-chip">${distance}</div>
         </div>
@@ -660,8 +661,8 @@ Il gère notamment :
   };
 
   const setView = view => {
-    // Connexion obligatoire avant setView — V2.1.6.11
-    const publicViews = ['login', 'signup'];
+    // Connexion obligatoire avant setView — V2.3.0
+    const publicViews = ['explore', 'map', 'about', 'login', 'signup'];
     if (window.BreizhAuth && !window.BreizhAuth.isConnected() && !publicViews.includes(view)) {
       window.BreizhAuth.go('login');
       return;
@@ -714,7 +715,7 @@ Il gère notamment :
   const tideInfo = (place, atDate = new Date()) => {
     if (!isSeaPlace(place)) return null;
 
-    // V2.1.6.11 statique : estimation indicative calculée à partir de l'heure réelle du téléphone.
+    // V2.3.0 statique : estimation indicative calculée à partir de l'heure réelle du téléphone.
     // Sur hébergeur, elle se recalcule à chaque ouverture/actualisation, mais ce n'est pas une donnée officielle.
     // Pour une V2 dynamique, remplacer ce calcul par une API marées officielle.
     const now = atDate instanceof Date ? atDate : new Date(atDate);
@@ -1102,7 +1103,7 @@ Il gère notamment :
         <div class="tide-demand-box tide-demand-box--clean">
           ${hasRequestedTideThisSession(place.id)
             ? `<button class="btn btn-ghost tide-load-btn" type="button" disabled>🔒 Déjà demandé pendant cette session</button>`
-            : `<button class="btn btn-primary tide-load-btn" data-load-tides="${place.id}" type="button">🌊 Afficher les marées</button>`}
+            : `<button class="btn btn-primary tide-load-btn" data-load-tides="${place.id}" type="button">🌊 Estimer les marées</button>`}
           <small>${hasRequestedTideThisSession(place.id)
             ? 'Ferme puis relance l’application pour refaire une demande sur cette balade.'
             : 'Affiche la marée maintenant et l’estimation à ton arrivée.'}</small>
@@ -1135,19 +1136,7 @@ Il gère notamment :
     if (!place || !isSeaPlace(place)) return;
     const box = document.querySelector(`[data-live-tide="${place.id}"]`);
     if (!box) return;
-
-    if (!apiMareeKeyReady()) {
-      box.innerHTML = tideStateTemplate({ status: 'missing-key' });
-      return;
-    }
-
-    box.innerHTML = tideStateTemplate({ status: 'loading' });
-    try {
-      const tide = await apiMareeInfo(place, new Date());
-      box.innerHTML = tideStateTemplate(tide);
-    } catch (_) {
-      box.innerHTML = tideStateTemplate({ status: 'error' }) + tideStateTemplate(tideInfo(place));
-    }
+    box.innerHTML = tideStateTemplate(tideInfo(place, new Date()));
   };
 
   const ensureLocationForTides = async () => {
@@ -1185,13 +1174,9 @@ Il gère notamment :
 
     box.innerHTML = arrivalTideSummary(place, { status: 'loading' });
     const routeResult = await getRouteMinutes(place);
-    if (routeResult.status === 'ok' && routeResult.minutes != null && apiMareeKeyReady()) {
-      try {
-        const arrivalDate = new Date(Date.now() + routeResult.minutes * 60 * 1000);
-        routeResult.tide = await apiMareeInfo(place, arrivalDate);
-      } catch (_) {
-        routeResult.tide = { status: 'error' };
-      }
+    if (routeResult.status === 'ok' && routeResult.minutes != null) {
+      const arrivalDate = new Date(Date.now() + routeResult.minutes * 60 * 1000);
+      routeResult.tide = tideInfo(place, arrivalDate);
     }
     box.innerHTML = arrivalTideSummary(place, routeResult);
   };
@@ -1401,22 +1386,32 @@ Il gère notamment :
     } catch (_) {}
   };
 
+  const requirePersonalAccount = () => {
+    if (window.BreizhAuth?.isConnected?.()) return true;
+    showToast('Connecte-toi pour enregistrer tes favoris, notes et listes personnelles.');
+    window.BreizhAuth?.go?.('login');
+    return false;
+  };
+
   /* bindDynamicButtons : relie les boutons créés dynamiquement après le rendu, par exemple dans les cartes ou fiches. */
   const bindDynamicButtons = () => {
     document.querySelectorAll('[data-open]').forEach(btn => btn.onclick = () => openPlace(btn.dataset.open));
     document.querySelectorAll('[data-fav]').forEach(btn => btn.onclick = () => {
+      if (!requirePersonalAccount()) return;
       const isOn = Store.toggleFavorite(btn.dataset.fav);
       showToast(isOn ? 'Ajouté aux favoris ❤️' : 'Retiré des favoris');
       renderAll();
       if (els.dialog.open) openPlace(btn.dataset.fav);
     });
     document.querySelectorAll('[data-later]').forEach(btn => btn.onclick = () => {
+      if (!requirePersonalAccount()) return;
       const isOn = Store.toggleLater(btn.dataset.later);
       showToast(isOn ? 'Ajouté à visiter plus tard 📌' : 'Retiré de la liste');
       renderAll();
       if (els.dialog.open) openPlace(btn.dataset.later);
     });
     document.querySelectorAll('[data-visited]').forEach(btn => btn.onclick = () => {
+      if (!requirePersonalAccount()) return;
       const isOn = Store.toggleVisited(btn.dataset.visited);
       showToast(isOn ? 'Marqué comme visité ✅' : 'Retiré des visités');
       renderAll();
@@ -1424,6 +1419,7 @@ Il gère notamment :
     });
     document.querySelectorAll('[data-note]').forEach(input => {
       input.oninput = debounce(() => {
+        if (!requirePersonalAccount()) return;
         Store.setNote(input.dataset.note, input.value);
         showToast('Note sauvegardée');
       }, 500);
@@ -1648,8 +1644,8 @@ Il gère notamment :
     });
     window.addEventListener('hashchange', () => {
       const view = window.location.hash.replace('#', '');
-      // Connexion obligatoire avant hashchange — V2.1.6.11
-      const publicViews = ['login', 'signup'];
+      // Connexion obligatoire avant hashchange — V2.3.0
+      const publicViews = ['explore', 'map', 'about', 'login', 'signup'];
       if (window.BreizhAuth && !window.BreizhAuth.isConnected() && view && !publicViews.includes(view)) {
         window.BreizhAuth.go('login');
         return;
@@ -1715,14 +1711,14 @@ Il gère notamment :
   /* init : point de départ du JavaScript. Cette fonction lance l’application quand la page est prête. */
   const init = () => {
     if (els.heroPlacesCount) els.heroPlacesCount.textContent = `${places.length} lieux disponibles`;
-    preloadPlaceImages();
     populateFilters();
     bindEvents();
     refreshViewportSafe();
     window.addEventListener('resize', refreshViewportSafe, { passive: true });
     window.addEventListener('orientationchange', () => setTimeout(refreshViewportSafe, 350), { passive: true });
     renderAll();
-    checkLocationAtStartup();
+    const savedPosition = Geo.getUserPosition();
+    if (savedPosition) { BreizhMap.setUser(savedPosition); renderAll(); }
     const initialView = window.location.hash.replace('#', '') || ((window.BreizhAuth && window.BreizhAuth.isConnected()) ? 'explore' : 'login');
     if (document.getElementById(`view-${initialView}`)) setView(initialView);
     registerServiceWorker();

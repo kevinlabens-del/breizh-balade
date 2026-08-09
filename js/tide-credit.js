@@ -3,7 +3,7 @@
 BREIZH’ BALLADE — js/tide-credit.js
 ===============================================================================
 
-V2.1.6.11 — Crédit api-maree.fr non répétitif.
+V2.3.0 — Mention de sécurité marée non répétitive.
 
 Objectif :
 - ne plus répéter le crédit dans chaque sous-bloc ;
@@ -13,7 +13,7 @@ Objectif :
 */
 
 (() => {
-  const CREDIT_TEXT = "Données de marée calculées via api-maree.fr, à partir de composantes harmoniques issues de l’atlas Ifremer / PREVIMER.";
+  const CREDIT_TEXT = "Estimation locale indicative : vérifie toujours les horaires officiels de marée et les consignes locales avant une sortie littorale.";
   const CREDIT_CLASS = 'tide-credit-visible';
   const CREDIT_DONE_ATTR = 'data-tide-credit-container-done';
 

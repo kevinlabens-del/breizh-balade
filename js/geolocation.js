@@ -24,7 +24,7 @@ const Geo = (() => {
 
   const readSavedPosition = () => {
     try {
-      const raw = sessionStorage.getItem(storageKey) || localStorage.getItem(storageKey);
+      const raw = sessionStorage.getItem(storageKey);
       if (!raw) return null;
       const saved = JSON.parse(raw);
       if (!saved?.latitude || !saved?.longitude || !saved?.savedAt) return null;
@@ -51,7 +51,6 @@ const Geo = (() => {
     userPosition = payload;
     try {
       sessionStorage.setItem(storageKey, JSON.stringify(payload));
-      localStorage.setItem(storageKey, JSON.stringify(payload));
     } catch (_) {}
   };
 
@@ -101,7 +100,6 @@ const Geo = (() => {
       userPosition = null;
       try {
         sessionStorage.removeItem(storageKey);
-        localStorage.removeItem(storageKey);
       } catch (_) {}
     },
     distanceKm,

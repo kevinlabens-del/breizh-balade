@@ -2,7 +2,7 @@
   "_comment": "Manifest de Breizh’ Balade : permet l’installation de l’application sur mobile. Les champs name, short_name, icons, start_url et display sont utilisés par le navigateur.",
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
-  "description": "Application mobile de balades, lieux naturels, patrimoine et découvertes en Bretagne.",
+  "description": "Breizh’ Balade V2.3.0 : 71 lieux, balades nature, patrimoine et découvertes en Bretagne.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

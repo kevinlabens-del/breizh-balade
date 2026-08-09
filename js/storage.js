@@ -1,67 +1,10 @@
-/*
-===============================================================================
-BREIZH’ BALLADE — js/storage.js
-===============================================================================
-
-Ce fichier gère la petite mémoire locale de l’application.
-
-Il sert à enregistrer dans le navigateur :
-- les favoris ;
-- les lieux à visiter plus tard ;
-- les lieux déjà visités.
-
-Important :
-- localStorage reste sur le téléphone ou navigateur de l’utilisateur ;
-- ce n’est pas une base de données en ligne ;
-- si l’utilisateur vide les données du navigateur, ces listes peuvent disparaître.
-===============================================================================
-*/
 const Store = (() => {
-  const prefix = 'breizhBalade:';
-  /* read : lit une liste enregistrée dans localStorage. */
-  const read = (key, fallback) => {
-    try {
-      const raw = localStorage.getItem(prefix + key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch (error) {
-      console.warn('Storage read error', key, error);
-      return fallback;
-    }
-  };
-  /* write : sauvegarde une liste dans localStorage. */
-  const write = (key, value) => {
-    try {
-      localStorage.setItem(prefix + key, JSON.stringify(value));
-    } catch (error) {
-      console.warn('Storage write error', key, error);
-    }
-  };
-  const toggleInArray = (key, id) => {
-    const list = read(key, []);
-    const next = list.includes(id) ? list.filter(item => item !== id) : [...list, id];
-    write(key, next);
-    return next.includes(id);
-  };
-  return {
-    read,
-    write,
-    all: () => ({
-      favorites: read('favorites', []),
-      later: read('later', []),
-      visited: read('visited', []),
-      notes: read('notes', {})
-    }),
-    isFavorite: id => read('favorites', []).includes(id),
-    isLater: id => read('later', []).includes(id),
-    isVisited: id => read('visited', []).includes(id),
-    toggleFavorite: id => toggleInArray('favorites', id),
-    toggleLater: id => toggleInArray('later', id),
-    toggleVisited: id => toggleInArray('visited', id),
-    getNote: id => read('notes', {})[id] || '',
-    setNote: (id, note) => {
-      const notes = read('notes', {});
-      notes[id] = note;
-      write('notes', notes);
-    }
-  };
+  const prefix='breizhBalade:';
+  const currentUserId=()=>{try{return String(window.BreizhAuth?.currentAccount?.()?.email||'').trim().toLowerCase();}catch(_){return '';}};
+  const scopedKey=key=>currentUserId()?`${prefix}user:${encodeURIComponent(currentUserId())}:${key}`:null;
+  const readJSON=(k,f)=>{try{const raw=localStorage.getItem(k);return raw?JSON.parse(raw):f;}catch(_){return f;}};
+  const read=(key,fallback)=>{const target=scopedKey(key);if(!target)return fallback;try{const existing=localStorage.getItem(target);if(existing!=null)return readJSON(target,fallback);const legacyKey=prefix+key,legacy=localStorage.getItem(legacyKey);if(legacy!=null){localStorage.setItem(target,legacy);localStorage.removeItem(legacyKey);return JSON.parse(legacy);}}catch(_){}return fallback;};
+  const write=(key,value)=>{const target=scopedKey(key);if(!target)return false;try{localStorage.setItem(target,JSON.stringify(value));return true;}catch(_){return false;}};
+  const toggleInArray=(key,id)=>{const list=read(key,[]);const next=list.includes(id)?list.filter(x=>x!==id):[...list,id];write(key,next);return next.includes(id);};
+  return {read,write,all:()=>({favorites:read('favorites',[]),later:read('later',[]),visited:read('visited',[]),notes:read('notes',{})}),isFavorite:id=>read('favorites',[]).includes(id),isLater:id=>read('later',[]).includes(id),isVisited:id=>read('visited',[]).includes(id),toggleFavorite:id=>toggleInArray('favorites',id),toggleLater:id=>toggleInArray('later',id),toggleVisited:id=>toggleInArray('visited',id),getNote:id=>read('notes',{})[id]||'',setNote:(id,note)=>{const notes=read('notes',{});notes[id]=note;return write('notes',notes);}};
 })();
