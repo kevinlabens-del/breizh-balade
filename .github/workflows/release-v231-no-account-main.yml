@@ -1,0 +1,63 @@
+name: Release V2.3.1 public sans compte
+
+on:
+  push:
+    paths:
+      - 'scripts/remove-accounts-v231.py'
+      - '.github/workflows/release-v231-no-account-main.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tooling from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: tooling
+      - name: Checkout published site
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: site
+      - name: Apply migration
+        working-directory: site
+        run: python ../tooling/scripts/remove-accounts-v231.py
+      - name: Remove obsolete auth and temporary files
+        working-directory: site
+        run: rm -f js/auth-local.js scripts/remove-accounts-v231.py .github/workflows/release-v231-no-account.yml
+      - name: Validate V2.3.1
+        working-directory: site
+        shell: bash
+        run: |
+          node --check js/app.js
+          node --check js/storage.js
+          node --check js/geolocation.js
+          python - <<'PY'
+          from pathlib import Path
+          i=Path('index.html').read_text(encoding='utf-8')
+          a=Path('js/app.js').read_text(encoding='utf-8')
+          sw=Path('service-worker.js').read_text(encoding='utf-8')
+          assert 'V2.3.1' in i
+          assert 'view-login' not in i and 'view-signup' not in i and 'view-profile' not in i
+          assert 'data-account-go=' not in i
+          assert 'js/auth-local.js' not in i and 'js/auth-local.js' not in sw
+          assert 'BreizhAuth' not in a
+          assert 'data-access="private"' not in i
+          assert "const requirePersonalAccount = () => true;" in a
+          assert Path('CHANGEMENTS_V2.3.1_PUBLIC_SANS_COMPTE.md').exists()
+          print('V2.3.1 validation OK')
+          PY
+      - name: Publish to gh-pages
+        working-directory: site
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release Breizh Balade V2.3.1 public sans compte'
+          git push origin HEAD:gh-pages
