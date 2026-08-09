@@ -1,4 +1,4 @@
-/* Breizh’ Balade — statistiques anonymes V2.3.2
+/* Breizh’ Balade — statistiques anonymes V2.3.3
    Aucun nom, email ou compte. Un identifiant aléatoire local distingue les visiteurs. */
 (() => {
   const ENDPOINT = 'https://kokmqcqlpkruoewhewcb.supabase.co/functions/v1/breizh-analytics';
@@ -64,6 +64,51 @@
     }
   };
 
+  const formatNumber = value => Number(value || 0).toLocaleString('fr-FR');
+
+  const createPublicStatsLine = () => {
+    if (document.getElementById('publicVisitorStats')) return document.getElementById('publicVisitorStats');
+    const actions = document.querySelector('.hero-actions');
+    if (!actions) return null;
+
+    const line = document.createElement('div');
+    line.id = 'publicVisitorStats';
+    line.setAttribute('aria-live', 'polite');
+    line.setAttribute('aria-label', 'Fréquentation de Breizh Balade');
+    line.textContent = '👥 — visiteurs depuis le lancement · 📅 — aujourd’hui · 🟢 — en ligne';
+    Object.assign(line.style, {
+      width: '100%',
+      marginTop: '7px',
+      textAlign: 'center',
+      fontSize: 'clamp(9px, 2.35vw, 11.5px)',
+      lineHeight: '1.35',
+      fontWeight: '600',
+      letterSpacing: '-0.015em',
+      opacity: '0.72',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      userSelect: 'none'
+    });
+    actions.insertAdjacentElement('afterend', line);
+    return line;
+  };
+
+  const loadPublicStats = async () => {
+    const line = createPublicStatsLine();
+    if (!line) return;
+    try {
+      const response = await fetch(ENDPOINT, { cache: 'no-store' });
+      if (!response.ok) throw new Error('stats');
+      const data = await response.json();
+      line.textContent = `👥 ${formatNumber(data.total_visitors)} visiteurs depuis le lancement · 📅 ${formatNumber(data.visitors_today)} aujourd’hui · 🟢 ${formatNumber(data.online_now)} en ligne`;
+      line.style.visibility = 'visible';
+    } catch (_) {
+      // Si le compteur est temporairement indisponible, on ne gêne jamais l'application.
+      line.style.visibility = 'hidden';
+    }
+  };
+
   send('visit');
 
   let heartbeatTimer = null;
@@ -79,10 +124,23 @@
     heartbeatTimer = null;
   };
 
+  const initPublicStats = () => {
+    createPublicStatsLine();
+    loadPublicStats();
+    setInterval(loadPublicStats, 20000);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPublicStats, { once: true });
+  } else {
+    initPublicStats();
+  }
+
   startHeartbeat();
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       send('heartbeat');
+      loadPublicStats();
       startHeartbeat();
     } else {
       stopHeartbeat();
