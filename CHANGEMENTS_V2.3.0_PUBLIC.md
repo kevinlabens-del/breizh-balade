@@ -12,3 +12,5 @@
 - Clé API marée retirée ; estimation locale indicative.
 - Open Graph, canonical, métadonnées sociales et iOS.
 - Zoom mobile réactivé.
+
+Validation automatisée GitHub Actions : JavaScript, manifest, cache, accès public, lazy loading et absence de la clé API contrôlés avant publication.
