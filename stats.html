@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Breizh’ Balade — Statistiques</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17211c;background:#f6f3ec}
+    *{box-sizing:border-box}body{margin:0;padding:24px}.wrap{max-width:760px;margin:auto}.head{margin-bottom:20px}.head h1{margin:0 0 6px}.head p{margin:0;color:#657068}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}.card{background:#fff;border:1px solid #dedbd3;border-radius:18px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.05)}.value{font-size:2rem;font-weight:800;margin-top:8px}.label{color:#657068}.online .value{color:#16864a}.foot{margin-top:20px;color:#657068;font-size:.92rem}.error{background:#fff1f1;border:1px solid #efb7b7;padding:12px;border-radius:12px;margin-top:16px;display:none}.back{display:inline-block;margin-top:20px;color:#164d3d;text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><h1>📊 Breizh’ Balade</h1><p>Statistiques anonymes de fréquentation</p></div>
+  <div class="grid">
+    <div class="card"><div class="label">Visiteurs au total</div><div class="value" id="totalVisitors">—</div></div>
+    <div class="card"><div class="label">Visites au total</div><div class="value" id="totalVisits">—</div></div>
+    <div class="card"><div class="label">Visiteurs aujourd’hui</div><div class="value" id="todayVisitors">—</div></div>
+    <div class="card"><div class="label">Visites aujourd’hui</div><div class="value" id="todayVisits">—</div></div>
+    <div class="card online"><div class="label">🟢 En ligne maintenant</div><div class="value" id="onlineNow">—</div></div>
+  </div>
+  <div class="error" id="error">Les statistiques sont momentanément indisponibles.</div>
+  <div class="foot">“En ligne” = visiteur ayant eu une activité dans les 2 dernières minutes. Mise à jour automatique toutes les 20 secondes.</div>
+  <a class="back" href="./">← Retour à Breizh’ Balade</a>
+</div>
+<script>
+(() => {
+  const endpoint='https://kokmqcqlpkruoewhewcb.supabase.co/functions/v1/breizh-analytics';
+  const $=id=>document.getElementById(id);
+  const set=(id,v)=>$(id).textContent=Number(v||0).toLocaleString('fr-FR');
+  const load=async()=>{
+    try{
+      const r=await fetch(endpoint,{cache:'no-store'});
+      if(!r.ok)throw new Error('stats');
+      const d=await r.json();
+      set('totalVisitors',d.total_visitors);set('totalVisits',d.total_visits);set('todayVisitors',d.visitors_today);set('todayVisits',d.visits_today);set('onlineNow',d.online_now);$('error').style.display='none';
+    }catch(_){$('error').style.display='block';}
+  };
+  load();setInterval(load,20000);
+})();
+</script>
+</body>
+</html>
