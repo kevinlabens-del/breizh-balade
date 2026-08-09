@@ -32,14 +32,13 @@
     }
   };
 
-  // Compatibilité avec app.js : l'ancien nom reste disponible, mais il n'y a plus d'authentification.
   window.BreizhAuth = PublicAccess;
   window.BreizhPublicAccess = PublicAccess;
 
   const loadAnonymousAnalytics = () => {
     if (document.querySelector('script[data-breizh-analytics]')) return;
     const script = document.createElement('script');
-    script.src = 'js/analytics.js?v=232';
+    script.src = 'js/analytics.js?v=233';
     script.async = true;
     script.dataset.breizhAnalytics = '1';
     document.head.appendChild(script);
