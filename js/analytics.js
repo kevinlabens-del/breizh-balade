@@ -1,4 +1,4 @@
-/* Breizh’ Balade — statistiques anonymes V2.3.3
+/* Breizh’ Balade — statistiques anonymes V2.3.4
    Aucun nom, email ou compte. Un identifiant aléatoire local distingue les visiteurs. */
 (() => {
   const ENDPOINT = 'https://kokmqcqlpkruoewhewcb.supabase.co/functions/v1/breizh-analytics';
@@ -51,7 +51,7 @@
       referrer: event === 'visit' ? (document.referrer || '') : ''
     };
     try {
-      await fetch(ENDPOINT, {
+      const response = await fetch(ENDPOINT, {
         method: 'POST',
         mode: 'cors',
         cache: 'no-store',
@@ -59,8 +59,9 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      return response.ok;
     } catch (_) {
-      // Les statistiques ne doivent jamais gêner l'utilisation de l'application.
+      return false;
     }
   };
 
@@ -75,7 +76,7 @@
     line.id = 'publicVisitorStats';
     line.setAttribute('aria-live', 'polite');
     line.setAttribute('aria-label', 'Fréquentation de Breizh Balade');
-    line.textContent = '👥 — visiteurs depuis le lancement · 📅 — aujourd’hui · 🟢 — en ligne';
+    line.textContent = '👥 chargement des visiteurs…';
     Object.assign(line.style, {
       width: '100%',
       marginTop: '7px',
@@ -103,9 +104,11 @@
       const data = await response.json();
       line.textContent = `👥 ${formatNumber(data.total_visitors)} visiteurs depuis le lancement · 📅 ${formatNumber(data.visitors_today)} aujourd’hui · 🟢 ${formatNumber(data.online_now)} en ligne`;
       line.style.visibility = 'visible';
+      line.style.opacity = '0.72';
     } catch (_) {
-      // Si le compteur est temporairement indisponible, on ne gêne jamais l'application.
-      line.style.visibility = 'hidden';
+      line.textContent = '👥 statistiques momentanément indisponibles';
+      line.style.visibility = 'visible';
+      line.style.opacity = '0.58';
     }
   };
 
