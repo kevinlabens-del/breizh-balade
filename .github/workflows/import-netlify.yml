@@ -1,0 +1,185 @@
+name: Import exact Breizh Balade Netlify deploy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-netlify.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download and verify exact Netlify deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://6a526a8ccf47028c8969b6b9--breizh-balade.netlify.app"
+          cat > /tmp/breizh-sha256.txt <<'EOF'
+35e9b6e23356fa9777a8a6a17cbb3ebdc06865a2b711b516429e3a2d895a8bcf  CHANGEMENTS_V2.0.1.5_COULEURS.md
+cfbc7c243006c8152ac10f0c85bf846546b1ec8b450d281ee22dd4befa4dc276  CHANGEMENTS_V2.0.1.5_CROIX_FERMETURE.md
+04a832a37fa1b1d72c4f5eb2829cf179109302e7fcfe2a8c20794ba64ed4f14b  CHANGEMENTS_V2.0.1.5_CROQUIS.md
+86b34e72459c70a31c209e8d582c0e1a04ec887d79e5e3a659ba759e86e9a0c7  CHANGEMENTS_V2.0.1.5_MAREES.md
+4e573164e9233030ac28a3b9ceb7929a9afc35509aa9780c233d14b4722c4daa  CHANGEMENTS_V2.0.1.5_VISUELS_35_CROQUIS.md
+ee322bd995cb082f8988e3da25d0488394e5d65c030b94e7a55c4f2cb6906700  CHANGEMENTS_V2.0.1_71_LIEUX.md
+c31cb34824cb53ae83372b70eaaebb9bd993abcb55b4e7f8a486e3f542989c04  CHANGEMENTS_V2.1.1_PAGES_COMPTE_CORRIGEES.md
+8bbda031d58b8f838ebc2b624ee7247c16c89f4efbe9cc39c6bd0c729f75361e  CHANGEMENTS_V2.1.2_ACCES_OBLIGATOIRE_COMPTE.md
+d1083e0312f9c2bf23e3d42e0cfc044ba7c1f20d5db0504efa51af2322a93040  CHANGEMENTS_V2.1.3_REDIRECTION_EXPLORER.md
+99e2426007403b3bb5c9f4886b8c308ec78a9c2db144a237022ea30b1813517a  CHANGEMENTS_V2.1.4_DEMARRAGE_CONNEXION_INSCRIPTION.md
+9fd05cb95ff3045bc1df669d8be6156d2fe8dd7a07da6d20eeabb5f69aebba59  CHANGEMENTS_V2.1.5_VERROUILLAGE_EXPLORER.md
+dbab5388d082f265a13213db1b3735cccf7c2bbeed4ecd2de362c7c13a15f06b  CHANGEMENTS_V2.1.6.11_STABLE_AUTH_API.md
+a304d4e46adbd3b1d1057bf6d42c418a3f7026bbd5514c7c1c1a811cc2cbb99f  CHANGEMENTS_V2.1.6.1_AUTH_INITIAL_CORRIGE.md
+5e96d1a2b62596a0bba57ca5bd0cc6894a9578d3343c1c4b21d46163f19a3c47  CHANGEMENTS_V2.1.6.2_MENU_COMPTE_CORRIGE.md
+661acaec78bc31c275f2e96ea393f50f1b9ca6698077d898d0fb5fe2cbef3ea8  CHANGEMENTS_V2.1.6.3_TEXTE_UTILISATION_LISIBLE.md
+d5ca00639c9c3c56462b986dd18473d822db34998da063a2f0287012ebdab6ca  CHANGEMENTS_V2.1.6.4_CREDIT_API_MAREE.md
+f635cf803c606252849bd6e38bcce48f0a0509ca9f39dc52d3da70c7b0012400  CHANGEMENTS_V2.1.6.5_CREDIT_MAREE_NON_REPETITIF.md
+e557bf5af4a5e9a7bee38e0a8277d49c1986c73629f7a5393f6af9f53da8fe01  CHANGEMENTS_V2.1.6.6_NOM_ICONE.md
+b5ce64f431941ba05156c6279aee56263027e975d6971216ba9a3f5215da2630  CHANGEMENTS_V2.1.6_PAGES_AUTH_PROPRES.md
+ba02e758d5f561285bdf1381d142421de3a6eb63b266ec9e0c31b8943ea20fa6  CHANGEMENTS_V2.1_COMPTE_PROFIL_LOCAL.md
+ea9ef1c7c66ac65f2e64015ceb6afa235b0c875aea9e47a23b12939741c6fd09  CHANGEMENTS_V2.2.1_GOOGLE_AUTO_LOGIN.md
+f8d2ff0c490b07aee68d032803edbee1751143aa2067e7f3756640925735241d  CHANGEMENTS_V2.2.2_SANS_ACCES_PROTEGE.md
+47d7bfa4f2dfb5c324516b92e816e89d6e518e00a242f661d8deaa40094b55b3  CHANGEMENTS_V2.2.3_SESSION_GOOGLE.md
+a5659dac6c756f226be287c9c7476221e4be71e44feffaf9ccb21469b44c8d23  CHANGEMENTS_V2.2_SUPABASE_GOOGLE.md
+a9a3f10495eda829686bb89bd9c99911e427cdffe4095aa72bb40fd062148e6b  GUIDE_CODE.md
+58c3dcdbfa06879abfa2b8764435c7547d60df2c2c92f28a42af0b0db5a9ee52  OPTIONS_SERVEUR_V2.1.md
+959186b5b2979092351bd81c4edd4e11c0ea1f5eab362e358d909c0d8ec022ac  README.md
+5580ff72232a73c650af42cc4ed49b9979c06f1f2fb313455d79f35518e44852  assets/icons/icon-192.png
+2dd130217782fecad8b0628e25d975a576e44169c9abfbbb82bff28eb4e0294b  assets/icons/icon-512.png
+5d191411c6f772255836738eb072a9b88301854977e3a82fc9fb528cab1e70d5  assets/logo/breizh-balade-icon-v12.png
+811610f5abb29e6a71c63d6c4a3309168db60125c0c55c68d384901dc80e1db9  assets/logo/breizh-balade-logo.svg
+82a98bf2853f960d2c8a93bbf47b6c07b5ef46f6878fd3718146b96f07b50094  assets/logo/breizh-pattern.svg
+ee5f7709a131a4f3c623bccc76d16ecaafc9cb558275ac0a369beb09425eac13  assets/places/coast.svg
+25a53304e25b0084182c81c3489745a85108b3462818b4ad8bd51e94b15a8076  assets/places/forest.svg
+789a2880eb84a7d73fead2ec0573326ef839f3179ba1416860618d1adba0861c  assets/places/heritage.svg
+e03908967286a233c19b00fd57440e921f07c84e5399e375aa17f04acb1dd8ac  assets/places/island.svg
+08fdb1c3b1a8307be27780d4e6d219c4ad8df1a4e32a5cebce677b6edbfc5724  assets/places/legend.svg
+d760b023fb6001b80be4f9a393b9ce6b1119c317b256081e01dbbe58897f08af  assets/places/megalith.svg
+d3a478ad17bd9547bf83e63ae1e7a58f804c99a8f096cb0d523095aa6b94fd6c  assets/sketches-v15/abbaye-beauport.jpg
+1acd0ea91010a65837b68b36bd733d2b0179a6968c081753bb47ec4953107e25  assets/sketches-v15/auray-saint-goustan.jpg
+408d0718f9bb8e14d01444a8fa5144cef2484ab9911e53d4d24ddaca85324970  assets/sketches-v15/belle-ile-port-coton.jpg
+641bd8a7e39ec4812022814f0981902ed8620de0737e3fdc3382b72c4951e5b2  assets/sketches-v15/broceliande-val-sans-retour.jpg
+21ea54d984ea8f94262d092f8bced93e64deda8e8ee585bcbcadba92b9186e79  assets/sketches-v15/cap-frehel.jpg
+a695c37091767b789267d7133d6e6fe4116b34dddf419e0205291872d2e28281  assets/sketches-v15/carnac-alignements.jpg
+f56854258eccd6a97c52bb215133b1c0b881cf8879b5b4b1b25228fe850abef5  assets/sketches-v15/chateau-suscinio.jpg
+2c814b8fc96ad7c0b87811ab3c6da30b2268459db3b8ca37a5de4734056e8118  assets/sketches-v15/concarneau-ville-close.jpg
+4cbaab889c0612a2d68ffc8c0dec6a9b339df7a494d22d60732b29333d0dc217  assets/sketches-v15/dinan-port.jpg
+8486ef85507860757428ab9cfe7e93a48dd7babca7de9eb0fba752bcb8877c76  assets/sketches-v15/fort-la-latte.jpg
+732ea897019f8430816158e910131ffcfd8f856c57008d5b290824ef87939df2  assets/sketches-v15/fougeres-chateau.jpg
+bb382be473fa24529648799a46331125165eeb17d49b456038967cf4d994875d  assets/sketches-v15/gavrinis.jpg
+ae7245db48512c059b81baca273d0131327a0764b4463f9cf1cff0a91d48ea14  assets/sketches-v15/huelgoat.jpg
+474cc5991cc4dd493edbc12017778c78804ddb6bc0bd7ed0c885c280abf1e791  assets/sketches-v15/ile-aux-moines.jpg
+d2d52ea02969ac34685965cc862b813342cdf2fa8d9629dbb64b7361ca80e84b  assets/sketches-v15/ile-brehat.jpg
+a84992b1a2a0a77af4bb87446a3ec520b9d333ca5d4c93ec223638f1ff623b29  assets/sketches-v15/ile-vierge-crozon.jpg
+7238af5c8c31dae621b22294a60c645f935c17ce1139fa4d10c34b809243a841  assets/sketches-v15/josselin-canal.jpg
+4631fa082d96863757169376b36f7fc99e327b780e4896ead8566c568d9568d3  assets/sketches-v15/lac-guerledan.jpg
+30e91011a4af3924aa3860db47ea6a6b43b72887e6c242164615bf50b0288eed  assets/sketches-v15/locronan.jpg
+5a3de24d0c1fb5693c15fafa1631cf1d24ab024cf45f8d71b91857bb474afb8f  assets/sketches-v15/meneham.jpg
+05a3586d1e49d93abb4116bc1a699423966e308779e217db307c866835e378c6  assets/sketches-v15/monts-arree-brasparts.jpg
+2172c336b9b701fe9371a8956e5b7379f637a8d5c00e67a3945c770bc473d863  assets/sketches-v15/plougrescant-gouffre.jpg
+7118433a8d4917acf64bba0c023938379198e69b206e6298291156ed10d711a8  assets/sketches-v15/ploumanach-granit-rose.jpg
+2a54b20cc617929db9a13c18b3b8fec26960071568bce00afc796ef40185445e  assets/sketches-v15/pointe-du-raz.jpg
+980455aac991da6c13ff36e07245f4fa9bf76064fa243b04668d80bfb98a4437  assets/sketches-v15/pointe-grouin.jpg
+f6184eeaded5d054c47cdfd528b808b00ebece5535f76b0b5d6dc66fed0afcd7  assets/sketches-v15/pointe-pen-hir.jpg
+65160b88d65484fc823fedc0c7c9e22aa334825112ed87b0778542939b08918e  assets/sketches-v15/pointe-saint-mathieu.jpg
+f93550f9e27b71bed577b983fa727770f80d9e19aa456c6dcdc04753160ddf6b  assets/sketches-v15/pointe-torche.jpg
+4d38416dba3651cd03224230d99222b9f34569440a7c3e1277313d96a80c49d9  assets/sketches-v15/pont-aven.jpg
+4a07d7e48e8a7d4f572a7084e44b547096219dd8df378c7abdb15af590cdbffd  assets/sketches-v15/quiberon-cote-sauvage.jpg
+510e739ac66f7be1cd56b1c9b4679acb566809dd59ab04e7a6ea9ed4dce5293b  assets/sketches-v15/roche-aux-fees.jpg
+0a82f6d8b9badcd42a21ff1734645e3e6778addb0a7370b671b06a40008b6239  assets/sketches-v15/rochefort-en-terre.jpg
+ddc23f4508ec48372cf5b34c38211a6c7522bd8bdd71e47dc1a6de9a916fc4f7  assets/sketches-v15/saint-cado.jpg
+2541ba8dcda8f5c954e16403fe34a9b0addbe385648ab15524369f597fb97ba8  assets/sketches-v15/sillon-talbert.jpg
+bf13d4cf4ebf7dcd1848c825f5f60d083b6de086c01940d31fb5e205e958f32f  assets/sketches-v15/tremelin.jpg
+bb2b8d80b04c13169a831319367f733cc0ef7b81981835d44dcc2de7a60d739c  assets/sketches-v15/vallee-des-saints.jpg
+080a3c93972834fd9d888b99ca4afa9b6f2386a644b92352a3e2cc5f42b2e4c0  assets/sketches-v201/chateau-ballue.jpg
+77e4176519ba3bdd72840cab2150d7b1785e8ed1f79e2e58364a410ef657d4a5  assets/sketches-v201/chateau-bienassis.jpg
+ff0845e3e51c929cd71d48b6c7513cf0c4d960166c5a34073e71e31b149a7656  assets/sketches-v201/chateau-bourbansais.jpg
+d070be0de3bf892ec5e6a3a5c4bba98dfaf6e6a8848a8dc325ba381c098bb489  assets/sketches-v201/chateau-brest.jpg
+9813e167d70f9acf3b2d3befbc015805b83fdf4a5c28be300e54b42088e18fec  assets/sketches-v201/chateau-chateaugiron.jpg
+73c6c4ec2b7f0bb52d41fc84e41513ce2b5f1b156252602d5f73849e7a6ea4b2  assets/sketches-v201/chateau-combourg.jpg
+c31570dd959e58403062622923df5f0f292703006549fdebb0f712d86535a11a  assets/sketches-v201/chateau-hunaudaye.jpg
+00091c2b01ad0f74b6c1bf7902f22d17895117d4a8cc3f52d7c2dd6bbf7db0d9  assets/sketches-v201/chateau-kergrist.jpg
+91f37b15725b960882341983d5c9bc79acbcbb9ab8ca41188dc72b84116d33cb  assets/sketches-v201/chateau-kergroadez.jpg
+3e7e1fa278c29b8e6a4d32ee10d2fc2d8be0639df6c93b6fc59391aa0fc51d23  assets/sketches-v201/chateau-keriolet.jpg
+747d3cdc4162e51525347fd5ca5989900b5c3a79426a474f3f969da43775068b  assets/sketches-v201/chateau-kerjean.jpg
+29cf9f2a95f36877558c2ec27642370d4682ef124f4179a9c9a9dfa8a0df4980  assets/sketches-v201/chateau-kerouzere.jpg
+fededd54c549f7bb2ad90f0927a034dc8ec430660da2fb0b79e65a5f70a69613  assets/sketches-v201/chateau-la-roche-maurice.jpg
+2eadc45d5bcec3b572321c97deff012006c8e6b648f912850fb2eb6ac08f50b8  assets/sketches-v201/chateau-lanniron.jpg
+7d32435448256f8d185ca1d0f9d1754e274113808cd617f56c973b515fcb72f1  assets/sketches-v201/chateau-montmuran.jpg
+46acdf6446f976dea39be301626b3fc2ff645a3764accd6b863f58775a7f8d90  assets/sketches-v201/chateau-quintin.jpg
+fededd54c549f7bb2ad90f0927a034dc8ec430660da2fb0b79e65a5f70a69613  assets/sketches-v201/chateau-roche-maurice.jpg
+ba43709aba4f0271095e1c1e3406eac55e7021c8504be91bc85ad7c7de21a6d8  assets/sketches-v201/chateau-rochers-sevigne.jpg
+530dd837caf10d08d625ed466849251cfa8c0d71518f2c42b52da65f1dcdc7fd  assets/sketches-v201/chateau-rosanbo.jpg
+bbcb7c9a1925e386f1ac7784c9cf0139823c664b5179271e6c1caccf4fb63253  assets/sketches-v201/chateau-taureau.jpg
+7032e0044715407fb26df11e9367a579ed2be499783bd5edd973c43c06d21379  assets/sketches-v201/chateau-tonquedec.jpg
+eca80e7c42c125f010fdc878bd712f3f009a01a4958318aad17ec99f808018be  assets/sketches-v201/chateau-trecesson.jpg
+2081a12f1bbad958f41ac6fffc56c0ab48c9c808d2812aaef932d63360da8615  assets/sketches-v201/chateau-vitre.jpg
+899171a83701f345426ab758f22cee3e8851aafa06bb323378a740b250a3b4cd  assets/sketches-v201/domaine-roche-jagu.jpg
+d3d141c8ecc9e3435fd6b2fa168a7a93e4e6eb14c1c1209d2e6e4d33a3281dac  assets/sketches-v201/domaine-trevarez.jpg
+b4c4bfcaff38dcb59e6805ecf719ad7bfcab947f933d8de76f849b868b4726f4  assets/sketches-v201/la-regalante.jpg
+b4c4bfcaff38dcb59e6805ecf719ad7bfcab947f933d8de76f849b868b4726f4  assets/sketches-v201/regalante-mont-saint-michel-nantes.jpg
+ba43709aba4f0271095e1c1e3406eac55e7021c8504be91bc85ad7c7de21a6d8  assets/sketches-v201/rochers-sevigne.jpg
+581fe0c0ca24669bbec77842c7ef483b913911c91e40d2eeaf8a0ffad03d0a79  assets/sketches-v201/tours-elven-largoet.jpg
+581fe0c0ca24669bbec77842c7ef483b913911c91e40d2eeaf8a0ffad03d0a79  assets/sketches-v201/tours-elven.jpg
+971b0bc3bb01c289e0e196872602dc57574a3f2979169b6166d42ea35b52d011  assets/sketches-v201/traversee-bretonne-nantes-mont-saint-michel.jpg
+971b0bc3bb01c289e0e196872602dc57574a3f2979169b6166d42ea35b52d011  assets/sketches-v201/traversee-bretonne.jpg
+564ae96b10fc1f9d25fd43ff0422c788ab6b63c14f9814c98fb30804279cd31e  assets/sketches-v201/velodyssee-roscoff-nantes.jpg
+d1cac46a5477f1358b0693a4fd37da71880e6d2cffaf5ad51d235c6794eb5211  assets/sketches-v201/velomaritime-roscoff-mont-saint-michel.jpg
+d1cac46a5477f1358b0693a4fd37da71880e6d2cffaf5ad51d235c6794eb5211  assets/sketches-v201/velomaritime-roscoff-montsaintmichel.jpg
+bb871fa322bdb31b549c90bd1bd5b21cb9b20c7c7248f159a423c74100dbe2ba  assets/sketches-v201/voie-3-saint-malo-arzal.jpg
+a927f06868d674a45669fe930412b77494f3e034e31a05e3df7b75585d14069d  assets/sketches-v201/voie-4-saint-malo-questembert.jpg
+3e7641227b53f102ff3517f4db914a438708f7bf70544e5d556f8d0d74e7aa39  assets/sketches-v201/voie-6-roscoff-nantes.jpg
+38fb845983cf7abef538d462801c80bbcff553e0125b0b98b062add2813b19dc  assets/sketches-v201/voie-7-carhaix-saint-meen.jpg
+486d55422f7fb8bc027fb344ddedf516a3e6dbc840f5e54a628bef4ef4af55eb  assets/sketches-v201/voie-8-roscoff-concarneau.jpg
+5c57e62620b4cbba009e868adf0b4b8998b018c5525b219bb6ea9a0330f69f9f  assets/sketches-v201/voie-9-saint-brieuc-lorient.jpg
+bb871fa322bdb31b549c90bd1bd5b21cb9b20c7c7248f159a423c74100dbe2ba  assets/sketches-v201/voie3-saintmalo-arzal.jpg
+a927f06868d674a45669fe930412b77494f3e034e31a05e3df7b75585d14069d  assets/sketches-v201/voie4-saintmalo-questembert.jpg
+3e7641227b53f102ff3517f4db914a438708f7bf70544e5d556f8d0d74e7aa39  assets/sketches-v201/voie6-roscoff-nantes.jpg
+38fb845983cf7abef538d462801c80bbcff553e0125b0b98b062add2813b19dc  assets/sketches-v201/voie7-carhaix-saintmeenlegrand.jpg
+486d55422f7fb8bc027fb344ddedf516a3e6dbc840f5e54a628bef4ef4af55eb  assets/sketches-v201/voie8-roscoff-concarneau.jpg
+5c57e62620b4cbba009e868adf0b4b8998b018c5525b219bb6ea9a0330f69f9f  assets/sketches-v201/voie9-saintbrieuc-lorient.jpg
+8e61bb574ea63211fdccc9e12eded6710529cb206c354a604946842201622263  css/map.css
+e28ac6198c2716718ed18c281c996ec04c593d713f36c1dcd44f766ccf80b6e4  css/responsive.css
+1b4f5b5e99581b614566812ca26653fb3482ef636a1bc82dd55d130f60c9fdef  css/style.css
+87786c2fbfbf1a23815bc9dacbaa315bef1ffd981a775ea12548fffa553e25a0  data/places.js
+f51d858d1f8b180f9d804cd1bc762cad1443205ec5e4e51423da9fb2dea6700a  index.html
+6f41ee271d9e87f8b1e44f22acbd363c16a5b16aa76dbbc3b980a961ccbc340d  js/app.js
+8249014bda568cca39198a307e8ac312026ca994804a42d7bc0a06ed291604b2  js/auth-local.js
+aaa9adfad82d82f446f7d2085bdfb7651095f69e4fe5215235d9d4bd793b97cc  js/geolocation.js
+f4b25ec43a66dbaf771660e2aa89f288c40b39c9649dd401d03ecb48b6f6d0e8  js/map.js
+454033dbca53a51c08df0eb9f746b9e8e4b3716836bc4a6070f34d93d370518e  js/storage.js
+48a135fe5c68e2b248f6fcf089e3b8792942659961f6bc88666e92f3f57ef127  js/tide-credit.js
+b8f9adce6915208373ddb07709b6a0ee1b05c6f7600ba8911a14ae66428cea04  manifest.webmanifest
+5d7298a6ee20ebfea35184d729f3c5e42e6177aee6ef812da3ecd10e0cced4c4  service-worker.js
+EOF
+          while read -r expected path; do
+            mkdir -p "$(dirname "$path")"
+            echo "Fetching $path"
+            curl -fsSL --retry 4 --retry-delay 2 "$BASE/$path" -o "$path"
+            actual="$(sha256sum "$path" | awk '{print $1}')"
+            if [ "$actual" != "$expected" ]; then
+              echo "SHA-256 mismatch for $path" >&2
+              echo "expected: $expected" >&2
+              echo "actual:   $actual" >&2
+              exit 1
+            fi
+          done < /tmp/breizh-sha256.txt
+
+      - name: Commit verified Breizh Balade V2.2.3
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Publish Breizh Balade V2.2.3 from verified Netlify deploy"
+            git push origin HEAD:main
+          fi
