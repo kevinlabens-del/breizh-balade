@@ -3,8 +3,8 @@ name: Import exact Breizh Balade Netlify deploy
 on:
   workflow_dispatch:
   push:
-    paths:
-      - ".github/workflows/import-netlify.yml"
+    branches:
+      - main
 
 permissions:
   contents: write
