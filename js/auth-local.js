@@ -36,7 +36,17 @@
   window.BreizhAuth = PublicAccess;
   window.BreizhPublicAccess = PublicAccess;
 
+  const loadAnonymousAnalytics = () => {
+    if (document.querySelector('script[data-breizh-analytics]')) return;
+    const script = document.createElement('script');
+    script.src = 'js/analytics.js?v=232';
+    script.async = true;
+    script.dataset.breizhAnalytics = '1';
+    document.head.appendChild(script);
+  };
+
   makePublic();
+  loadAnonymousAnalytics();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', makePublic, { once: true });
   }
