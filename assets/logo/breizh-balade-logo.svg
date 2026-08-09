@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Breizh’ Balade</title>
+  <desc id="desc">Hermine blanche animale grimpant sur une hermine bretonne noire stylisée</desc>
+  <defs>
+    <radialGradient id="bg" cx="30%" cy="20%" r="85%"><stop stop-color="#1a514a"/><stop offset=".62" stop-color="#08201f"/><stop offset="1" stop-color="#061515"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5df9e"/><stop offset="1" stop-color="#b9903f"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".42"/></filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M127 369c88-68 100-128 67-216 48 28 82 61 101 97 30-20 63-24 99-17-49 24-71 61-63 108 7 44 38 79 91 107-78 6-150-14-209-61-26 18-55 27-86 26 25-14 43-28 55-44-19 3-37 3-55 0Z" fill="#050807" opacity=".96" filter="url(#shadow)"/>
+  <path d="M128 369c69-23 108-67 117-133 8-58-9-112-51-162 58 30 99 74 123 131 27-12 55-12 85 0-40 15-64 44-71 87-8 53 15 100 70 141-70-1-128-27-174-77-25 14-58 19-99 13Z" fill="none" stroke="url(#gold)" stroke-width="10" stroke-linejoin="round" opacity=".9"/>
+  <g filter="url(#shadow)">
+    <path d="M176 303c-38 0-60-24-55-57 4-28 27-45 58-44 21 1 37 10 49 25 10-28 31-51 61-63 8-3 18 4 16 13l-11 45c16-4 32-4 49 0 12 3 15 19 5 26-22 15-36 34-42 57 27 13 50 33 69 59 6 8 0 20-10 20-54 0-96-16-126-48-16 19-37 29-63 29Z" fill="#f4fbf8"/>
+    <path d="M142 240c15-23 44-20 62-4-25 3-44 14-62 4Z" fill="#d7e8e3"/>
+    <circle cx="183" cy="235" r="7" fill="#061515"/>
+    <path d="M121 249c-15-4-26-13-35-27 24-1 41 4 51 16Z" fill="#f4fbf8"/>
+    <path d="M213 333c-30 26-68 37-113 32 29-18 53-44 70-78Z" fill="#f4fbf8"/>
+    <path d="M305 218c19 3 33 12 43 27-26-6-46-4-62 5Z" fill="#d7e8e3"/>
+  </g>
+  <path d="M104 421h304" stroke="#f5df9e" stroke-width="10" stroke-linecap="round" opacity=".75"/>
+  <text x="256" y="468" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="32" fill="#f4fbf8">Breizh’ Balade</text>
+</svg>

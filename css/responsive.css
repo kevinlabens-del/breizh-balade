@@ -1,0 +1,1638 @@
+/* @media : applique des règles seulement sous une certaine largeur d’écran. */
+@media (max-width: 980px){.cards-grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:repeat(2,1fr)}.dialog-body{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr}.map-shell,#map{min-height:560px;height:560px}}
+@media (max-width: 640px){.app-shell{padding:10px 10px calc(20px + var(--safe-bottom))}.hero{border-radius:26px;min-height:280px}.hero__content{padding:18px;min-height:280px}.brand-logo{width:76px;height:76px;border-radius:18px}h1{font-size:3rem}.search-row{grid-template-columns:1fr}.filter-grid{grid-template-columns:1fr}.cards-grid{grid-template-columns:1fr}.place-card{grid-template-rows:168px 1fr}.section-title{align-items:start}.tabs{margin-left:-10px;margin-right:-10px;padding-left:10px;padding-right:10px}.map-shell,#map{min-height:500px;height:500px}.dialog-body{max-height:calc(100vh - 245px);padding:12px}.dialog-hero{min-height:245px;padding:16px}.dialog-tags{position:relative;display:flex;max-width:calc(100% - 54px);margin:0 54px 12px 0}.dialog-title h2{font-size:clamp(2rem,10vw,3.1rem);line-height:.95}.info-grid{grid-template-columns:1fr}.footer{display:grid}.hero-actions .btn{flex:1;min-width:145px}.quick-filters{margin-left:-2px;margin-right:-2px}.place-dialog{width:calc(100vw - 10px);border-radius:24px}}
+
+
+/* V1.7 mobile polish */
+@media (max-width: 980px){
+  .dialog-body--premium{grid-template-columns:1fr}.detail-panel--split{grid-template-columns:1fr}.detail-side{position:static}.dialog-metrics{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width: 640px){
+  .hero-stats{gap:7px}.hero-stats span{font-size:.76rem;padding:7px 9px}.place-card--premium{grid-template-rows:190px 1fr;border-radius:22px}.place-card__body{padding:13px;gap:9px}.card-kpis{grid-template-columns:1fr 1fr 1fr;gap:6px}.card-kpis span{padding:7px 6px}.card-kpis b{font-size:.72rem}.card-pills{display:none}.card-distance-chip{font-size:.7rem;padding:6px 8px}.dialog-hero--premium{min-height:285px;padding:14px}.dialog-tags{max-width:calc(100% - 50px);gap:5px}.dialog-title--premium h2{font-size:clamp(1.75rem,9.5vw,2.75rem);line-height:.98}.dialog-metrics{grid-template-columns:1fr;gap:6px}.dialog-metrics span{padding:7px 9px;display:flex;align-items:center;justify-content:space-between;gap:8px}.dialog-metrics small{margin-top:0;text-align:right}.dialog-body--premium{padding:10px;max-height:calc(100vh - 285px);gap:10px}.detail-panel{border-radius:18px;padding:12px}.detail-panel--split{gap:10px}.route-cta{border-radius:18px;padding:13px}.pill-grid{gap:6px}.premium-pill{font-size:.74rem;padding:6px 8px}.info-grid--premium{grid-template-columns:1fr}.dialog-actions--compact .mini-action{flex:1 1 100%}.detail-panel--map .detail-map{height:250px}.place-dialog{max-height:calc(100vh - 10px)}
+}
+
+/* V1.9 responsive */
+@media (max-width:760px){
+  .about-grid--v19{grid-template-columns:1fr}
+  .offline-banner{font-size:.86rem;line-height:1.3}
+  .source-grid span{font-size:.84rem}
+}
+
+/* Menu burger V1.9 */
+@media (max-width:640px){
+  .burger-bar{
+    margin-left:-10px;
+    margin-right:-10px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .burger-btn{
+    padding:10px 14px;
+  }
+  .burger-current{
+    font-size:.88rem;
+    padding:9px 12px;
+  }
+  .side-menu{
+    width:min(315px,88vw);
+  }
+}
+
+/* Marées V1.9.2 */
+@media (max-width:640px){
+  .tide-detail-grid{grid-template-columns:1fr}
+  .tide-strip span{font-size:.72rem}
+}
+
+/* Marée arrivée V1.9.1 */
+@media (max-width:640px){
+  .travel-time-control{grid-template-columns:1fr;gap:6px}
+  .arrival-tide-result{grid-template-columns:1fr}
+}
+
+/* Localisation startup */
+@media (max-width:640px){
+  .location-prompt__card{
+    grid-template-columns:1fr;
+    padding:16px;
+    border-radius:24px;
+  }
+  .location-prompt__icon{
+    width:50px;
+    height:50px;
+  }
+  .location-prompt__actions .btn{
+    width:100%;
+  }
+}
+
+/* Marées à la demande */
+@media (max-width:640px){
+  .tide-load-btn{
+    width:100%;
+  }
+}
+
+
+/* ============================================================
+   V1.9.7 — Correctif format mobile propre
+   Corrige le responsive trop agressif de la V1.9.6.
+   Objectif : garder l’interface mobile lisible, sans boutons
+   écrasés verticalement, et sans fausse mise en page desktop.
+   ============================================================ */
+
+html{
+  width:100%;
+  min-width:320px;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+body{
+  width:100%;
+  min-width:320px;
+  overflow-x:hidden;
+}
+
+img,svg,canvas,video,iframe{
+  max-width:100%;
+}
+
+/* Empêche les boutons et badges de devenir des colonnes verticales */
+.chip,
+.tag,
+.badge,
+.pill,
+.quick-chip,
+.filter-chip,
+.amenity,
+button,
+.btn{
+  white-space:nowrap !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  min-width:max-content;
+}
+
+/* Les groupes de chips doivent défiler horizontalement si l’écran est trop étroit */
+.chips,
+.tags,
+.badges,
+.quick-filters,
+.amenities,
+.filter-pills,
+.ambiance-row,
+.mood-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  max-width:100%;
+}
+
+/* Ligne des filtres rapides : mobile propre sans écrasement */
+@media (max-width: 720px){
+  .chips,
+  .tags,
+  .badges,
+  .quick-filters,
+  .amenities,
+  .filter-pills{
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:4px;
+  }
+
+  .chips::-webkit-scrollbar,
+  .tags::-webkit-scrollbar,
+  .badges::-webkit-scrollbar,
+  .quick-filters::-webkit-scrollbar,
+  .amenities::-webkit-scrollbar,
+  .filter-pills::-webkit-scrollbar{
+    display:none;
+  }
+
+  .ambiance-row,
+  .mood-row{
+    flex-wrap:wrap;
+    overflow-x:visible;
+  }
+}
+
+/* Force le vrai format mobile sur téléphone et navigateur mobile */
+@media (max-width: 760px){
+  .app,
+  .shell,
+  .main,
+  main,
+  .page,
+  .container,
+  .content,
+  .app-container,
+  .main-content,
+  .section-inner,
+  .places-wrap,
+  .page-wrap{
+    width:100% !important;
+    max-width:100% !important;
+    margin-inline:auto !important;
+    box-sizing:border-box;
+  }
+
+  .container,
+  .content,
+  .app-container,
+  .main-content,
+  .section-inner,
+  .places-wrap,
+  .page-wrap{
+    padding-inline:12px !important;
+  }
+
+  .hero,
+  .app-hero,
+  .hero-card{
+    width:100% !important;
+    max-width:100% !important;
+    border-radius:24px !important;
+    padding:18px !important;
+  }
+
+  .hero h1,
+  .app-title,
+  .brand-title{
+    font-size:clamp(3rem, 13vw, 4.8rem) !important;
+    line-height:.92 !important;
+  }
+
+  .hero p,
+  .app-subtitle,
+  .lead{
+    font-size:1rem !important;
+    line-height:1.55 !important;
+  }
+
+  .hero-actions,
+  .top-actions,
+  .quick-actions{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:10px !important;
+  }
+
+  .hero-actions .btn,
+  .top-actions .btn,
+  .quick-actions .btn{
+    width:auto !important;
+    flex:0 0 auto !important;
+  }
+
+  .filters,
+  .filters-panel,
+  .search-panel{
+    width:100% !important;
+    max-width:100% !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+    padding:16px !important;
+    border-radius:22px !important;
+  }
+
+  .filters-grid,
+  .filter-grid,
+  .form-grid,
+  .search-row{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+  }
+
+  input,
+  select,
+  textarea,
+  .search-input,
+  .filter-select{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .places-grid,
+  .cards-grid,
+  .place-grid,
+  #placesList{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .place-card,
+  .balade-card,
+  .card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  .place-card img,
+  .place-image,
+  .place-cover,
+  .card-cover img{
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:16/9;
+    object-fit:cover;
+  }
+
+  .place-card h2,
+  .place-card h3,
+  .card-title{
+    font-size:clamp(1.45rem, 6vw, 2rem) !important;
+    line-height:1.12 !important;
+    word-break:normal !important;
+    overflow-wrap:break-word !important;
+  }
+
+  .place-meta,
+  .card-meta,
+  .stats-row{
+    display:grid !important;
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    gap:8px !important;
+  }
+
+  .tide-strip,
+  .tide-detail-grid,
+  .arrival-tide-result{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+  }
+
+  #map,
+  .map,
+  .map-view,
+  .map-panel,
+  .leaflet-container{
+    width:100% !important;
+    min-height:520px !important;
+    max-width:100% !important;
+  }
+}
+
+/* Très petits écrans : boutons lisibles, jamais verticaux */
+@media (max-width: 390px){
+  .chip,
+  .tag,
+  .badge,
+  .pill,
+  .quick-chip,
+  .filter-chip,
+  .amenity,
+  button,
+  .btn{
+    font-size:.9rem !important;
+    padding-inline:10px !important;
+  }
+
+  .place-meta,
+  .card-meta,
+  .stats-row{
+    grid-template-columns:1fr !important;
+  }
+
+  .hero h1,
+  .app-title,
+  .brand-title{
+    font-size:clamp(2.65rem, 14vw, 4.1rem) !important;
+  }
+}
+
+/* Tablette / navigateur large : 2 colonnes seulement si l’écran est vraiment assez large */
+@media (min-width: 761px) and (max-width: 1099px){
+  .places-grid,
+  .cards-grid,
+  .place-grid,
+  #placesList{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1100px){
+  .places-grid,
+  .cards-grid,
+  .place-grid,
+  #placesList{
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Dialog fiche : conserve un vrai format mobile */
+@media (max-width: 760px){
+  .place-dialog,
+  dialog.place-dialog{
+    width:100vw !important;
+    max-width:100vw !important;
+    height:100dvh !important;
+    max-height:100dvh !important;
+    border-radius:0 !important;
+  }
+
+  .dialog-scroll,
+  .place-dialog__scroll,
+  .dialog-body{
+    max-height:100dvh !important;
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+}
+
+
+
+/* ============================================================
+   V1.9.11 — Viewport mobile réel
+   Corrige Chrome mobile qui affichait une page trop large/compacte.
+   ============================================================ */
+
+html.bb-phone, html.bb-phone body{
+  width:100% !important;
+  max-width:100vw !important;
+  min-width:320px !important;
+  overflow-x:hidden !important;
+}
+
+html.bb-phone .app-shell{
+  width:100% !important;
+  max-width:430px !important;
+  margin-inline:auto !important;
+  padding:10px 10px calc(20px + var(--safe-bottom)) !important;
+  box-sizing:border-box !important;
+}
+
+/* Dans Chrome mobile, on garde le même format visuel qu'en aperçu/application. */
+html.bb-phone .hero{
+  width:100% !important;
+  max-width:100% !important;
+  border-radius:26px !important;
+  min-height:auto !important;
+}
+html.bb-phone .hero__content{
+  min-height:560px !important;
+  padding:22px !important;
+  align-content:center !important;
+  justify-items:start !important;
+  gap:16px !important;
+}
+html.bb-phone .brand-lockup{
+  display:grid !important;
+  grid-template-columns:82px 1fr !important;
+  align-items:center !important;
+  gap:18px !important;
+  width:100% !important;
+}
+html.bb-phone .brand-logo{
+  width:82px !important;
+  height:82px !important;
+  min-width:82px !important;
+  border-radius:20px !important;
+}
+html.bb-phone .eyebrow{
+  font-size:.92rem !important;
+  letter-spacing:.18em !important;
+}
+html.bb-phone h1,
+html.bb-phone .brand-lockup h1{
+  font-size:clamp(3.25rem, 15vw, 5.3rem) !important;
+  line-height:.88 !important;
+  max-width:260px !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+}
+html.bb-phone .signature{
+  font-size:1.15rem !important;
+}
+html.bb-phone .hero__subtitle{
+  font-size:1.16rem !important;
+  line-height:1.6 !important;
+  margin-top:10px !important;
+}
+html.bb-phone .hero-stats{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:9px !important;
+}
+html.bb-phone .hero-stats span{
+  font-size:.9rem !important;
+  padding:8px 11px !important;
+  white-space:nowrap !important;
+}
+html.bb-phone .hero-actions{
+  width:100% !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+  max-width:260px !important;
+}
+html.bb-phone .hero-actions .btn{
+  width:100% !important;
+  justify-content:center !important;
+  font-size:1rem !important;
+  padding:14px 16px !important;
+}
+
+/* Barre menu */
+html.bb-phone .burger-bar{
+  width:100% !important;
+  max-width:100% !important;
+  display:flex !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+}
+
+/* Filtres en vraie colonne téléphone */
+html.bb-phone .search-panel{
+  width:100% !important;
+  max-width:100% !important;
+  padding:16px !important;
+  border-radius:22px !important;
+}
+html.bb-phone .search-row,
+html.bb-phone .filter-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+  width:100% !important;
+}
+html.bb-phone .input-wrap,
+html.bb-phone input,
+html.bb-phone select,
+html.bb-phone .search-row > *,
+html.bb-phone .filter-grid > *{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+}
+html.bb-phone .quick-filters{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
+  overflow-x:auto !important;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+html.bb-phone .quick-filters::-webkit-scrollbar{display:none}
+html.bb-phone .mood-filters{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+}
+html.bb-phone .chip,
+html.bb-phone .btn,
+html.bb-phone button,
+html.bb-phone .pill,
+html.bb-phone .tag,
+html.bb-phone .badge{
+  white-space:nowrap !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  min-width:max-content !important;
+}
+
+/* Liste et cartes : une seule colonne, hauteur lisible */
+html.bb-phone #placesList,
+html.bb-phone .cards-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:18px !important;
+  width:100% !important;
+  max-width:100% !important;
+}
+html.bb-phone .place-card,
+html.bb-phone .place-card--premium{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  grid-template-rows:190px 1fr !important;
+  border-radius:22px !important;
+  overflow:hidden !important;
+}
+html.bb-phone .card-art{
+  height:190px !important;
+  min-height:190px !important;
+}
+html.bb-phone .place-image{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+}
+html.bb-phone .place-card__body{padding:13px !important; gap:9px !important;}
+html.bb-phone .place-card h3,
+html.bb-phone .card-heading h3{
+  font-size:clamp(1.45rem, 6.2vw, 2rem) !important;
+  line-height:1.12 !important;
+}
+html.bb-phone .card-kpis{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+html.bb-phone .card-kpis span{min-width:0 !important; padding:7px 6px !important;}
+html.bb-phone .card-kpis b{font-size:.72rem !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;}
+html.bb-phone .card-pills{display:none !important;}
+html.bb-phone .tide-strip{display:flex !important; flex-wrap:wrap !important; gap:7px !important;}
+
+html.bb-phone .section-title h2{font-size:clamp(2.25rem, 9vw, 3.1rem) !important;}
+
+/* Carte et dialogue */
+html.bb-phone #map,
+html.bb-phone .map-shell,
+html.bb-phone .leaflet-container{height:500px !important; min-height:500px !important; width:100% !important;}
+html.bb-phone .place-dialog{width:calc(100vw - 10px) !important; max-width:430px !important; border-radius:24px !important;}
+
+/* Si téléphone réellement très étroit */
+@media (max-width:380px){
+  html.bb-phone .app-shell{max-width:100% !important;}
+  html.bb-phone .brand-lockup{grid-template-columns:72px 1fr !important;gap:13px !important;}
+  html.bb-phone .brand-logo{width:72px !important;height:72px !important;min-width:72px !important;}
+  html.bb-phone h1, html.bb-phone .brand-lockup h1{font-size:2.75rem !important;max-width:220px !important;}
+  html.bb-phone .card-kpis{grid-template-columns:1fr !important;}
+}
+
+/* Tablette et desktop conservés */
+html.bb-tablet .app-shell{max-width:860px !important;margin-inline:auto !important;}
+html.bb-tablet #placesList, html.bb-tablet .cards-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+html.bb-desktop .app-shell{max-width:1180px !important;margin-inline:auto !important;}
+html.bb-desktop #placesList, html.bb-desktop .cards-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
+
+
+
+/* ============================================================
+   V1.9.12 — Correction scroll fiche balade
+   Le haut de la fiche ne reste plus fixé devant le contenu.
+   L’image, le titre et les informations défilent normalement.
+   ============================================================ */
+
+/* Sur téléphone : la fiche devient une vraie page scrollable */
+html.bb-phone .place-dialog,
+html.device-phone .place-dialog,
+html.bb-phone dialog.place-dialog,
+html.device-phone dialog.place-dialog{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  max-width:100vw !important;
+  height:100dvh !important;
+  max-height:100dvh !important;
+  margin:0 !important;
+  border-radius:0 !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+}
+
+/* Le conteneur interne ne doit plus créer un second scroll bloqué */
+html.bb-phone .dialog-scroll,
+html.device-phone .dialog-scroll,
+html.bb-phone .place-dialog__scroll,
+html.device-phone .place-dialog__scroll,
+html.bb-phone .dialog-body,
+html.device-phone .dialog-body{
+  max-height:none !important;
+  height:auto !important;
+  overflow:visible !important;
+  -webkit-overflow-scrolling:auto !important;
+}
+
+/* Le bloc image/titre ne doit jamais rester collé/fixe au scroll */
+html.bb-phone .dialog-hero,
+html.device-phone .dialog-hero,
+html.bb-phone .detail-hero,
+html.device-phone .detail-hero,
+html.bb-phone .place-detail-hero,
+html.device-phone .place-detail-hero{
+  position:relative !important;
+  top:auto !important;
+  bottom:auto !important;
+  z-index:1 !important;
+  min-height:auto !important;
+  height:auto !important;
+  max-height:none !important;
+  padding:16px !important;
+  overflow:hidden !important;
+}
+
+/* On force les éventuels enfants sticky/fixed du haut à redevenir normaux */
+html.bb-phone .dialog-hero *,
+html.device-phone .dialog-hero *,
+html.bb-phone .detail-hero *,
+html.device-phone .detail-hero *,
+html.bb-phone .place-detail-hero *,
+html.device-phone .place-detail-hero *{
+  position:relative;
+}
+
+/* Sauf le bouton fermer, qui peut rester en haut à droite de la fiche */
+html.bb-phone .dialog-close,
+html.device-phone .dialog-close,
+html.bb-phone .close-dialog,
+html.device-phone .close-dialog,
+html.bb-phone [data-close-dialog],
+html.device-phone [data-close-dialog]{
+  position:absolute !important;
+  top:16px !important;
+  right:16px !important;
+  z-index:5 !important;
+}
+
+/* L’image de la fiche devient une image normale qui défile avec le reste */
+html.bb-phone .dialog-hero img,
+html.device-phone .dialog-hero img,
+html.bb-phone .detail-hero img,
+html.device-phone .detail-hero img,
+html.bb-phone .place-detail-hero img,
+html.device-phone .place-detail-hero img{
+  position:relative !important;
+  width:100% !important;
+  height:auto !important;
+  max-height:42dvh !important;
+  object-fit:cover !important;
+}
+
+/* Les sections de contenu passent au-dessus proprement, sans être cachées */
+html.bb-phone .detail-section,
+html.device-phone .detail-section,
+html.bb-phone .tide-section,
+html.device-phone .tide-section,
+html.bb-phone .dialog-section,
+html.device-phone .dialog-section{
+  position:relative !important;
+  z-index:2 !important;
+}
+
+/* Evite que la première section passe sous l’image */
+html.bb-phone .dialog-body > *:first-child,
+html.device-phone .dialog-body > *:first-child{
+  margin-top:0 !important;
+}
+
+/* Ajout d’espace bas pour ne pas être coupé par les boutons système Android */
+html.bb-phone .place-dialog::after,
+html.device-phone .place-dialog::after{
+  content:"";
+  display:block;
+  height:calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Desktop/tablette : garde un comportement propre sans double scroll */
+html.bb-tablet .place-dialog,
+html.device-tablet .place-dialog,
+html.bb-desktop .place-dialog,
+html.device-desktop .place-dialog{
+  overflow:auto !important;
+}
+
+
+
+/* ============================================================
+   V1.9.13 — Correction cadre image fiche + anti-débordement
+   Corrige l’image trop grande / mal cadrée et les infos cachées
+   sur la droite de l’écran dans les fiches balade.
+   ============================================================ */
+
+/* La fiche ne peut plus dépasser de l’écran */
+html.bb-phone .place-dialog,
+html.device-phone .place-dialog,
+html.bb-phone dialog.place-dialog,
+html.device-phone dialog.place-dialog{
+  left:0 !important;
+  right:0 !important;
+  width:100vw !important;
+  max-width:100vw !important;
+  min-width:0 !important;
+  overflow-x:hidden !important;
+  box-sizing:border-box !important;
+}
+
+/* Tout élément interne doit rester dans la largeur visible */
+html.bb-phone .place-dialog *,
+html.device-phone .place-dialog *{
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+/* Le haut de fiche redevient une vraie colonne mobile */
+html.bb-phone .dialog-hero,
+html.device-phone .dialog-hero,
+html.bb-phone .detail-hero,
+html.device-phone .detail-hero,
+html.bb-phone .place-detail-hero,
+html.device-phone .place-detail-hero{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  display:block !important;
+  padding:14px !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  transform:none !important;
+}
+
+/* Les infos du haut ne doivent plus partir sur la droite */
+html.bb-phone .dialog-title,
+html.device-phone .dialog-title,
+html.bb-phone .detail-title,
+html.device-phone .detail-title,
+html.bb-phone .dialog-meta,
+html.device-phone .dialog-meta,
+html.bb-phone .detail-meta,
+html.device-phone .detail-meta,
+html.bb-phone .dialog-tags,
+html.device-phone .dialog-tags,
+html.bb-phone .detail-tags,
+html.device-phone .detail-tags{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  left:auto !important;
+  right:auto !important;
+  transform:none !important;
+  overflow:visible !important;
+}
+
+/* Tous les blocs de tags en fiche restent visibles et wrap proprement */
+html.bb-phone .dialog-tags,
+html.device-phone .dialog-tags,
+html.bb-phone .detail-tags,
+html.device-phone .detail-tags,
+html.bb-phone .dialog-hero .chips,
+html.device-phone .dialog-hero .chips,
+html.bb-phone .dialog-hero .tags,
+html.device-phone .dialog-hero .tags{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  overflow:visible !important;
+  gap:8px !important;
+}
+
+/* Bouton fermer visible mais pas hors écran */
+html.bb-phone .dialog-close,
+html.device-phone .dialog-close,
+html.bb-phone .close-dialog,
+html.device-phone .close-dialog,
+html.bb-phone [data-close-dialog],
+html.device-phone [data-close-dialog]{
+  position:absolute !important;
+  top:14px !important;
+  right:14px !important;
+  z-index:20 !important;
+  transform:none !important;
+}
+
+/* Cadre image propre dans la fiche */
+html.bb-phone .dialog-hero picture,
+html.device-phone .dialog-hero picture,
+html.bb-phone .detail-hero picture,
+html.device-phone .detail-hero picture,
+html.bb-phone .place-detail-hero picture,
+html.device-phone .place-detail-hero picture{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 0 14px 0 !important;
+  overflow:hidden !important;
+  border-radius:18px !important;
+}
+
+/* Image de fiche : largeur écran, hauteur contrôlée, pas de débordement */
+html.bb-phone .dialog-hero img,
+html.device-phone .dialog-hero img,
+html.bb-phone .detail-hero img,
+html.device-phone .detail-hero img,
+html.bb-phone .place-detail-hero img,
+html.device-phone .place-detail-hero img,
+html.bb-phone .dialog-hero .place-image,
+html.device-phone .dialog-hero .place-image,
+html.bb-phone .detail-hero .place-image,
+html.device-phone .detail-hero .place-image{
+  display:block !important;
+  position:relative !important;
+  inset:auto !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  height:clamp(210px, 42vw, 330px) !important;
+  max-height:330px !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  border-radius:18px !important;
+  margin:0 !important;
+  transform:none !important;
+}
+
+/* Si l’image est utilisée comme fond/croquis dans le hero */
+html.bb-phone .dialog-hero::before,
+html.device-phone .dialog-hero::before,
+html.bb-phone .detail-hero::before,
+html.device-phone .detail-hero::before,
+html.bb-phone .place-detail-hero::before,
+html.device-phone .place-detail-hero::before{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  max-width:100% !important;
+  transform:none !important;
+  background-size:cover !important;
+  background-position:center center !important;
+}
+
+/* Titre plus raisonnable pour éviter le débordement */
+html.bb-phone .dialog-title h2,
+html.device-phone .dialog-title h2,
+html.bb-phone .detail-title,
+html.device-phone .detail-title,
+html.bb-phone .detail-title h2,
+html.device-phone .detail-title h2{
+  width:100% !important;
+  max-width:100% !important;
+  font-size:clamp(2rem, 9vw, 3.15rem) !important;
+  line-height:.98 !important;
+  word-break:normal !important;
+  overflow-wrap:break-word !important;
+  transform:none !important;
+}
+
+/* Les lignes distance/durée/difficulté ne sortent plus de l’écran */
+html.bb-phone .dialog-kpis,
+html.device-phone .dialog-kpis,
+html.bb-phone .detail-kpis,
+html.device-phone .detail-kpis,
+html.bb-phone .dialog-hero .card-kpis,
+html.device-phone .dialog-hero .card-kpis{
+  width:100% !important;
+  max-width:100% !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:8px !important;
+  overflow:visible !important;
+}
+
+/* Corps de fiche parfaitement contenu */
+html.bb-phone .dialog-body,
+html.device-phone .dialog-body,
+html.bb-phone .dialog-scroll,
+html.device-phone .dialog-scroll,
+html.bb-phone .place-dialog__scroll,
+html.device-phone .place-dialog__scroll{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  padding-left:12px !important;
+  padding-right:12px !important;
+  overflow-x:hidden !important;
+}
+
+/* Sections de contenu */
+html.bb-phone .detail-section,
+html.device-phone .detail-section,
+html.bb-phone .dialog-section,
+html.device-phone .dialog-section,
+html.bb-phone .tide-section,
+html.device-phone .tide-section{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+/* Très petit écran : image un peu moins haute */
+@media (max-width:380px){
+  html.bb-phone .dialog-hero img,
+  html.device-phone .dialog-hero img,
+  html.bb-phone .detail-hero img,
+  html.device-phone .detail-hero img,
+  html.bb-phone .place-detail-hero img,
+  html.device-phone .place-detail-hero img{
+    height:220px !important;
+  }
+}
+
+
+
+/* ============================================================
+   V1.9.14 — Finitions utilisateur
+   Nettoyage des textes techniques, menu toujours accessible,
+   logo plus équilibré, niveau avec pastille intégrée.
+   ============================================================ */
+
+/* Menu toujours accessible pendant le scroll */
+.burger-bar{
+  position:sticky !important;
+  top:0 !important;
+  z-index:1200 !important;
+  margin-top:8px !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.24);
+}
+html.bb-phone .burger-bar,
+html.device-phone .burger-bar{
+  position:sticky !important;
+  top:0 !important;
+  z-index:1200 !important;
+}
+
+/* Icône application légèrement plus grande */
+.brand-logo{
+  width:88px !important;
+  height:88px !important;
+  min-width:88px !important;
+  border-radius:22px !important;
+}
+html.bb-phone .brand-logo,
+html.device-phone .brand-logo{
+  width:88px !important;
+  height:88px !important;
+  min-width:88px !important;
+  flex:0 0 88px !important;
+}
+@media (max-width:380px){
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:78px !important;
+    height:78px !important;
+    min-width:78px !important;
+    flex-basis:78px !important;
+  }
+}
+
+/* Haut accueil : un seul badge nombre de lieux */
+.hero-stats{gap:8px !important;}
+.hero-stats span:not(:first-child){display:none !important;}
+#heroPlacesCount{display:inline-flex !important;}
+
+/* Niveau : la pastille de difficulté est dans le cadre niveau */
+.difficulty-dot{display:none !important;}
+.difficulty-kpi b{
+  display:flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  white-space:nowrap !important;
+}
+.difficulty-inline-dot{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 auto !important;
+  font-size:.95rem !important;
+  line-height:1 !important;
+}
+
+/* Nettoyage des blocs techniques devenus inutiles */
+.gps-copy-hint,
+.tide-warning,
+.api-maree-credit,
+.detail-panel--source{display:none !important;}
+.tide-demand-box--clean p{display:none !important;}
+.tide-demand-box--clean{gap:10px !important;}
+.tide-demand-box--clean small{margin-top:0 !important;}
+
+/* Page Infos nettoyée */
+.about-grid--clean{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:14px !important;
+  align-items:start !important;
+}
+.about-grid--clean .panel{height:auto !important;}
+.about-intro-card{grid-column:1 / -1;}
+.about-list{
+  list-style:none !important;
+  padding:0 !important;
+  margin:8px 0 0 !important;
+  display:grid !important;
+  gap:9px !important;
+}
+.about-list li{
+  position:relative !important;
+  padding-left:20px !important;
+  color:#dceae6 !important;
+  line-height:1.5 !important;
+}
+.about-list li::before{
+  content:'•';
+  position:absolute;
+  left:4px;
+  top:0;
+  color:var(--primary);
+  font-weight:900;
+}
+.checklist--clean{
+  align-content:start !important;
+  padding:18px !important;
+  gap:12px !important;
+}
+.checklist--clean label{
+  display:grid !important;
+  grid-template-columns:24px 1fr !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:0 !important;
+}
+.checklist--clean input{width:20px !important;height:20px !important;margin:0 !important;}
+.info-callout{display:none !important;}
+@media (max-width:760px){
+  .about-grid--clean{grid-template-columns:1fr !important;}
+}
+
+/* Carte de fiche : hauteur et largeur stables */
+.detail-panel--map{display:block !important;}
+.detail-panel--map .detail-map,
+#detailMap{
+  display:block !important;
+  width:100% !important;
+  height:260px !important;
+  min-height:260px !important;
+  border-radius:18px !important;
+  overflow:hidden !important;
+}
+html.bb-phone .detail-panel--map .detail-map,
+html.device-phone .detail-panel--map .detail-map,
+html.bb-phone #detailMap,
+html.device-phone #detailMap{
+  height:260px !important;
+  min-height:260px !important;
+}
+
+
+
+/* ============================================================
+   V1.9.15 — Logo menu carte corrigés
+   Corrige uniquement :
+   1. Logo vraiment plus grand
+   2. Menu réellement accessible tout le temps
+   3. Carte des fiches balade fonctionnelle
+   ============================================================ */
+
+/* 1) Logo plus grand et mieux accordé au titre */
+.brand-logo,
+html.bb-phone .brand-logo,
+html.device-phone .brand-logo{
+  width:104px !important;
+  height:104px !important;
+  min-width:104px !important;
+  flex:0 0 104px !important;
+  border-radius:25px !important;
+  padding:9px !important;
+}
+
+@media (max-width:420px){
+  .brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:96px !important;
+    height:96px !important;
+    min-width:96px !important;
+    flex-basis:96px !important;
+  }
+}
+
+@media (max-width:360px){
+  .brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:88px !important;
+    height:88px !important;
+    min-width:88px !important;
+    flex-basis:88px !important;
+  }
+}
+
+/* 2) Menu vraiment fixe sur l’écran, pas seulement sticky */
+.burger-bar,
+html.bb-phone .burger-bar,
+html.device-phone .burger-bar{
+  position:fixed !important;
+  top:calc(env(safe-area-inset-top, 0px) + 8px) !important;
+  left:10px !important;
+  right:10px !important;
+  width:auto !important;
+  max-width:calc(100vw - 20px) !important;
+  z-index:4500 !important;
+  margin:0 !important;
+  padding:8px 0 !important;
+  border-radius:22px !important;
+  background:linear-gradient(180deg,rgba(6,21,21,.98),rgba(6,21,21,.88)) !important;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+  box-shadow:0 14px 36px rgba(0,0,0,.34) !important;
+}
+
+/* Ajoute un espace pour que le menu fixe ne masque pas trop le haut des pages */
+.app-shell{
+  padding-top:62px !important;
+}
+
+/* Quand la fiche est ouverte, elle reste au-dessus du menu */
+.place-dialog,
+dialog.place-dialog{
+  z-index:6000 !important;
+}
+
+/* 3) Carte dans les fiches : annule les règles globales qui cassent Leaflet */
+.detail-panel--map{
+  display:block !important;
+  overflow:visible !important;
+  width:100% !important;
+  max-width:100% !important;
+}
+
+.detail-panel--map .detail-map,
+#detailMap{
+  display:block !important;
+  position:relative !important;
+  width:100% !important;
+  max-width:100% !important;
+  height:280px !important;
+  min-height:280px !important;
+  border-radius:18px !important;
+  overflow:hidden !important;
+  background:#0e2521 !important;
+  isolation:isolate !important;
+}
+
+/* Très important pour Leaflet : les tuiles ne doivent PAS hériter de max-width:100% */
+#detailMap .leaflet-container,
+#detailMap .leaflet-pane,
+#detailMap .leaflet-map-pane,
+#detailMap .leaflet-tile-pane,
+#detailMap .leaflet-overlay-pane,
+#detailMap .leaflet-shadow-pane,
+#detailMap .leaflet-marker-pane,
+#detailMap .leaflet-tooltip-pane,
+#detailMap .leaflet-popup-pane,
+#detailMap .leaflet-control-container,
+.detail-map .leaflet-container,
+.detail-map .leaflet-pane,
+.detail-map .leaflet-map-pane,
+.detail-map .leaflet-tile-pane,
+.detail-map .leaflet-overlay-pane,
+.detail-map .leaflet-shadow-pane,
+.detail-map .leaflet-marker-pane,
+.detail-map .leaflet-tooltip-pane,
+.detail-map .leaflet-popup-pane,
+.detail-map .leaflet-control-container{
+  max-width:none !important;
+  box-sizing:content-box !important;
+}
+
+#detailMap .leaflet-tile,
+#detailMap .leaflet-marker-icon,
+#detailMap .leaflet-marker-shadow,
+#detailMap img,
+.detail-map .leaflet-tile,
+.detail-map .leaflet-marker-icon,
+.detail-map .leaflet-marker-shadow,
+.detail-map img{
+  max-width:none !important;
+  max-height:none !important;
+  box-sizing:content-box !important;
+}
+
+#detailMap .leaflet-control,
+.detail-map .leaflet-control{
+  max-width:none !important;
+}
+
+/* Téléphone : carte fiche lisible, sans casser la largeur */
+html.bb-phone #detailMap,
+html.device-phone #detailMap,
+html.bb-phone .detail-panel--map .detail-map,
+html.device-phone .detail-panel--map .detail-map{
+  height:300px !important;
+  min-height:300px !important;
+}
+
+
+
+/* ============================================================
+   V1.9.16 — Logo hauteur titre signature
+   Le logo est agrandi pour aller de la ligne "Nature & patrimoine"
+   jusqu’à la signature "by cr3@tix dev’".
+   ============================================================ */
+
+/* Bloc logo/titre : colonne logo calibrée sur la hauteur du texte */
+.brand-lockup,
+html.bb-phone .brand-lockup,
+html.device-phone .brand-lockup{
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:18px !important;
+}
+
+/* Logo principal : hauteur du bloc eyebrow + titre + signature */
+.brand-logo,
+html.bb-phone .brand-logo,
+html.device-phone .brand-logo{
+  width:156px !important;
+  height:156px !important;
+  min-width:156px !important;
+  flex:0 0 156px !important;
+  border-radius:34px !important;
+  padding:12px !important;
+  object-fit:contain !important;
+}
+
+/* Pour mobiles standards : reste grand mais sans pousser le titre hors écran */
+@media (max-width:480px){
+  .brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:142px !important;
+    height:142px !important;
+    min-width:142px !important;
+    flex-basis:142px !important;
+    border-radius:30px !important;
+    padding:11px !important;
+  }
+
+  html.bb-phone .brand-lockup,
+  html.device-phone .brand-lockup{
+    gap:14px !important;
+  }
+}
+
+/* Pour petits mobiles : logo encore proportionné, mais lisible */
+@media (max-width:390px){
+  .brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:126px !important;
+    height:126px !important;
+    min-width:126px !important;
+    flex-basis:126px !important;
+    border-radius:27px !important;
+    padding:10px !important;
+  }
+
+  html.bb-phone .brand-lockup,
+  html.device-phone .brand-lockup{
+    gap:12px !important;
+  }
+}
+
+/* Très petits écrans : évite de casser le titre */
+@media (max-width:345px){
+  .brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:112px !important;
+    height:112px !important;
+    min-width:112px !important;
+    flex-basis:112px !important;
+  }
+}
+
+
+
+/* ============================================================
+   V1.9.17 — Logo maxi réel
+   Le logo prend enfin la hauteur visuelle du bloc texte :
+   de "Nature & patrimoine" jusqu’à "by cr3@tix dev’".
+   ============================================================ */
+
+/* Structure du bloc haut : le texte définit la hauteur, le logo la suit */
+.hero__content .brand-lockup,
+.brand-lockup{
+  align-items:stretch !important;
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) !important;
+  gap:16px !important;
+}
+
+.hero__content .brand-lockup > div,
+.brand-lockup > div{
+  min-height:172px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+}
+
+.hero__content .brand-lockup > .brand-logo,
+.brand-lockup > .brand-logo,
+.hero__content img.brand-logo,
+img.brand-logo{
+  width:172px !important;
+  min-width:172px !important;
+  height:172px !important;
+  align-self:stretch !important;
+  flex:0 0 172px !important;
+  padding:12px !important;
+  border-radius:36px !important;
+  object-fit:contain !important;
+}
+
+@media (max-width:480px){
+  .hero__content .brand-lockup,
+  .brand-lockup{gap:14px !important;}
+
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div{min-height:160px !important;}
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo{
+    width:160px !important;
+    min-width:160px !important;
+    height:160px !important;
+    flex-basis:160px !important;
+    border-radius:34px !important;
+  }
+}
+
+@media (max-width:390px){
+  .hero__content .brand-lockup,
+  .brand-lockup{gap:12px !important;}
+
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div{min-height:146px !important;}
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo{
+    width:146px !important;
+    min-width:146px !important;
+    height:146px !important;
+    flex-basis:146px !important;
+    border-radius:31px !important;
+    padding:11px !important;
+  }
+}
+
+@media (max-width:345px){
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div{min-height:132px !important;}
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo{
+    width:132px !important;
+    min-width:132px !important;
+    height:132px !important;
+    flex-basis:132px !important;
+  }
+}
+
+
+
+/* ============================================================
+   V1.9.18 — Logo et titre dans le cadre
+   Correction finale : le logo reste aligné de "Nature & patrimoine"
+   à "by cr3@tix dev’", mais le titre ne sort plus du cadre.
+   ============================================================ */
+
+/* Bloc logo + texte : largeur maîtrisée */
+.hero__content .brand-lockup,
+.brand-lockup,
+html.bb-phone .brand-lockup,
+html.device-phone .brand-lockup{
+  display:grid !important;
+  grid-template-columns:clamp(112px, 30vw, 132px) minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:12px !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+
+/* Colonne texte : jamais hors cadre */
+.hero__content .brand-lockup > div,
+.brand-lockup > div,
+html.bb-phone .brand-lockup > div,
+html.device-phone .brand-lockup > div{
+  min-width:0 !important;
+  min-height:132px !important;
+  height:132px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+  overflow:visible !important;
+}
+
+/* Logo : même hauteur que le bloc texte, mais plus trop large */
+.hero__content .brand-lockup > .brand-logo,
+.brand-lockup > .brand-logo,
+.hero__content img.brand-logo,
+img.brand-logo,
+html.bb-phone .brand-logo,
+html.device-phone .brand-logo{
+  width:132px !important;
+  height:132px !important;
+  min-width:132px !important;
+  max-width:132px !important;
+  flex:0 0 132px !important;
+  border-radius:30px !important;
+  padding:10px !important;
+  object-fit:contain !important;
+}
+
+/* Titre : taille réduite juste ce qu’il faut pour rester lisible et dans le cadre */
+.hero__content .brand-lockup h1,
+.brand-lockup h1,
+html.bb-phone .brand-lockup h1,
+html.device-phone .brand-lockup h1{
+  font-size:clamp(2.55rem, 10.2vw, 3.55rem) !important;
+  line-height:.88 !important;
+  letter-spacing:.005em !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  hyphens:none !important;
+  white-space:normal !important;
+}
+
+/* Petits textes autour du titre */
+.hero__content .brand-lockup .eyebrow,
+.brand-lockup .eyebrow{
+  font-size:.72rem !important;
+  line-height:1.2 !important;
+  margin:0 !important;
+  white-space:normal !important;
+}
+
+.hero__content .brand-lockup .signature,
+.brand-lockup .signature{
+  font-size:1rem !important;
+  line-height:1.2 !important;
+  margin:0 !important;
+  white-space:normal !important;
+}
+
+/* Mobile standard */
+@media (max-width:480px){
+  .hero__content .brand-lockup,
+  .brand-lockup,
+  html.bb-phone .brand-lockup,
+  html.device-phone .brand-lockup{
+    grid-template-columns:122px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div,
+  html.bb-phone .brand-lockup > div,
+  html.device-phone .brand-lockup > div{
+    min-height:122px !important;
+    height:122px !important;
+  }
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:122px !important;
+    height:122px !important;
+    min-width:122px !important;
+    max-width:122px !important;
+    flex-basis:122px !important;
+    border-radius:28px !important;
+  }
+
+  .hero__content .brand-lockup h1,
+  .brand-lockup h1,
+  html.bb-phone .brand-lockup h1,
+  html.device-phone .brand-lockup h1{
+    font-size:clamp(2.35rem, 9.5vw, 3.05rem) !important;
+  }
+}
+
+/* Petit mobile */
+@media (max-width:390px){
+  .hero__content .brand-lockup,
+  .brand-lockup,
+  html.bb-phone .brand-lockup,
+  html.device-phone .brand-lockup{
+    grid-template-columns:112px minmax(0,1fr) !important;
+    gap:10px !important;
+  }
+
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div,
+  html.bb-phone .brand-lockup > div,
+  html.device-phone .brand-lockup > div{
+    min-height:112px !important;
+    height:112px !important;
+  }
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:112px !important;
+    height:112px !important;
+    min-width:112px !important;
+    max-width:112px !important;
+    flex-basis:112px !important;
+    border-radius:25px !important;
+    padding:9px !important;
+  }
+
+  .hero__content .brand-lockup h1,
+  .brand-lockup h1,
+  html.bb-phone .brand-lockup h1,
+  html.device-phone .brand-lockup h1{
+    font-size:clamp(2.15rem, 9.2vw, 2.65rem) !important;
+  }
+
+  .hero__content .brand-lockup .signature,
+  .brand-lockup .signature{
+    font-size:.92rem !important;
+  }
+}
+
+/* Très petit mobile */
+@media (max-width:345px){
+  .hero__content .brand-lockup,
+  .brand-lockup,
+  html.bb-phone .brand-lockup,
+  html.device-phone .brand-lockup{
+    grid-template-columns:98px minmax(0,1fr) !important;
+    gap:9px !important;
+  }
+
+  .hero__content .brand-lockup > div,
+  .brand-lockup > div,
+  html.bb-phone .brand-lockup > div,
+  html.device-phone .brand-lockup > div{
+    min-height:98px !important;
+    height:98px !important;
+  }
+
+  .hero__content .brand-lockup > .brand-logo,
+  .brand-lockup > .brand-logo,
+  .hero__content img.brand-logo,
+  img.brand-logo,
+  html.bb-phone .brand-logo,
+  html.device-phone .brand-logo{
+    width:98px !important;
+    height:98px !important;
+    min-width:98px !important;
+    max-width:98px !important;
+    flex-basis:98px !important;
+  }
+}
+

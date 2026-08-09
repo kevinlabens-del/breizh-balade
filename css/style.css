@@ -1,0 +1,1810 @@
+/*
+===============================================================================
+BREIZH’ BALLADE — css/style.css
+===============================================================================
+
+Ce fichier contient le design principal de l’application.
+
+Pour comprendre simplement :
+- les couleurs générales ;
+- les cartes de balades ;
+- les boutons ;
+- les onglets ;
+- l’accueil ;
+- les fenêtres de détail ;
+- les favoris ;
+- les blocs d’informations.
+
+Une classe CSS est appelée depuis le HTML ou depuis JavaScript.
+Exemple :
+- .hero = le grand bloc d’accueil ;
+- .place-card = une carte de balade ;
+- .btn = un bouton ;
+- .dialog = la fenêtre qui affiche la fiche d’un lieu.
+===============================================================================
+*/
+/* Variables globales : couleurs, ombres, arrondis et valeurs réutilisées partout. */
+:root{
+  --bg:#061515;
+  --bg-2:#08201f;
+  --panel:rgba(255,255,255,.075);
+  --panel-strong:rgba(255,255,255,.12);
+  --text:#f4fbf8;
+  --muted:#b7c9c4;
+  --line:rgba(255,255,255,.14);
+  --primary:#e8c777;
+  --primary-2:#f5df9e;
+  --accent:#54d0b2;
+  --danger:#ff6b6b;
+  --shadow:0 22px 70px rgba(0,0,0,.38);
+  --radius:24px;
+  --radius-sm:16px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 20% 0%,rgba(84,208,178,.16),transparent 32rem),
+    radial-gradient(circle at 82% 10%,rgba(232,199,119,.13),transparent 28rem),
+    linear-gradient(160deg,#04100f 0%,#061515 45%,#0b1d22 100%);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,"Segoe UI", sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+.app-shell{width:min(1180px,100%);margin:0 auto;padding:18px 16px calc(28px + var(--safe-bottom))}
+/* Hero : grande zone d’accueil avec image de fond, logo, titre et boutons. */
+.hero{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:34px;
+  min-height:310px;
+  box-shadow:var(--shadow);
+  isolation:isolate;
+}
+.hero__bg{
+  position:absolute;inset:0;z-index:-2;
+  background:
+    linear-gradient(135deg,rgba(6,21,21,.93),rgba(8,32,31,.72)),
+    radial-gradient(circle at 75% 22%,rgba(232,199,119,.25),transparent 14rem),
+    radial-gradient(circle at 18% 80%,rgba(84,208,178,.28),transparent 16rem),
+    url("../assets/logo/breizh-pattern.svg");
+  background-size:cover,auto,auto,480px;
+}
+.hero__bg::after{
+  content:"";position:absolute;inset:auto -10% -42% -10%;height:70%;z-index:-1;
+  background:radial-gradient(ellipse at center,rgba(84,208,178,.18),transparent 70%);
+  filter:blur(10px);
+}
+.hero__content{padding:28px;display:grid;gap:18px;align-content:center;min-height:310px}
+/* Bloc identité : aligne le logo avec le titre et la signature. */
+.brand-lockup{display:flex;gap:17px;align-items:center}
+/* Logo principal de l’application. Sa taille peut être ajustée dans responsive.css. */
+.brand-logo{
+  width:94px;height:94px;border-radius:24px;padding:8px;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+  border:1px solid var(--line);box-shadow:0 16px 40px rgba(0,0,0,.25);
+  object-fit:contain;
+}
+.eyebrow{text-transform:uppercase;letter-spacing:.17em;color:var(--primary-2);font-size:.72rem;font-weight:800;margin:0 0 6px}
+h1{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.65rem,9vw,5.65rem);
+  letter-spacing:.015em;
+  line-height:.89;
+  text-shadow:0 4px 26px rgba(0,0,0,.38);
+}
+.signature{margin:.35rem 0 0;color:var(--muted);font-weight:700;letter-spacing:.05em}
+.hero__subtitle{max-width:720px;font-size:1.08rem;color:#d8e7e3;line-height:1.55;margin:0}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:8px;flex-wrap:wrap}.hero-stats span{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);border-radius:999px;padding:7px 10px;color:#e9f6f2;font-weight:900;font-size:.82rem;backdrop-filter:blur(10px)}
+/* Boutons généraux : utilisés pour les actions principales et secondaires. */
+.btn{
+  border:1px solid var(--line);border-radius:999px;background:var(--panel-strong);color:var(--text);
+  padding:12px 16px;font-weight:850;box-shadow:0 10px 30px rgba(0,0,0,.18);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease;
+}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.24)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#15231f;border-color:rgba(255,255,255,.2)}
+.btn-ghost{backdrop-filter:blur(12px)}
+.btn-small{padding:9px 12px;font-size:.88rem}
+.hidden{display:none!important}
+/* Onglets de navigation : Explorer, Carte, Favoris, À visiter, Visité, Infos. */
+.tabs{
+  display:flex;gap:8px;overflow-x:auto;padding:12px 2px;margin:8px 0 4px;position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,rgba(6,21,21,.96),rgba(6,21,21,.82));backdrop-filter:blur(18px);
+}
+.tab{
+  border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);border-radius:999px;
+  padding:10px 14px;font-weight:850;white-space:nowrap;
+}
+.tab.is-active{background:var(--text);color:#071817;border-color:var(--text)}
+main{display:grid;gap:18px}
+.panel{
+  background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.055));
+  border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 18px 55px rgba(0,0,0,.22);
+}
+.search-panel{padding:16px;display:grid;gap:13px}
+.search-row{display:grid;grid-template-columns:1fr minmax(150px,220px);gap:10px}
+.input-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.09);border:1px solid var(--line);border-radius:18px;padding:0 12px}
+.input-wrap input{width:100%;background:transparent;border:0;outline:0;color:var(--text);padding:14px 0}
+.input-wrap input::placeholder{color:#8fa8a2}
+select{
+  width:100%;appearance:none;background:rgba(255,255,255,.09);color:var(--text);border:1px solid var(--line);
+  border-radius:18px;padding:14px 42px 14px 13px;outline:0;
+  background-image:linear-gradient(45deg,transparent 50%,var(--primary) 50%),linear-gradient(135deg,var(--primary) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 20px,calc(100% - 12px) 20px;background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+}
+select option{background:#102421;color:var(--text)}
+.filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.filter-grid label{display:grid;gap:6px;color:var(--muted);font-size:.84rem;font-weight:800}
+.quick-filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);border-radius:999px;padding:9px 12px;font-weight:800;white-space:nowrap}
+.chip.is-active{background:rgba(84,208,178,.18);border-color:rgba(84,208,178,.55);color:#eafff9}
+.status-line{margin:0;color:var(--muted);font-weight:750}
+.view{display:none;animation:fade .22s ease both}.view.is-visible{display:block}@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:12px 2px}
+.section-title h2{font-size:clamp(1.45rem,4vw,2.15rem);margin:0;font-family:Georgia,"Times New Roman",serif}
+/* Grille des cartes de balades. Sur mobile elle passe généralement en une seule colonne. */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* Carte d’une balade dans la liste : image, titre, infos rapides et actions. */
+.place-card{
+  position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line);background:rgba(255,255,255,.07);
+  min-height:310px;display:grid;grid-template-rows:140px 1fr;box-shadow:0 18px 55px rgba(0,0,0,.2);
+}
+.card-art{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(248,247,243,.96),rgba(214,210,200,.92))}
+.place-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.08) brightness(1.03);transform:scale(1.002)}
+.card-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,21,21,.02),rgba(0,0,0,.48))}
+.badge-row{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;display:flex;gap:7px;flex-wrap:wrap}
+.badge{font-size:.72rem;font-weight:900;border-radius:999px;padding:6px 8px;background:rgba(6,21,21,.78);color:#f7fbfa;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px)}
+.place-card__body{padding:14px;display:grid;gap:10px}
+.place-card h3{margin:0;font-size:1.18rem;line-height:1.13}
+.meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:.84rem;font-weight:750}
+.place-card p{margin:0;color:#d5e6e1;line-height:1.45;font-size:.94rem}
+.visual-line{display:flex;gap:8px;justify-content:space-between;align-items:center;color:#cfe2dc;font-size:.78rem;font-weight:900}.visual-line span{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);border-radius:999px;padding:5px 7px}
+.card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.icon-btn,.mini-action{
+  border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--text);border-radius:14px;padding:9px 10px;font-weight:850;
+}
+.icon-btn.is-on,.mini-action.is-on{background:rgba(232,199,119,.19);border-color:rgba(232,199,119,.48)}
+.mini-action{font-size:.84rem;flex:1}.mini-action.primary{background:rgba(84,208,178,.18);border-color:rgba(84,208,178,.42)}
+.empty-state{grid-column:1/-1;padding:22px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);background:rgba(255,255,255,.04)}
+/* Fenêtre de détail d’une balade : s’ouvre quand on clique sur une carte. */
+.place-dialog{width:min(920px,calc(100vw - 20px));max-height:calc(100vh - 24px);border:1px solid var(--line);border-radius:28px;background:#071b1a;color:var(--text);box-shadow:var(--shadow);padding:0;overflow:hidden}
+.place-dialog::backdrop{background:rgba(0,0,0,.68);backdrop-filter:blur(10px)}
+.dialog-close{position:absolute;right:13px;top:13px;z-index:3;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(6,21,21,.78);color:var(--text);font-size:1.6rem;line-height:1}
+.dialog-hero{min-height:240px;position:relative;background:linear-gradient(135deg,#f8f7f3,#d9d6cb);display:flex;align-items:end;padding:22px;overflow:hidden}
+.dialog-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.06) brightness(1.02)}
+.dialog-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.72));z-index:0}
+.dialog-title{position:relative;z-index:1;max-width:780px;display:grid;gap:0}.dialog-tags{position:relative;z-index:2;display:flex;gap:7px;flex-wrap:wrap;max-width:calc(100% - 56px);margin:0 56px 12px 0}.dialog-title h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,7vw,4rem);line-height:.92;margin:0;clear:both}.dialog-title p{margin:8px 0 0;color:#dbe8e5;font-weight:800}
+/* Corps de la fiche balade : zone défilable avec description, conseils, carte et actions. */
+.dialog-body{padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px;overflow:auto;max-height:calc(100vh - 270px)}
+.detail-panel{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:20px;padding:14px}
+.detail-panel h3{margin:0 0 10px}.detail-panel p,.detail-panel li{color:#d8e6e2;line-height:1.55}.detail-panel ul{margin:0;padding-left:18px}.visual-audit-box{margin:14px 0;padding:12px;border:1px solid rgba(232,199,119,.34);background:rgba(232,199,119,.09);border-radius:18px}.visual-audit-box strong{display:block;margin-bottom:9px;color:#fff3c7}.marker-row{display:flex;gap:7px;flex-wrap:wrap}.marker-chip{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#effbf8;border-radius:999px;padding:6px 8px;font-size:.8rem;font-weight:900}.detail-map{height:260px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#102421}.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.info-tile{border:1px solid var(--line);border-radius:16px;padding:10px;background:rgba(255,255,255,.055)}.info-tile b{display:block}.info-tile span{color:var(--muted);font-size:.88rem}.dialog-actions{display:flex;flex-wrap:wrap;gap:8px}.note-box{width:100%;min-height:88px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);padding:10px;resize:vertical;outline:0}
+.about-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:14px}.big-copy,.checklist{padding:18px}.big-copy h2{font-family:Georgia,"Times New Roman",serif;font-size:2rem;margin:0 0 10px}.big-copy p{color:#d6e7e2;line-height:1.6}.checklist{display:grid;gap:10px}.checklist h3{margin:0}.checklist label{display:flex;align-items:center;gap:9px;color:#dceae6;font-weight:750}
+.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:26px;padding:18px;color:var(--muted);border-top:1px solid var(--line);font-weight:800}/* Toast : petit message temporaire affiché après une action utilisateur. */
+.toast{position:fixed;left:50%;bottom:calc(18px + var(--safe-bottom));transform:translate(-50%,16px);background:#f5fbf9;color:#071817;border-radius:999px;padding:11px 15px;font-weight:900;box-shadow:0 14px 40px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.22s ease;z-index:100}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+/* =========================
+   Breizh’ Balade V1.7
+   Finition mobile + fiche premium
+   ========================= */
+.hero-stats span{box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.place-card--premium{grid-template-rows:172px 1fr;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;background:linear-gradient(145deg,rgba(255,255,255,.088),rgba(255,255,255,.045))}
+.place-card--premium:hover{transform:translateY(-3px);border-color:rgba(232,199,119,.34);box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.place-card--premium .card-art{background:#f7f4ed}
+.place-card--premium .place-image{filter:grayscale(1) contrast(1.12) brightness(1.04)}
+.card-distance-chip{position:absolute;right:10px;top:10px;z-index:3;border:1px solid rgba(255,255,255,.28);background:rgba(6,21,21,.76);color:#fff;border-radius:999px;padding:7px 9px;font-size:.74rem;font-weight:950;backdrop-filter:blur(10px)}
+.card-heading{display:flex;gap:10px;align-items:start;justify-content:space-between}.difficulty-dot{flex:0 0 auto;font-size:1.05rem;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+.meta--premium{font-size:.8rem;gap:7px}.meta--premium span{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);border-radius:999px;padding:5px 7px}
+.card-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.card-kpis span{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);border-radius:14px;padding:8px 7px}.card-kpis b{display:block;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-kpis small{display:block;color:var(--muted);font-size:.68rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em}.card-pills{display:flex;gap:6px;flex-wrap:wrap;min-height:28px}.card-pill{border:1px solid rgba(84,208,178,.24);background:rgba(84,208,178,.09);color:#eafff9;border-radius:999px;padding:5px 7px;font-size:.72rem;font-weight:900}.card-actions--premium .primary{flex:1 1 135px}.card-actions--premium .icon-btn{min-width:42px}
+.dialog-hero--premium{min-height:315px;padding:24px}.dialog-hero--premium::after{background:linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.34) 42%,rgba(0,0,0,.82))}.dialog-title--premium{gap:8px}.dialog-title--premium h2{letter-spacing:-.02em;text-wrap:balance}.dialog-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px;max-width:720px}.dialog-metrics span{border:1px solid rgba(255,255,255,.17);background:rgba(6,21,21,.62);border-radius:16px;padding:9px 10px;backdrop-filter:blur(12px)}.dialog-metrics b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dialog-metrics small{display:block;color:#c8d9d5;font-size:.72rem;font-weight:850;margin-top:2px}
+.dialog-body--premium{grid-template-columns:minmax(0,1.08fr) minmax(310px,.92fr);gap:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.045))}.detail-main,.detail-side{display:grid;gap:12px;align-content:start}.detail-side{position:relative}.detail-panel--story{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.055))}.panel-title-row{display:flex;align-items:center;gap:8px;margin:0 0 10px}.panel-title-row h3{margin:0}.panel-title-row span{width:30px;height:30px;display:grid;place-items:center;border-radius:11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.detail-panel--split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.premium-list{display:grid;gap:7px;margin:0!important;padding-left:0!important;list-style:none}.premium-list li{position:relative;padding-left:18px}.premium-list li::before{content:'•';position:absolute;left:2px;color:var(--primary);font-weight:900}.visual-audit-box--premium{margin-top:16px}.detail-panel--warning{border-color:rgba(255,107,107,.35);background:rgba(255,107,107,.08)}.detail-panel--route{display:grid;gap:12px}.route-cta{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;align-items:center;text-decoration:none;color:#071817;background:linear-gradient(135deg,var(--primary),var(--primary-2));border-radius:20px;padding:14px 15px;border:1px solid rgba(255,255,255,.26);box-shadow:0 14px 38px rgba(0,0,0,.25)}.route-cta span{grid-row:1/3;font-size:1.55rem}.route-cta strong{font-size:1rem}.route-cta small{font-weight:850;color:rgba(7,24,23,.78)}.pill-grid{display:flex;gap:7px;flex-wrap:wrap}.premium-pill{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.075);color:#effbf8;border-radius:999px;padding:7px 9px;font-size:.78rem;font-weight:900}.info-grid--premium{grid-template-columns:repeat(2,1fr)}.dialog-actions--compact .mini-action{flex:1 1 calc(50% - 6px)}.detail-panel--map{padding:12px}.detail-panel--map .detail-map{height:230px}.note-box:focus{border-color:rgba(84,208,178,.48);box-shadow:0 0 0 3px rgba(84,208,178,.1)}
+
+/* Correction V1.7 GPS feedback */
+.gps-copy-hint{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:.86rem;
+  line-height:1.35;
+  font-weight:750;
+}
+.gps-copy-btn.is-copied,
+.mini-action.is-copied{
+  background:linear-gradient(135deg,var(--accent),#dffbf3)!important;
+  color:#06201b!important;
+  border-color:rgba(255,255,255,.4)!important;
+  transform:translateY(-1px);
+}
+.toast{
+  max-width:min(92vw,520px);
+  text-align:center;
+  line-height:1.25;
+}
+
+/* =========================
+   Breizh’ Balade V1.8
+   Contenu intelligent
+   ========================= */
+.mood-filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:10px;
+}
+.mood-label{
+  color:var(--muted);
+  font-weight:900;
+  margin-right:2px;
+}
+.mood-chip.is-active{
+  background:linear-gradient(135deg,var(--accent),var(--primary-2));
+  color:#061515;
+  border-color:rgba(255,255,255,.44);
+}
+.smart-panel .panel-title-row,
+.around-panel .panel-title-row{
+  margin-bottom:12px;
+}
+.smart-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.smart-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  padding:13px;
+}
+.smart-card b{
+  display:block;
+  margin-bottom:8px;
+  color:var(--primary-2);
+}
+.smart-card p{
+  margin:0;
+  color:#dceae6;
+  line-height:1.45;
+}
+.smart-card--accent{
+  background:linear-gradient(145deg,rgba(84,208,178,.16),rgba(232,199,119,.11));
+}
+.smart-list{
+  margin:0;
+}
+.around-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.around-card{
+  text-align:left;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(255,255,255,.07);
+  color:var(--text);
+  padding:12px;
+  transition:.18s ease;
+}
+.around-card:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.12);
+}
+.around-card strong{
+  display:block;
+  font-size:.92rem;
+  margin-bottom:4px;
+}
+.around-card span{
+  color:var(--muted);
+  font-size:.82rem;
+  font-weight:800;
+}
+@media (max-width:760px){
+  .smart-grid,
+  .around-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =========================
+   Breizh’ Balade V1.9
+   Pré-publication + offline
+   ========================= */
+.offline-banner{
+  position:sticky;
+  top:0;
+  z-index:200;
+  display:none;
+  margin:0;
+  padding:10px 14px;
+  text-align:center;
+  background:linear-gradient(135deg,#f5df9e,#e8c777);
+  color:#061515;
+  font-weight:950;
+  box-shadow:0 10px 35px rgba(0,0,0,.26);
+}
+.offline-banner.is-visible{display:block}
+.about-grid--v19{grid-template-columns:1.35fr .9fr}
+.info-callout{
+  display:grid;
+  gap:5px;
+  margin-top:14px;
+  border:1px solid rgba(232,199,119,.35);
+  border-radius:18px;
+  padding:14px;
+  background:rgba(232,199,119,.1);
+}
+.info-callout strong{color:var(--primary-2)}
+.info-callout span{color:#dceae6;line-height:1.45}
+.info-card-v19 p{margin:0;color:#dceae6;line-height:1.55}
+.detail-panel--source{background:linear-gradient(145deg,rgba(84,208,178,.11),rgba(255,255,255,.055))}
+.source-grid{display:grid;gap:8px}
+.source-grid span{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  background:rgba(255,255,255,.055);
+  color:#dceae6;
+  line-height:1.35;
+  font-size:.9rem;
+}
+.source-grid b{display:block;color:var(--primary-2);margin-bottom:3px}
+.place-image,.dialog-hero__img{background:#f8f7f3}
+
+/* =========================
+   Breizh’ Balade V1.9
+   Menu burger latéral
+   ========================= */
+body.menu-open{overflow:hidden}
+.burger-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  position:sticky;
+  top:0;
+  z-index:70;
+  margin:8px 0 4px;
+  padding:10px 2px;
+  background:linear-gradient(180deg,rgba(6,21,21,.96),rgba(6,21,21,.82));
+  backdrop-filter:blur(18px);
+}
+.burger-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:11px 16px;
+  background:rgba(255,255,255,.1);
+  color:var(--text);
+  font-weight:950;
+  box-shadow:0 12px 34px rgba(0,0,0,.24);
+}
+.burger-btn:hover{
+  background:rgba(255,255,255,.16);
+}
+.burger-icon{
+  font-size:1.2rem;
+  line-height:1;
+}
+.burger-current{
+  color:var(--primary-2);
+  font-weight:950;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.06);
+}
+.drawer-overlay{
+  position:fixed;
+  inset:0;
+  z-index:110;
+  background:rgba(0,0,0,.54);
+  opacity:0;
+  transition:opacity .22s ease;
+  backdrop-filter:blur(3px);
+}
+.drawer-overlay.is-visible{
+  opacity:1;
+}
+.side-menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:min(330px,86vw);
+  height:100dvh;
+  z-index:120;
+  transform:translateX(-105%);
+  transition:transform .24s ease;
+  background:
+    radial-gradient(circle at 0% 0%,rgba(84,208,178,.16),transparent 18rem),
+    linear-gradient(160deg,#061515,#08201f);
+  border-right:1px solid var(--line);
+  box-shadow:28px 0 70px rgba(0,0,0,.42);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.side-menu.is-open{
+  transform:translateX(0);
+}
+.side-menu__header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 4px 14px;
+  border-bottom:1px solid var(--line);
+}
+.side-menu__header strong{
+  display:block;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:1.35rem;
+}
+.side-menu__header small{
+  color:var(--muted);
+  font-weight:850;
+}
+.side-menu__close{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.1);
+  color:var(--text);
+  font-size:1.7rem;
+  line-height:1;
+}
+.side-tabs{
+  display:grid;
+  gap:9px;
+}
+.side-tab{
+  width:100%;
+  justify-content:flex-start;
+  text-align:left;
+  border-radius:18px;
+  padding:13px 14px;
+  font-size:1rem;
+}
+.side-tab.is-active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#13231f;
+  border-color:rgba(255,255,255,.4);
+}
+.tabs{
+  display:none!important;
+}
+
+/* Correction V1.9.14 — marées indicatives */
+.tide-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:center;
+  border:1px solid rgba(84,208,178,.28);
+  border-radius:16px;
+  padding:8px;
+  background:linear-gradient(135deg,rgba(84,208,178,.13),rgba(232,199,119,.08));
+}
+.tide-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  border-radius:999px;
+  padding:5px 8px;
+  background:rgba(255,255,255,.08);
+  color:#e8f4ef;
+  font-size:.76rem;
+  font-weight:900;
+}
+.tide-panel{
+  background:linear-gradient(145deg,rgba(84,208,178,.15),rgba(255,255,255,.06));
+}
+.tide-detail-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.tide-detail-grid div{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(255,255,255,.065);
+}
+.tide-detail-grid b{
+  display:block;
+  color:var(--primary-2);
+  font-size:1rem;
+  margin-bottom:4px;
+}
+.tide-detail-grid span{
+  color:var(--muted);
+  font-weight:850;
+  font-size:.82rem;
+}
+.tide-warning{
+  margin:12px 0 0;
+  color:#dceae6;
+  font-size:.9rem;
+  line-height:1.45;
+}
+
+/* Correction V1.9.14 — marée à l'arrivée estimée */
+.tide-arrival-box{
+  margin-top:14px;
+  border:1px solid rgba(232,199,119,.28);
+  border-radius:18px;
+  padding:12px;
+  background:rgba(232,199,119,.075);
+}
+.panel-title-row--mini{margin-bottom:8px}
+.panel-title-row--mini h4{margin:0;font-size:1rem;color:var(--primary-2)}
+.travel-time-control{
+  display:grid;
+  grid-template-columns:1fr 86px auto;
+  gap:8px;
+  align-items:center;
+  margin:10px 0 12px;
+  color:#dceae6;
+  font-weight:900;
+}
+.travel-time-control input{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:9px 10px;
+  background:rgba(255,255,255,.09);
+  color:var(--text);
+  font-weight:900;
+}
+.travel-time-control small{color:var(--muted);font-weight:900}
+.arrival-tide-result{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.arrival-tide-result span{
+  display:grid;
+  gap:3px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  background:rgba(255,255,255,.07);
+}
+.arrival-tide-result b{color:var(--primary-2)}
+.arrival-tide-result small{color:var(--muted);font-weight:850}
+
+/* Correction V1.9.14 — demande localisation au démarrage */
+.location-prompt{
+  position:fixed;
+  inset:0;
+  z-index:180;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(5px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+.location-prompt.is-visible{
+  opacity:1;
+  pointer-events:auto;
+}
+.location-prompt__card{
+  width:min(560px,100%);
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 0 0,rgba(84,208,178,.18),transparent 16rem),
+    linear-gradient(145deg,#061515,#08201f);
+  box-shadow:0 28px 80px rgba(0,0,0,.48);
+  padding:20px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:16px;
+}
+.location-prompt__icon{
+  width:58px;
+  height:58px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#061515;
+  font-size:1.7rem;
+  box-shadow:0 14px 36px rgba(0,0,0,.28);
+}
+.location-prompt__content h2{
+  margin:0 0 8px;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(1.8rem,6vw,2.6rem);
+}
+.location-prompt__content p{
+  margin:0;
+  color:#dceae6;
+  line-height:1.5;
+}
+.location-prompt__content small{
+  display:block;
+  margin-top:10px;
+  color:var(--muted);
+  font-weight:800;
+}
+.location-prompt__actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:16px;
+}
+
+/* Correction V1.9.14 — marée à l’arrivée sans temps par défaut */
+.arrival-tide-result--pending span{
+  grid-column:1/-1;
+}
+.route-time-used{
+  margin:10px 0 0;
+  color:#dceae6;
+  font-weight:850;
+  line-height:1.35;
+}
+.route-time-used b{
+  color:var(--primary-2);
+}
+
+/* V1.9.14 — api-maree.fr */
+.api-maree-status{
+  border:1px solid rgba(232,199,119,.32);
+  border-radius:18px;
+  padding:13px;
+  background:rgba(232,199,119,.1);
+  color:#f5df9e;
+  font-weight:900;
+  line-height:1.45;
+}
+.api-maree-status code{
+  color:#061515;
+  background:#f5df9e;
+  border-radius:8px;
+  padding:2px 6px;
+}
+.arrival-tide-result--api{
+  border-color:rgba(84,208,178,.42);
+  background:linear-gradient(135deg,rgba(84,208,178,.16),rgba(255,255,255,.07));
+}
+.api-maree-credit{
+  margin:9px 0 0;
+  color:var(--muted);
+  font-size:.84rem;
+  font-weight:850;
+  line-height:1.35;
+}
+.local-tide-details{
+  margin-top:12px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,255,255,.05);
+  padding:10px;
+}
+.local-tide-details summary{
+  cursor:pointer;
+  color:var(--primary-2);
+  font-weight:950;
+}
+.local-tide-details .tide-detail-grid{
+  margin-top:10px;
+}
+
+/* V1.9.14 — marées à la demande */
+.tide-demand-box{
+  display:grid;
+  gap:10px;
+  border:1px solid rgba(84,208,178,.28);
+  border-radius:18px;
+  padding:14px;
+  background:linear-gradient(135deg,rgba(84,208,178,.12),rgba(232,199,119,.08));
+  margin-bottom:12px;
+}
+.tide-demand-box p{
+  margin:0;
+  color:#dceae6;
+  line-height:1.45;
+  font-weight:800;
+}
+.tide-demand-box small{
+  color:var(--muted);
+  font-weight:850;
+}
+.tide-load-btn{
+  justify-self:start;
+}
+.tide-load-btn:disabled{
+  opacity:.72;
+  cursor:wait;
+}
+.tide-results-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:12px;
+}
+.tide-result-block{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  background:rgba(255,255,255,.055);
+}
+
+/* V1.9.14 — limitation marées par session */
+.tide-session-lock{
+  display:grid;
+  gap:5px;
+  border:1px solid rgba(232,199,119,.34);
+  border-radius:16px;
+  padding:12px;
+  background:rgba(232,199,119,.1);
+  color:#f5df9e;
+  line-height:1.4;
+}
+.tide-session-lock strong{
+  font-weight:950;
+}
+.tide-session-lock span{
+  color:#dceae6;
+  font-size:.9rem;
+  font-weight:800;
+}
+
+/* V1.9.14 — correction affichage croquis */
+.card-art::before,
+.dialog-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#f8f7f3,#d6d2c8);
+  z-index:0;
+}
+.place-image,
+.dialog-hero__img{
+  z-index:1;
+  opacity:1;
+  backface-visibility:hidden;
+  will-change:opacity;
+}
+.place-image.is-fallback-image,
+.dialog-hero__img.is-fallback-image{
+  object-fit:cover;
+  padding:24px;
+}
+.card-art .badge-row,
+.card-art .card-distance-chip{
+  z-index:3;
+}
+
+
+/*
+===============================================================================
+V2.1.6.11 — Signature copyright + crédit discret
+===============================================================================
+Ces règles ajoutent :
+- le petit symbole © dans la signature sous le titre ;
+- la mention discrète “Créé par Kevin Labens” en bas de l’application.
+===============================================================================
+*/
+
+.copyright-mark{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:1.05em;
+  height:1.05em;
+  margin-right:.28em;
+  border:1px solid rgba(255,255,255,.42);
+  border-radius:50%;
+  font-size:.72em;
+  line-height:1;
+  font-weight:900;
+  color:rgba(235,255,247,.92);
+  vertical-align:.08em;
+}
+
+.creator-credit{
+  width:100%;
+  text-align:center;
+  margin:18px auto 4px;
+  padding:6px 8px calc(8px + var(--safe-bottom, 0px));
+  font-size:.72rem;
+  line-height:1.25;
+  letter-spacing:.04em;
+  color:rgba(232,246,241,.58);
+  font-weight:700;
+  user-select:none;
+}
+
+
+
+/*
+===============================================================================
+BREIZH’ BALLADE — V2.1.6.11 couleurs joyeuses
+===============================================================================
+Objectif : remplacer l’ambiance sombre par une interface plus lumineuse,
+plus douce et plus agréable, sans toucher à la structure JavaScript.
+
+Palette utilisée :
+- fond sable clair / crème : plus chaleureux ;
+- vert mer : garde l’identité nature Bretagne ;
+- jaune soleil : donne de l’énergie aux boutons importants ;
+- corail discret : ajoute une touche vivante sans agresser les yeux.
+===============================================================================
+*/
+:root{
+  --bg:#fff8ed;
+  --bg-2:#eafff6;
+  --panel:rgba(255,255,255,.72);
+  --panel-strong:rgba(255,255,255,.92);
+  --text:#173832;
+  --muted:#5f7a72;
+  --line:rgba(25,92,78,.18);
+  --primary:#ffbd57;
+  --primary-2:#ffe58f;
+  --accent:#23b7a4;
+  --danger:#e85268;
+  --shadow:0 22px 64px rgba(23,87,75,.17);
+}
+
+body{
+  color:var(--text);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(35,183,164,.20),transparent 34rem),
+    radial-gradient(circle at 86% 8%,rgba(255,189,87,.28),transparent 30rem),
+    radial-gradient(circle at 52% 82%,rgba(255,126,94,.12),transparent 36rem),
+    linear-gradient(160deg,#fff8ed 0%,#eefcf3 46%,#e6f8ff 100%);
+}
+
+.app-shell{background:transparent}
+
+.hero{
+  border-color:rgba(25,92,78,.20);
+  box-shadow:0 24px 70px rgba(24,94,80,.18);
+}
+.hero__bg{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.88),rgba(244,255,248,.68)),
+    radial-gradient(circle at 74% 18%,rgba(255,189,87,.42),transparent 15rem),
+    radial-gradient(circle at 18% 82%,rgba(35,183,164,.32),transparent 17rem),
+    radial-gradient(circle at 95% 90%,rgba(255,126,94,.20),transparent 14rem),
+    url("../assets/logo/breizh-pattern.svg");
+  background-size:cover,auto,auto,auto,480px;
+}
+.hero__bg::after{
+  background:radial-gradient(ellipse at center,rgba(35,183,164,.18),transparent 70%);
+}
+.brand-logo{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,237,176,.44));
+  border-color:rgba(25,92,78,.18);
+  box-shadow:0 18px 44px rgba(24,94,80,.16);
+}
+h1{
+  color:#143a34;
+  text-shadow:0 3px 0 rgba(255,255,255,.72),0 14px 32px rgba(24,94,80,.16);
+}
+.eyebrow,
+.signature,
+.burger-current,
+.smart-card b,
+.info-callout strong,
+.source-grid b,
+.local-tide-details summary,
+.route-time-used b{
+  color:#0f8f7e;
+}
+.hero__subtitle,
+.place-card p,
+.big-copy p,
+.detail-panel p,
+.detail-panel li,
+.checklist label,
+.smart-card p,
+.info-callout span,
+.info-card-v19 p,
+.source-grid span,
+.location-prompt__content p,
+.route-time-used,
+.tide-demand-box p,
+.tide-session-lock span{
+  color:#385c54;
+}
+.hero-stats span,
+.burger-current{
+  border-color:rgba(25,92,78,.16);
+  background:rgba(255,255,255,.64);
+  color:#24534b;
+  box-shadow:0 10px 30px rgba(24,94,80,.10);
+}
+
+.panel,
+.place-card,
+.place-card--premium,
+.detail-panel,
+.smart-card,
+.around-card,
+.info-tile,
+.local-tide-details,
+.tide-result-block,
+.empty-state{
+  background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(255,250,235,.62));
+  border-color:rgba(25,92,78,.16);
+  box-shadow:0 18px 46px rgba(24,94,80,.11);
+  color:var(--text);
+}
+.panel,
+.search-panel{backdrop-filter:blur(14px)}
+.empty-state{color:var(--muted)}
+
+.btn,
+.icon-btn,
+.mini-action,
+.burger-btn,
+.side-menu__close,
+.tab,
+.chip,
+.around-card,
+.tide-load-btn{
+  background:rgba(255,255,255,.76);
+  color:#1b423b;
+  border-color:rgba(25,92,78,.18);
+  box-shadow:0 10px 26px rgba(24,94,80,.10);
+}
+.btn:hover,
+.icon-btn:hover,
+.mini-action:hover,
+.burger-btn:hover,
+.chip:hover,
+.around-card:hover{
+  background:rgba(255,255,255,.96);
+  border-color:rgba(35,183,164,.38);
+}
+.btn-primary,
+.route-cta,
+.side-tab.is-active,
+.tab.is-active,
+.mood-chip.is-active,
+.gps-copy-btn.is-copied,
+.mini-action.is-copied{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#18372f!important;
+  border-color:rgba(255,255,255,.7);
+  box-shadow:0 14px 34px rgba(255,168,64,.22);
+}
+.btn-ghost{background:rgba(255,255,255,.55)}
+
+.tabs,
+.burger-bar{
+  background:linear-gradient(180deg,rgba(255,248,237,.95),rgba(255,248,237,.78));
+  border-bottom:1px solid rgba(25,92,78,.08);
+}
+.side-menu{
+  background:
+    radial-gradient(circle at 0% 0%,rgba(255,189,87,.30),transparent 18rem),
+    radial-gradient(circle at 100% 70%,rgba(35,183,164,.22),transparent 20rem),
+    linear-gradient(160deg,#fff8ed,#eafff6);
+  border-right-color:rgba(25,92,78,.18);
+  box-shadow:28px 0 70px rgba(24,94,80,.20);
+  color:var(--text);
+}
+.drawer-overlay{background:rgba(35,70,63,.28)}
+.side-menu__header{border-bottom-color:rgba(25,92,78,.16)}
+.side-menu__header small{color:var(--muted)}
+.side-tab{color:#1b423b}
+
+.input-wrap,
+select,
+.note-box{
+  background:rgba(255,255,255,.78);
+  color:var(--text);
+  border-color:rgba(25,92,78,.18);
+}
+.input-wrap input{color:var(--text)}
+.input-wrap input::placeholder{color:#77958d}
+select option{background:#fff8ed;color:#173832}
+.note-box:focus{
+  border-color:rgba(35,183,164,.55);
+  box-shadow:0 0 0 3px rgba(35,183,164,.14);
+}
+.filter-grid label,
+.status-line,
+.meta,
+.card-kpis small,
+.card-distance-chip + span,
+.visual-line,
+.mood-label,
+.around-card span,
+.info-tile span,
+.gps-copy-hint,
+.api-maree-credit,
+.tide-demand-box small,
+.creator-credit{
+  color:var(--muted);
+}
+.chip.is-active,
+.icon-btn.is-on,
+.mini-action.is-on,
+.mini-action.primary{
+  background:rgba(35,183,164,.16);
+  border-color:rgba(35,183,164,.42);
+  color:#0f5e54;
+}
+
+.card-art,
+.place-card--premium .card-art,
+.dialog-hero{
+  background:linear-gradient(135deg,#fff3d5,#dffcf2);
+}
+.card-art::before,
+.dialog-hero::before{
+  background:linear-gradient(135deg,#fff3d5,#dffcf2);
+}
+.place-image,
+.place-card--premium .place-image,
+.dialog-hero__img{
+  filter:saturate(1.12) contrast(1.03) brightness(1.04);
+}
+.card-art::after{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(20,83,72,.34));
+}
+.badge,
+.card-distance-chip,
+.dialog-metrics span{
+  background:rgba(24,77,68,.74);
+  color:#fffdf6;
+  border-color:rgba(255,255,255,.42);
+}
+.meta--premium span,
+.card-kpis span,
+.visual-line span,
+.card-pill,
+.marker-chip,
+.premium-pill,
+.tide-strip span{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(25,92,78,.15);
+  color:#315f56;
+}
+.card-pill{border-color:rgba(35,183,164,.25)}
+
+.place-dialog{
+  background:#fffdf6;
+  color:var(--text);
+  border-color:rgba(25,92,78,.18);
+}
+.place-dialog::backdrop{background:rgba(38,70,64,.36);backdrop-filter:blur(10px)}
+.dialog-close{
+  background:#d9573f;
+  color:#fffdf6;
+  border-color:#b84232;
+  box-shadow:0 8px 22px rgba(87,39,31,.24);
+  font-weight:900;
+}
+.dialog-close:hover,
+.dialog-close:focus-visible{
+  background:#c94733;
+  color:#ffffff;
+  border-color:#9f3227;
+  outline:3px solid rgba(217,87,63,.24);
+  outline-offset:2px;
+}
+.dialog-hero::after,
+.dialog-hero--premium::after{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(18,67,59,.20) 42%,rgba(12,48,42,.70));
+}
+.dialog-title h2,
+.dialog-title p{
+  color:#fffdf6;
+  text-shadow:0 4px 18px rgba(10,38,33,.45);
+}
+.dialog-body,
+.dialog-body--premium{
+  background:linear-gradient(180deg,#fffdf6,#f2fff8);
+}
+.detail-panel--story,
+.detail-panel--source,
+.tide-panel,
+.arrival-tide-result--api{
+  background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(225,255,242,.72));
+}
+.detail-panel--warning{
+  border-color:rgba(232,82,104,.28);
+  background:rgba(255,237,232,.76);
+}
+.visual-audit-box,
+.info-callout,
+.api-maree-status,
+.tide-session-lock{
+  border-color:rgba(255,189,87,.42);
+  background:rgba(255,236,167,.44);
+  color:#7a5512;
+}
+.visual-audit-box strong,
+.api-maree-status,
+.tide-session-lock strong{
+  color:#8a6017;
+}
+.api-maree-status code{
+  color:#173832;
+  background:#fff4c1;
+}
+.tide-strip,
+.tide-demand-box{
+  border-color:rgba(35,183,164,.28);
+  background:linear-gradient(135deg,rgba(35,183,164,.14),rgba(255,189,87,.13));
+}
+.detail-map{background:#e9fff6}
+
+.location-prompt__card{
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(232,255,246,.86));
+  color:var(--text);
+  border-color:rgba(25,92,78,.18);
+  box-shadow:0 24px 70px rgba(24,94,80,.18);
+}
+.location-prompt__icon{box-shadow:0 14px 36px rgba(255,168,64,.24)}
+
+.offline-banner{
+  background:linear-gradient(135deg,#ffe58f,#ffbd57);
+  color:#18372f;
+  box-shadow:0 10px 35px rgba(255,168,64,.22);
+}
+.toast{
+  background:#173832;
+  color:#fffdf6;
+  box-shadow:0 14px 40px rgba(24,94,80,.26);
+}
+.copyright-mark{
+  border-color:rgba(15,143,126,.42);
+  color:#0f8f7e;
+}
+.creator-credit{color:rgba(31,82,73,.55)}
+
+
+/*
+===============================================================================
+BREIZH’ BALLADE — V2.1.6.11 correction lisibilité marées
+===============================================================================
+Objectif : garder la palette joyeuse de la V2.1.6.11, mais remplacer les textes de
+marées trop jaune clair par une couleur vert océan plus foncée et plus lisible.
+===============================================================================
+*/
+.tide-detail-grid b,
+.arrival-tide-result b,
+.panel-title-row--mini h4,
+.route-time-used b,
+.local-tide-details summary{
+  color:#0f6f63;
+}
+
+.tide-detail-grid div,
+.arrival-tide-result span,
+.local-tide-details,
+.tide-result-block{
+  border-color:rgba(15,111,99,.20);
+}
+
+.tide-panel,
+.arrival-tide-result--api{
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(224,255,244,.78));
+}
+
+.tide-strip span{
+  color:#174f47;
+  background:rgba(255,255,255,.82);
+  border-color:rgba(15,111,99,.18);
+}
+
+.tide-arrival-box,
+.tide-demand-box,
+.tide-strip{
+  border-color:rgba(35,183,164,.34);
+  background:linear-gradient(135deg,rgba(35,183,164,.16),rgba(255,189,87,.10));
+}
+
+.api-maree-status,
+.tide-session-lock{
+  color:#6b4810;
+  background:rgba(255,236,167,.52);
+  border-color:rgba(190,126,25,.34);
+}
+
+.api-maree-status,
+.tide-session-lock strong{
+  color:#6b4810;
+}
+
+
+/*
+===============================================================================
+BREIZH’ BALLADE — V2.1.6.11 correction croix de fermeture
+===============================================================================
+Objectif : rendre la croix de fermeture des fiches balade plus visible.
+Le corail/terracotta reste cohérent avec la palette joyeuse, mais se distingue
+nettement du fond clair et des visuels.
+===============================================================================
+*/
+
+
+/*
+===============================================================================
+V2.1.6.11 — Connexion / inscription / profil local
+===============================================================================
+Styles pour les nouvelles pages Compte et Profil.
+Ces écrans fonctionnent sans serveur en mode test local.
+===============================================================================
+*/
+
+.account-status-mini{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:800;
+}
+
+.auth-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+
+.auth-card,
+.auth-help-card,
+.profile-summary-card,
+.profile-form-card,
+.profile-stats-card{
+  display:grid;
+  gap:12px;
+}
+
+.auth-help-card{
+  grid-column:1/-1;
+}
+
+.auth-note{
+  color:var(--muted);
+  line-height:1.5;
+  margin:0;
+}
+
+.auth-form{
+  display:grid;
+  gap:11px;
+}
+
+.auth-form label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-weight:850;
+}
+
+.auth-form input,
+.auth-form select,
+.auth-form textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(255,255,255,.52);
+  color:var(--text);
+  padding:12px 13px;
+  outline:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.auth-form textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.auth-form input:focus,
+.auth-form select:focus,
+.auth-form textarea:focus{
+  border-color:rgba(40,144,123,.46);
+  box-shadow:0 0 0 3px rgba(40,144,123,.13);
+}
+
+.oauth-box{
+  display:grid;
+  gap:8px;
+  padding-top:4px;
+}
+
+.oauth-btn,
+.text-btn{
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.45);
+  color:var(--text);
+  padding:11px 13px;
+  font-weight:900;
+}
+
+.text-btn{
+  background:transparent;
+  border-color:transparent;
+  color:var(--accent);
+  text-align:left;
+  padding-left:0;
+}
+
+.oauth-box small{
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.auth-message{
+  display:none;
+  border-radius:18px;
+  padding:12px 14px;
+  font-weight:850;
+  line-height:1.45;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.42);
+}
+
+.auth-message.is-visible{
+  display:block;
+}
+
+.auth-message[data-type="success"]{
+  border-color:rgba(40,144,123,.35);
+  background:rgba(40,144,123,.13);
+}
+
+.auth-message[data-type="error"]{
+  border-color:rgba(217,87,63,.35);
+  background:rgba(217,87,63,.12);
+}
+
+.profile-layout{
+  display:grid;
+  gap:14px;
+}
+
+.profile-summary-card{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+}
+
+.profile-avatar{
+  width:86px;
+  height:86px;
+  border-radius:30px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#173832;
+  font-size:2rem;
+  font-weight:1000;
+  box-shadow:0 18px 42px rgba(80,50,15,.18);
+}
+
+.profile-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.profile-form{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.profile-wide{
+  grid-column:1/-1;
+}
+
+.profile-stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.profile-stats-grid div{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:13px 10px;
+  background:rgba(255,255,255,.42);
+  text-align:center;
+}
+
+.profile-stats-grid b{
+  display:block;
+  font-size:1.45rem;
+  color:var(--accent);
+}
+
+.profile-stats-grid span{
+  color:var(--muted);
+  font-size:.82rem;
+  font-weight:850;
+}
+
+@media (max-width:720px){
+  .auth-grid,
+  .profile-form{
+    grid-template-columns:1fr;
+  }
+
+  .profile-summary-card{
+    grid-template-columns:1fr;
+    text-align:center;
+    justify-items:center;
+  }
+
+  .profile-actions{
+    justify-content:center;
+  }
+
+  .profile-stats-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Pages Connexion / Inscription visibles
+===============================================================================
+Correction :
+- page Connexion séparée ;
+- page Inscription séparée ;
+- page Profil accessible ;
+- boutons rapides visibles sur l’accueil ;
+- menu latéral scrollable si l’écran est petit.
+===============================================================================
+*/
+
+.side-menu{
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+}
+
+.side-tabs{
+  overflow-y:auto !important;
+  max-height:calc(100vh - 135px) !important;
+  padding-bottom:calc(14px + var(--safe-bottom, 0px)) !important;
+}
+
+.account-quick-btn{
+  min-width:145px;
+}
+
+.auth-page-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
+  gap:14px;
+  align-items:start;
+}
+
+.auth-main-card{
+  min-height:100%;
+}
+
+.auth-switch-box{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:9px;
+  margin-top:5px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+
+.auth-switch-box p{
+  margin:0;
+  color:var(--muted);
+  font-weight:850;
+}
+
+#view-login,
+#view-signup,
+#view-profile{
+  scroll-margin-top:90px;
+}
+
+@media (max-width:760px){
+  .auth-page-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero-actions .account-quick-btn{
+    flex:1 1 145px;
+  }
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Accès obligatoire avant application
+===============================================================================
+L’utilisateur doit passer par Connexion ou Inscription avant d’accéder
+aux balades, carte, favoris et profil.
+===============================================================================
+*/
+
+.auth-required-banner{
+  display:grid;
+  gap:4px;
+  margin-bottom:14px;
+  padding:14px 16px;
+  border-radius:20px;
+  border:1px solid rgba(217,87,63,.25);
+  background:rgba(217,87,63,.10);
+  box-shadow:0 14px 34px rgba(87,39,31,.10);
+}
+
+.auth-required-banner strong{
+  color:#b84232;
+  font-size:1.02rem;
+}
+
+.auth-required-banner span{
+  color:var(--muted);
+  font-weight:850;
+  line-height:1.45;
+}
+
+.side-tab.is-locked{
+  opacity:.48;
+  filter:grayscale(.25);
+  position:relative;
+}
+
+.side-tab.is-locked::after{
+  content:"🔒";
+  margin-left:auto;
+}
+
+body.is-guest .account-quick-btn{
+  display:none;
+}
+
+body.is-guest #accountStatusMini{
+  color:#b84232;
+}
+
+body.is-guest .hero-actions .btn:not([data-account-go]){
+  pointer-events:none;
+  opacity:.55;
+}
+
+body.is-guest .profile-form-card{
+  opacity:.72;
+}
+
+@media (max-width:720px){
+  .auth-required-banner{
+    padding:12px 13px;
+  }
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Démarrage invité corrigé
+===============================================================================
+Sans compte connecté, l’application reste sur Connexion ou Inscription.
+Explorer devient la destination uniquement après inscription ou connexion réussie.
+===============================================================================
+*/
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Verrouillage visuel Explorer corrigé
+===============================================================================
+Explorer est bien marqué comme page privée. Connexion et Inscription restent publiques.
+===============================================================================
+*/
+.side-tab[data-access="private"].is-locked{opacity:.50;}
+.side-tab[data-access="private"].is-locked::after{content:"🔒";margin-left:auto;font-size:.95rem;}
+.side-tab[data-access="public"]::after{content:"";}
+
+
+/*
+===============================================================================
+V2.1.6.11 — Pages Connexion / Inscription propres
+===============================================================================
+Correction :
+Sans compte connecté, l’utilisateur ne doit voir que Connexion ou Inscription.
+Explorer, recherche, filtres, cartes, listes et autres vues privées sont masqués.
+===============================================================================
+*/
+
+body.is-guest .view{
+  display:none !important;
+}
+
+body.is-guest #view-login.is-visible,
+body.is-guest #view-signup.is-visible{
+  display:block !important;
+}
+
+body.is-guest .filters-panel,
+body.is-guest .search-panel,
+body.is-guest .results-panel,
+body.is-guest .map-panel,
+body.is-guest .collection-panel,
+body.is-guest .place-grid,
+body.is-guest .list-grid,
+body.is-guest [data-private-content="true"]{
+  display:none !important;
+}
+
+body.is-guest main{
+  padding-top:18px;
+}
+
+body.is-guest .app-header .account-status-mini{
+  color:#b84232;
+}
+
+body.is-guest .hero,
+body.is-guest .hero-card,
+body.is-guest .explore-grid{
+  display:none !important;
+}
+
+/* Sécurité visuelle : si Explorer reçoit par erreur la classe is-visible en mode invité, il reste invisible. */
+body.is-guest #view-home.is-visible,
+body.is-guest #view-explore.is-visible,
+body.is-guest #view-map.is-visible,
+body.is-guest #view-favorites.is-visible,
+body.is-guest #view-later.is-visible,
+body.is-guest #view-visited.is-visible,
+body.is-guest #view-about.is-visible,
+body.is-guest #view-profile.is-visible{
+  display:none !important;
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Menu Compte corrigé
+===============================================================================
+Correction :
+- le bouton Connexion est masqué une fois connecté ;
+- le bouton Inscription est masqué une fois connecté ;
+- le bouton Profil devient l’unique accès aux informations utilisateur.
+===============================================================================
+*/
+
+.side-tab[hidden]{
+  display:none !important;
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Texte Utilisation lisible
+===============================================================================
+Correction :
+Dans la page Infos, la section Utilisation avait un texte trop clair.
+Les listes et paragraphes des panneaux d’information reprennent maintenant
+une couleur foncée et lisible comme le reste de l’application.
+===============================================================================
+*/
+
+#view-about .panel,
+#view-about .info-card,
+#view-about .about-card{
+  color:var(--text);
+}
+
+#view-about .panel p,
+#view-about .panel li,
+#view-about .panel span,
+#view-about .about-list li{
+  color:var(--text) !important;
+  opacity:1 !important;
+}
+
+#view-about .panel li::marker,
+#view-about .about-list li::marker{
+  color:var(--accent) !important;
+  opacity:1 !important;
+}
+
+#view-about .panel .muted,
+#view-about .panel small{
+  color:var(--muted) !important;
+  opacity:1 !important;
+}
+
+#view-about h2,
+#view-about h3,
+#view-about h4,
+#view-about .eyebrow{
+  opacity:1 !important;
+}
+
+
+
+/*
+===============================================================================
+V2.1.6.11 — Crédit api-maree.fr visible
+===============================================================================
+Le crédit des données de marée est affiché près des blocs de marée
+et dans la page Infos.
+===============================================================================
+*/
+
+.tide-credit-visible{
+  margin:10px 0 0;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(40,144,123,.25);
+  background:rgba(40,144,123,.10);
+  color:var(--text) !important;
+  opacity:1 !important;
+  font-size:.82rem;
+  font-weight:850;
+  line-height:1.45;
+}
+
+.tide-credit-info-card p{
+  color:var(--text) !important;
+  opacity:1 !important;
+  line-height:1.55;
+}
+
+.tide-credit-info-card .muted{
+  color:var(--muted) !important;
+  opacity:1 !important;
+}
+
+
+/*
+===============================================================================
+V2.1.6.11 — Crédit marée non répétitif
+===============================================================================
+Le crédit api-maree.fr reste visible, mais une seule fois par bloc marée complet.
+===============================================================================
+*/
+
+.tide-credit-visible{
+  margin:12px 0 0 !important;
+  padding:9px 11px !important;
+  border-radius:13px !important;
+  border:1px solid rgba(40,144,123,.22) !important;
+  background:rgba(40,144,123,.08) !important;
+  color:var(--text) !important;
+  opacity:1 !important;
+  font-size:.76rem !important;
+  font-weight:750 !important;
+  line-height:1.4 !important;
+}
+
+.tide-credit-visible + .tide-credit-visible{
+  display:none !important;
+}
+
