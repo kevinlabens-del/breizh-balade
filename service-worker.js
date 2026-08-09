@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.3.4 — service worker léger */
-const CACHE_NAME='breizh-balade-v2.3.4-public';
+/* Breizh’ Balade V2.3.5 — service worker léger */
+const CACHE_NAME='breizh-balade-v2.3.5-public';
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./css/style.css','./css/map.css','./css/responsive.css','./js/app.js','./js/tide-credit.js','./js/storage.js','./js/auth-local.js','./js/analytics.js','./js/geolocation.js','./js/map.js','./data/places.js','./assets/logo/breizh-balade-logo.svg','./assets/logo/breizh-pattern.svg','./assets/icons/icon-192.png','./assets/icons/icon-512.png','./assets/places/coast.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('breizh-balade-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
