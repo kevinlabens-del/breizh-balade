@@ -1,4 +1,4 @@
-/* Breizh’ Balade — statistiques anonymes V2.3.4
+/* Breizh’ Balade — statistiques anonymes V2.3.5
    Aucun nom, email ou compte. Un identifiant aléatoire local distingue les visiteurs. */
 (() => {
   const ENDPOINT = 'https://kokmqcqlpkruoewhewcb.supabase.co/functions/v1/breizh-analytics';
@@ -66,6 +66,7 @@
   };
 
   const formatNumber = value => Number(value || 0).toLocaleString('fr-FR');
+  const plural = (value, singular, pluralForm) => Number(value || 0) === 1 ? singular : pluralForm;
 
   const createPublicStatsLine = () => {
     if (document.getElementById('publicVisitorStats')) return document.getElementById('publicVisitorStats');
@@ -102,7 +103,10 @@
       const response = await fetch(ENDPOINT, { cache: 'no-store' });
       if (!response.ok) throw new Error('stats');
       const data = await response.json();
-      line.textContent = `👥 ${formatNumber(data.total_visitors)} visiteurs depuis le lancement · 📅 ${formatNumber(data.visitors_today)} aujourd’hui · 🟢 ${formatNumber(data.online_now)} en ligne`;
+      const total = Number(data.total_visitors || 0);
+      const today = Number(data.visitors_today || 0);
+      const online = Number(data.online_now || 0);
+      line.textContent = `👥 ${formatNumber(total)} ${plural(total, 'visiteur', 'visiteurs')} depuis le lancement · 📅 ${formatNumber(today)} ${plural(today, 'visiteur', 'visiteurs')} aujourd’hui · 🟢 ${formatNumber(online)} ${plural(online, 'utilisateur', 'utilisateurs')} en ligne`;
       line.style.visibility = 'visible';
       line.style.opacity = '0.72';
     } catch (_) {
