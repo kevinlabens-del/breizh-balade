@@ -1,7 +1,31 @@
-/* Breizh’ Balade — accès public sans compte.
-   Ce fichier garde uniquement une petite couche de compatibilité pour l'ancien code
-   qui appelait window.BreizhAuth. Aucun compte, email ou mot de passe n'est utilisé. */
+/* Breizh’ Balade V2.4.0 — accès public sans compte.
+   Couche de compatibilité pour l'ancien code qui appelle window.BreizhAuth. */
 (() => {
+  const RELEASE_VERSION = '2.4.0';
+  const ANALYTICS_VERSION = '240';
+  const LOCATION_PROMPT_KEY = 'breizh.locationPromptDismissed';
+
+  const normalizeLegacyHash = () => {
+    const legacy = new Set(['login', 'signup', 'profile']);
+    const current = String(location.hash || '').replace('#', '');
+    if (legacy.has(current)) history.replaceState(null, '', `${location.pathname}${location.search}#explore`);
+  };
+
+  const normalizePublicMetadata = () => {
+    document.documentElement.dataset.bbVersion = RELEASE_VERSION;
+    document.title = 'Breizh’ Balade — 71 idées de sorties en Bretagne';
+    const description = document.querySelector('meta[name="description"]');
+    if (description) {
+      description.content = 'Breizh’ Balade — 71 idées de sorties en Bretagne : nature, patrimoine, plages, forêts, châteaux et balades.';
+    }
+  };
+
+  const disableAutomaticLocationPrompt = () => {
+    try {
+      if (!localStorage.getItem(LOCATION_PROMPT_KEY)) localStorage.setItem(LOCATION_PROMPT_KEY, 'yes');
+    } catch (_) {}
+  };
+
   const makePublic = () => {
     document.body?.classList.remove('is-guest');
     document.body?.classList.add('is-authenticated');
@@ -38,15 +62,22 @@
   const loadAnonymousAnalytics = () => {
     if (document.querySelector('script[data-breizh-analytics]')) return;
     const script = document.createElement('script');
-    script.src = 'js/analytics.js?v=235';
+    script.src = `js/analytics.js?v=${ANALYTICS_VERSION}`;
     script.async = true;
     script.dataset.breizhAnalytics = '1';
     document.head.appendChild(script);
   };
 
+  normalizeLegacyHash();
+  normalizePublicMetadata();
+  disableAutomaticLocationPrompt();
   makePublic();
   loadAnonymousAnalytics();
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', makePublic, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      normalizePublicMetadata();
+      makePublic();
+    }, { once: true });
   }
 })();
