@@ -1,106 +1,15 @@
-<!--
-===============================================================================
-BREIZH’ BALLADE — index.html
-===============================================================================
-
-Ce fichier est le point d’entrée de l’application.
-
-Pour comprendre simplement :
-- c’est lui que le navigateur ouvre en premier ;
-- il contient la structure visible de la page ;
-- il charge les fichiers CSS pour le design ;
-- il charge les fichiers JavaScript pour les fonctions ;
-- il contient les zones principales de l’application : accueil, filtres, liste,
-  carte, favoris, infos, menus, fenêtre de détail d’une balade.
-
-Important pour GitHub Pages :
-- index.html doit rester à la racine du projet ;
-- les dossiers css/, js/, data/ et assets/ doivent rester au même niveau ;
-- service-worker.js doit aussi rester à la racine pour gérer le cache.
-===============================================================================
--->
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="Breizh’ Balade">
-  <!-- Métadonnées générales : encodage, affichage mobile, titre, thème et fichiers liés. -->
   <meta charset="utf-8" />
-  <!-- viewport : indispensable pour que l’application s’adapte correctement aux téléphones. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <script>
-    (() => {
-      const root = document.documentElement;
-
-      const getViewportMeta = () => {
-        let meta = document.querySelector('meta[name="viewport"]');
-        if (!meta) {
-          meta = document.createElement('meta');
-          meta.name = 'viewport';
-          document.head.prepend(meta);
-        }
-        return meta;
-      };
-
-      const applyBreizhViewport = () => {
-        const ua = navigator.userAgent || '';
-        const coarse = matchMedia('(pointer: coarse)').matches;
-        const hoverNone = matchMedia('(hover: none)').matches;
-        const touch = navigator.maxTouchPoints || 0;
-        const sw = Math.min(screen?.width || innerWidth, screen?.height || innerHeight);
-        const lw = Math.max(screen?.width || innerWidth, screen?.height || innerHeight);
-        const vw = visualViewport?.width || innerWidth || document.documentElement.clientWidth || sw;
-        const vh = visualViewport?.height || innerHeight || document.documentElement.clientHeight || lw;
-        const isPhoneUA = /Android|iPhone|iPod|Mobile|IEMobile|Opera Mini/i.test(ua);
-        const isTabletUA = /iPad|Tablet|SM-T|Lenovo TB|Nexus 7|Nexus 10/i.test(ua);
-
-        // Règle principale : si c'est un écran tactile de téléphone, on force une vraie largeur CSS de téléphone.
-        // Ça corrige Chrome Android quand il donne une largeur de rendu trop grande.
-        const phone = !isTabletUA && (isPhoneUA || (coarse && hoverNone && touch > 0 && sw <= 540));
-        const tablet = !phone && (isTabletUA || (coarse && sw > 540 && sw <= 950));
-        const desktop = !phone && !tablet;
-        const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-
-        if (phone) {
-          const phoneWidth = Math.round(Math.max(360, Math.min(430, sw || 390)));
-          getViewportMeta().setAttribute('content', `width=${phoneWidth}, initial-scale=1, viewport-fit=cover`);
-        } else {
-          getViewportMeta().setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
-        }
-
-        root.classList.remove('bb-phone','bb-tablet','bb-desktop','bb-browser','bb-installed','bb-portrait','bb-landscape');
-        root.classList.add(phone ? 'bb-phone' : tablet ? 'bb-tablet' : 'bb-desktop');
-        root.classList.add(standalone ? 'bb-installed' : 'bb-browser');
-        root.classList.add(vh >= vw ? 'bb-portrait' : 'bb-landscape');
-        root.dataset.bbDevice = phone ? 'phone' : tablet ? 'tablet' : 'desktop';
-        root.dataset.bbMode = standalone ? 'installed' : 'browser';
-        root.style.setProperty('--vh', `${vh * 0.01}px`);
-        root.style.setProperty('--bb-screen-w', `${sw}px`);
-        root.style.setProperty('--bb-viewport-w', `${vw}px`);
-        if (document.body) {
-          document.body.dataset.bbDevice = root.dataset.bbDevice;
-          document.body.dataset.bbMode = root.dataset.bbMode;
-        }
-      };
-
-      applyBreizhViewport();
-      document.addEventListener('DOMContentLoaded', applyBreizhViewport);
-      addEventListener('resize', applyBreizhViewport, { passive:true });
-      addEventListener('orientationchange', () => setTimeout(applyBreizhViewport, 250), { passive:true });
-      if (visualViewport) visualViewport.addEventListener('resize', applyBreizhViewport, { passive:true });
-
-      // Nettoyage des anciens caches : important pour tester la vraie nouvelle version.
-      if ('caches' in window) {
-        caches.keys().then(keys => keys
-          .filter(key => key.includes('breizh-balade') && !key.includes('v2.3.0'))
-          .forEach(key => caches.delete(key))
-        ).catch(() => {});
-      }
-    })();
-  </script>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="Breizh’ Balade" />
+  <meta name="apple-mobile-web-app-title" content="Breizh’ Balade" />
   <meta name="theme-color" content="#fff8ed" />
+  <meta name="description" content="Breizh’ Balade — 71 idées de sorties en Bretagne : nature, patrimoine, plages, forêts, châteaux et balades." />
+
   <link rel="canonical" href="https://kevinlabens-del.github.io/breizh-balade/" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="fr_FR" />
@@ -109,50 +18,90 @@ Important pour GitHub Pages :
   <meta property="og:url" content="https://kevinlabens-del.github.io/breizh-balade/" />
   <meta property="og:image" content="https://kevinlabens-del.github.io/breizh-balade/assets/icons/icon-512.png" />
   <meta name="twitter:card" content="summary" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="description" content="Breizh’ Balade V2.3.0 — 71 lieux, balades nature, patrimoine, plages, forêts et découvertes en Bretagne.">
-  <title>Breizh’ Balade V2.3.0 — by cr3@tix dev’</title>
 
-  <!-- manifest : fichier qui permet au navigateur de proposer l’installation de l’application. -->
-  <link rel="manifest" href="manifest.webmanifest?v=230" />
-  <meta name="apple-mobile-web-app-title" content="Breizh’ Balade">
+  <title>Breizh’ Balade — 71 idées de sorties en Bretagne</title>
+
+  <link rel="manifest" href="manifest.webmanifest?v=240" />
   <link rel="icon" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=230" />
-  <link rel="stylesheet" href="css/map.css?v=230" />
-  <link rel="stylesheet" href="css/responsive.css?v=230" />
+  <link rel="stylesheet" href="css/style.css?v=240" />
+  <link rel="stylesheet" href="css/map.css?v=240" />
+  <link rel="stylesheet" href="css/responsive.css?v=240" />
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const viewport = document.querySelector('meta[name="viewport"]');
+
+      const applyBreizhViewport = () => {
+        const ua = navigator.userAgent || '';
+        const coarse = matchMedia('(pointer: coarse)').matches;
+        const hoverNone = matchMedia('(hover: none)').matches;
+        const touch = navigator.maxTouchPoints || 0;
+        const sw = Math.min(screen?.width || innerWidth, screen?.height || innerHeight);
+        const vw = visualViewport?.width || innerWidth || document.documentElement.clientWidth || sw;
+        const vh = visualViewport?.height || innerHeight || document.documentElement.clientHeight || 800;
+        const isPhoneUA = /Android|iPhone|iPod|Mobile|IEMobile|Opera Mini/i.test(ua);
+        const isTabletUA = /iPad|Tablet|SM-T|Lenovo TB|Nexus 7|Nexus 10/i.test(ua);
+        const phone = !isTabletUA && (isPhoneUA || (coarse && hoverNone && touch > 0 && sw <= 540));
+        const tablet = !phone && (isTabletUA || (coarse && sw > 540 && sw <= 950));
+        const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+        if (viewport) {
+          if (phone) {
+            const phoneWidth = Math.round(Math.max(360, Math.min(430, sw || 390)));
+            viewport.setAttribute('content', `width=${phoneWidth}, initial-scale=1, viewport-fit=cover`);
+          } else {
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+          }
+        }
+
+        root.classList.remove('bb-phone','bb-tablet','bb-desktop','bb-browser','bb-installed','bb-portrait','bb-landscape');
+        root.classList.add(phone ? 'bb-phone' : tablet ? 'bb-tablet' : 'bb-desktop');
+        root.classList.add(standalone ? 'bb-installed' : 'bb-browser');
+        root.classList.add(vh >= vw ? 'bb-portrait' : 'bb-landscape');
+        root.dataset.bbDevice = phone ? 'phone' : tablet ? 'tablet' : 'desktop';
+        root.dataset.bbMode = standalone ? 'installed' : 'browser';
+        root.dataset.bbVersion = '2.4.0';
+        root.style.setProperty('--vh', `${vh * 0.01}px`);
+        root.style.setProperty('--bb-screen-w', `${sw}px`);
+        root.style.setProperty('--bb-viewport-w', `${vw}px`);
+      };
+
+      applyBreizhViewport();
+      document.addEventListener('DOMContentLoaded', applyBreizhViewport);
+      addEventListener('resize', applyBreizhViewport, { passive:true });
+      addEventListener('orientationchange', () => setTimeout(applyBreizhViewport, 250), { passive:true });
+      if (visualViewport) visualViewport.addEventListener('resize', applyBreizhViewport, { passive:true });
+    })();
+  </script>
 </head>
-<body class="is-guest">
-  <!-- Bannière hors ligne : apparaît si le navigateur détecte une perte de connexion. -->
-  <div class="offline-banner" id="offlineBanner">⚠️ Mode hors ligne : les fiches restent disponibles, la carte peut être limitée.</div>
-  <!-- app-shell : grand conteneur qui limite et centre toute l’interface de l’application. -->
+<body class="is-authenticated">
+  <div class="offline-banner" id="offlineBanner">⚠️ Mode hors ligne : les fiches enregistrées restent disponibles, la carte peut être limitée.</div>
+
   <div class="app-shell">
-    <!-- HERO / ACCUEIL : zone visuelle principale avec logo, titre et boutons rapides. -->
     <header class="hero" id="top">
       <div class="hero__bg"></div>
       <div class="hero__content">
-        <!-- Bloc identité : logo + texte de marque + signature. -->
         <div class="brand-lockup" aria-label="Logo Breizh Balade">
-          <img class="brand-logo" src="assets/logo/breizh-balade-icon-v12.png" alt="Logo Breizh’ Balade : hermine blanche et symbole breton noir" />
+          <img class="brand-logo" src="assets/logo/breizh-balade-icon-v12.png" alt="Logo Breizh’ Balade" />
           <div>
             <p class="eyebrow">Nature & patrimoine</p>
             <h1>Breizh’ Balade</h1>
             <p class="signature"><span class="copyright-mark" aria-label="Copyright">©</span> by cr3@tix dev’</p>
           </div>
         </div>
+
         <p class="hero__subtitle">Trouve une plage, une forêt, un monument, une légende ou une vraie sortie bretonne autour de toi.</p>
+
         <div class="hero-stats" aria-label="Résumé Breizh Balade">
           <span id="heroPlacesCount">71 lieux disponibles</span>
         </div>
-        <!-- Boutons principaux : localisation autour de moi et sortie surprise. -->
+
         <div class="hero-actions">
           <button class="btn btn-primary" id="locateBtn" type="button">📍 Autour de moi</button>
           <button class="btn btn-ghost" id="randomBtn" type="button">🎲 Sortie surprise</button>
-
-          <button class="btn btn-ghost account-quick-btn" type="button" data-account-go="login">🔐 Connexion</button>
-          <button class="btn btn-ghost account-quick-btn" type="button" data-account-go="signup">📝 Inscription</button>
-
           <button class="btn btn-ghost hidden" id="installBtn" type="button">⬇️ Installer</button>
         </div>
       </div>
@@ -172,7 +121,7 @@ Important pour GitHub Pages :
         <div>
           <strong>Breizh’ Balade</strong>
           <small>Navigation</small>
-          <small class="account-status-mini" id="accountStatusMini">Navigation libre • compte optionnel</small>
+          <small class="account-status-mini" id="accountStatusMini">Accès public • données personnelles enregistrées sur cet appareil</small>
         </div>
         <button class="side-menu__close" id="menuClose" type="button" aria-label="Fermer le menu">×</button>
       </div>
@@ -180,22 +129,18 @@ Important pour GitHub Pages :
       <nav class="side-tabs" aria-label="Menu latéral Breizh Balade">
         <button class="tab side-tab is-active" data-view="explore" data-access="public">🏞️ Explorer</button>
         <button class="tab side-tab" data-view="map" data-access="public">🗺️ Carte</button>
-        <button class="tab side-tab" data-view="favorites" data-access="private">❤️ Favoris</button>
-        <button class="tab side-tab" data-view="later" data-access="private">📌 À visiter</button>
-        <button class="tab side-tab" data-view="visited" data-access="private">✅ Visités</button>
+        <button class="tab side-tab" data-view="favorites" data-access="public">❤️ Favoris</button>
+        <button class="tab side-tab" data-view="later" data-access="public">📌 À visiter</button>
+        <button class="tab side-tab" data-view="visited" data-access="public">✅ Visités</button>
         <button class="tab side-tab" data-view="about" data-access="public">ℹ️ Infos</button>
-        <button class="tab side-tab" data-view="login" id="accountMenuTab" data-access="public">🔐 Connexion</button>
-        <button class="tab side-tab" data-view="signup" id="signupMenuTab" data-access="public">📝 Inscription</button>
-        <button class="tab side-tab" data-view="profile" id="profileMenuTab" data-access="private">🪪 Profil</button>
       </nav>
     </aside>
 
-    <!-- main : contenu principal qui change selon l’onglet sélectionné. -->
-      <main>
+    <main>
       <section class="panel search-panel" aria-label="Recherche et filtres">
         <div class="search-row">
           <label class="input-wrap" for="searchInput">
-            <span>🔎</span>
+            <span aria-hidden="true">🔎</span>
             <input id="searchInput" type="search" placeholder="Rechercher une balade, une ville, une ambiance…" autocomplete="off" />
           </label>
           <select id="sortSelect" aria-label="Trier les lieux">
@@ -207,20 +152,13 @@ Important pour GitHub Pages :
         </div>
 
         <div class="filter-grid">
-          <label>
-            Catégorie
-            <select id="categoryFilter">
-              <option value="all">Toutes</option>
-            </select>
+          <label>Catégorie
+            <select id="categoryFilter"><option value="all">Toutes</option></select>
           </label>
-          <label>
-            Département
-            <select id="departmentFilter">
-              <option value="all">Tous</option>
-            </select>
+          <label>Département
+            <select id="departmentFilter"><option value="all">Tous</option></select>
           </label>
-          <label>
-            Distance max
+          <label>Distance max
             <select id="radiusFilter">
               <option value="all">Peu importe</option>
               <option value="5">5 km</option>
@@ -230,8 +168,7 @@ Important pour GitHub Pages :
               <option value="100">100 km</option>
             </select>
           </label>
-          <label>
-            Difficulté
+          <label>Difficulté
             <select id="difficultyFilter">
               <option value="all">Toutes</option>
               <option value="facile">Facile</option>
@@ -242,22 +179,22 @@ Important pour GitHub Pages :
         </div>
 
         <div class="quick-filters" aria-label="Filtres rapides">
-          <button class="chip" data-quick="familyFriendly">👨‍👩‍👧 Famille</button>
-          <button class="chip" data-quick="dogFriendly">🐾 Chien OK</button>
-          <button class="chip" data-quick="strollerFriendly">♿ Facile accès</button>
-          <button class="chip" data-quick="parking">🅿️ Parking</button>
-          <button class="chip" data-quick="photoSpot">📸 Photo</button>
-          <button class="chip" data-quick="tideWatch">🌊 Marée</button>
+          <button class="chip" data-quick="familyFriendly" type="button">👨‍👩‍👧 Famille</button>
+          <button class="chip" data-quick="dogFriendly" type="button">🐾 Chien OK</button>
+          <button class="chip" data-quick="strollerFriendly" type="button">♿ Facile accès</button>
+          <button class="chip" data-quick="parking" type="button">🅿️ Parking</button>
+          <button class="chip" data-quick="photoSpot" type="button">📸 Photo</button>
+          <button class="chip" data-quick="tideWatch" type="button">🌊 Littoral</button>
         </div>
 
         <div class="mood-filters" aria-label="Ambiances rapides">
           <span class="mood-label">Ambiance :</span>
-          <button class="chip mood-chip" data-mood="sauvage">🌊 Sauvage</button>
-          <button class="chip mood-chip" data-mood="famille">👨‍👩‍👧 Famille</button>
-          <button class="chip mood-chip" data-mood="patrimoine">🏰 Patrimoine</button>
-          <button class="chip mood-chip" data-mood="photo">📸 Photo</button>
-          <button class="chip mood-chip" data-mood="mystere">🧙 Mystère</button>
-          <button class="chip mood-chip" data-mood="pluie">🌧️ Jour de pluie</button>
+          <button class="chip mood-chip" data-mood="sauvage" type="button">🌊 Sauvage</button>
+          <button class="chip mood-chip" data-mood="famille" type="button">👨‍👩‍👧 Famille</button>
+          <button class="chip mood-chip" data-mood="patrimoine" type="button">🏰 Patrimoine</button>
+          <button class="chip mood-chip" data-mood="photo" type="button">📸 Photo</button>
+          <button class="chip mood-chip" data-mood="mystere" type="button">🧙 Mystère</button>
+          <button class="chip mood-chip" data-mood="pluie" type="button">🌧️ Jour de pluie</button>
         </div>
 
         <p class="status-line" id="statusLine">Chargement des lieux…</p>
@@ -265,10 +202,7 @@ Important pour GitHub Pages :
 
       <section class="view is-visible" id="view-explore">
         <div class="section-title">
-          <div>
-            <p class="eyebrow">Sélection Bretagne</p>
-            <h2>Lieux à découvrir</h2>
-          </div>
+          <div><p class="eyebrow">Sélection Bretagne</p><h2>Lieux à découvrir</h2></div>
           <button class="btn btn-small" id="resetFiltersBtn" type="button">Réinitialiser</button>
         </div>
         <div class="cards-grid" id="placesList"></div>
@@ -276,13 +210,10 @@ Important pour GitHub Pages :
 
       <section class="view" id="view-map">
         <div class="section-title">
-          <div>
-            <p class="eyebrow">Carte interactive</p>
-            <h2>Voir toutes les balades sur la carte</h2>
-          </div>
+          <div><p class="eyebrow">Carte interactive</p><h2>Voir les balades sur la carte</h2></div>
           <button class="btn btn-small" id="fitMapBtn" type="button">Vue Bretagne</button>
         </div>
-        <p class="map-overview-note">🗺️ La carte affiche les 71 balades sur l’ensemble de la Bretagne.</p>
+        <p class="map-overview-note">🗺️ La carte affiche les balades disponibles sur l’ensemble de la Bretagne.</p>
         <div class="map-shell">
           <div id="map" role="application" aria-label="Carte des lieux Breizh Balade"></div>
           <div class="map-fallback" id="mapFallback">Carte en chargement…</div>
@@ -290,32 +221,17 @@ Important pour GitHub Pages :
       </section>
 
       <section class="view" id="view-favorites">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Ta sélection</p>
-            <h2>Favoris</h2>
-          </div>
-        </div>
+        <div class="section-title"><div><p class="eyebrow">Ta sélection</p><h2>Favoris</h2></div></div>
         <div class="cards-grid" id="favoritesList"></div>
       </section>
 
       <section class="view" id="view-later">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Carnet de route</p>
-            <h2>À visiter plus tard</h2>
-          </div>
-        </div>
+        <div class="section-title"><div><p class="eyebrow">Carnet de route</p><h2>À visiter plus tard</h2></div></div>
         <div class="cards-grid" id="laterList"></div>
       </section>
 
       <section class="view" id="view-visited">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Exploration</p>
-            <h2>Lieux visités</h2>
-          </div>
-        </div>
+        <div class="section-title"><div><p class="eyebrow">Exploration</p><h2>Lieux visités</h2></div></div>
         <div class="cards-grid" id="visitedList"></div>
       </section>
 
@@ -325,7 +241,7 @@ Important pour GitHub Pages :
             <p class="eyebrow">Infos utiles</p>
             <h2>Breizh’ Balade</h2>
             <p><strong>Breizh’ Balade</strong> aide à trouver facilement une sortie en Bretagne selon ton envie du moment : mer, forêt, patrimoine, village, lac, île, spot photo ou lieu plus sauvage.</p>
-            <p>Chaque fiche rassemble les informations importantes pour préparer ta balade : localisation, distance possible, durée estimée, niveau, points à voir, conseils pratiques, itinéraire et notes personnelles.</p>
+            <p>Chaque fiche rassemble localisation, durée, niveau, points à voir, conseils pratiques, itinéraire et listes personnelles.</p>
           </article>
 
           <article class="panel info-card-v19 about-use-card">
@@ -334,9 +250,9 @@ Important pour GitHub Pages :
             <ul class="about-list">
               <li>chercher une balade par lieu, ville, ambiance ou catégorie ;</li>
               <li>filtrer selon la distance, le niveau ou le département ;</li>
-              <li>ouvrir l’itinéraire directement dans Google Maps ;</li>
-              <li>garder des favoris, des lieux à visiter et des lieux déjà visités ;</li>
-              <li>ajouter une note personnelle sur une balade.</li>
+              <li>ouvrir l’itinéraire dans Google Maps ;</li>
+              <li>garder des favoris et des listes sur cet appareil ;</li>
+              <li>ajouter une note personnelle à une balade.</li>
             </ul>
           </article>
 
@@ -346,253 +262,41 @@ Important pour GitHub Pages :
             <label><input type="checkbox" /> Batterie chargée + itinéraire prêt</label>
             <label><input type="checkbox" /> Eau, veste, chaussures adaptées</label>
             <label><input type="checkbox" /> Météo vérifiée</label>
-            <label><input type="checkbox" /> Marée vérifiée si littoral</label>
+            <label><input type="checkbox" /> Marée officielle vérifiée si littoral</label>
             <label><input type="checkbox" /> Distance et durée adaptées au groupe</label>
             <label><input type="checkbox" /> Respect des sentiers et zones protégées</label>
+          </article>
+
+          <article class="panel info-card-v19 about-advice-card tide-credit-info-card">
+            <p class="eyebrow">Marées</p>
+            <h3>Données de marée</h3>
+            <p>Les estimations automatiques sont temporairement désactivées tant qu’une source fiable n’est pas intégrée.</p>
+            <p class="muted">Pour toute sortie littorale, vérifie les horaires officiels et les consignes locales avant de partir.</p>
+          </article>
+
+          <article class="panel info-card-v19 about-advice-card">
+            <p class="eyebrow">Confidentialité</p>
+            <h3>Statistiques anonymes</h3>
+            <p>Le compteur de fréquentation utilise un identifiant aléatoire enregistré dans le navigateur et un identifiant de session. Aucun nom, email ou compte n’est demandé.</p>
+            <p class="muted">Les favoris, notes et listes restent enregistrés localement sur cet appareil.</p>
           </article>
 
           <article class="panel info-card-v19 about-advice-card">
             <p class="eyebrow">Bon à savoir</p>
             <h3>Prépare toujours ta sortie</h3>
-            <p>Les informations aident à choisir une balade, mais la météo, l’état des sentiers, les accès, les horaires et les marées peuvent changer. Avant de partir, vérifie les conditions réelles du jour.</p>
+            <p>La météo, l’état des sentiers, les accès, les horaires et les conditions littorales peuvent changer. Vérifie les informations importantes avant de partir.</p>
           </article>
         </div>
       </section>
-
-      <section class="view" id="view-login">
-        <div class="auth-required-banner">
-          <strong>Compte optionnel</strong>
-          <span>Explorer et la carte sont accessibles sans compte. Connecte-toi seulement pour enregistrer tes favoris, notes et listes personnelles.</span>
-        </div>
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Compte local</p>
-            <h2>Connexion</h2>
-          </div>
-        </div>
-
-        <div class="auth-page-grid">
-          <article class="panel auth-card auth-main-card">
-            <p class="eyebrow">Se connecter</p>
-            <h3>J’ai déjà un compte local</h3>
-            <p class="auth-note">Compte local facultatif : il sert uniquement à conserver tes favoris, notes et listes sur cet appareil et dans ce navigateur.</p>
-
-            <form id="loginForm" class="auth-form">
-              <label>
-                Email
-                <input type="email" id="loginEmail" autocomplete="email" placeholder="exemple@mail.fr" required />
-              </label>
-              <label>
-                Mot de passe
-                <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Ton mot de passe local" required />
-              </label>
-              <button class="btn btn-primary" type="submit">Se connecter</button>
-              <button class="text-btn" id="forgotPasswordBtn" type="button">Mot de passe oublié ?</button>
-            </form>
-
-            <div class="auth-switch-box">
-              <p>Pas encore de compte ?</p>
-              <button class="btn btn-ghost" type="button" data-account-go="signup">Créer un compte local</button>
-            </div>
-          </article>
-
-          <article class="panel auth-card">
-            <p class="eyebrow">Connexion rapide</p>
-            <h3>Google / Facebook</h3>
-            <div class="oauth-box">
-              <button class="oauth-btn" type="button" disabled aria-disabled="true">🔴 Google — bientôt disponible</button>
-              <button class="oauth-btn" type="button" disabled aria-disabled="true">🔵 Facebook — bientôt disponible</button>
-              <small>Connexion Google/Facebook non disponible dans cette version.</small>
-            </div>
-          </article>
-
-          <article class="panel auth-help-card">
-            <p class="eyebrow">Aide</p>
-            <h3>Mot de passe oublié</h3>
-            <p class="auth-note">Sans serveur, l’application ne peut pas envoyer d’email. Le bouton affiche donc une aide locale de test.</p>
-            <div class="auth-message" id="authMessage" role="status" aria-live="polite"></div>
-          </article>
-        </div>
-      </section>
-
-      
-        <article class="panel tide-credit-info-card">
-          <p class="eyebrow">Sources marées</p>
-          <h3>Données de marée</h3>
-          <p>Estimation locale indicative des marées. Vérifie toujours les horaires officiels avant une sortie littorale.</p>
-          <p class="muted">Ces informations sont fournies à titre indicatif et ne remplacent pas les consignes officielles de sécurité maritime.</p>
-        </article>
-
-<section class="view" id="view-signup">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Compte local</p>
-            <h2>Inscription</h2>
-          </div>
-        </div>
-
-        <div class="auth-page-grid">
-          <article class="panel auth-card auth-main-card">
-            <p class="eyebrow">Créer un compte</p>
-            <h3>Nouveau compte local</h3>
-            <p class="auth-note">Ce compte sert à tester le futur espace utilisateur. Il n’est pas synchronisé entre plusieurs appareils tant qu’il n’y a pas de serveur.</p>
-
-            <form id="signupForm" class="auth-form">
-              <label>
-                Pseudo
-                <input type="text" id="signupPseudo" autocomplete="nickname" placeholder="Ex : TyKev" required />
-              </label>
-              <label>
-                Email
-                <input type="email" id="signupEmail" autocomplete="email" placeholder="exemple@mail.fr" required />
-              </label>
-              <label>
-                Mot de passe
-                <input type="password" id="signupPassword" autocomplete="new-password" placeholder="8 caractères minimum" minlength="8" required />
-              </label>
-              <label>
-                Confirmer le mot de passe
-                <input type="password" id="signupPasswordConfirm" autocomplete="new-password" placeholder="Répète le mot de passe" minlength="8" required />
-              </label>
-              <button class="btn btn-primary" type="submit">Créer mon compte local</button>
-            </form>
-
-            <div class="auth-switch-box">
-              <p>J’ai déjà un compte local.</p>
-              <button class="btn btn-ghost" type="button" data-account-go="login">Aller à la connexion</button>
-            </div>
-          </article>
-
-          <article class="panel auth-help-card">
-            <p class="eyebrow">Important</p>
-            <h3>Ce qui est simulé pour l’instant</h3>
-            <ul class="about-list">
-              <li>le compte est enregistré seulement dans ce navigateur ;</li>
-              <li>Google et Facebook sont uniquement des boutons de préparation ;</li>
-              <li>le mot de passe oublié ne peut pas envoyer d’email sans serveur ;</li>
-              <li>la vraie synchronisation multi-utilisateur viendra avec un backend.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="view" id="view-profile">
-        <div class="section-title">
-          <div>
-            <p class="eyebrow">Mon espace</p>
-            <h2>Profil utilisateur</h2>
-          </div>
-        </div>
-
-        <div class="profile-layout">
-          <article class="panel profile-summary-card" id="profileSummary">
-            <div class="profile-avatar" id="profileAvatar">?</div>
-            <div>
-              <p class="eyebrow">Compte local</p>
-              <h3 id="profileTitle">Aucun compte connecté</h3>
-              <p id="profileSubtitle">Connecte-toi ou crée un compte local pour tester le futur profil utilisateur.</p>
-              <div class="profile-actions">
-                <button class="btn btn-primary" type="button" data-account-go="login">Aller à la connexion</button>
-                <button class="btn btn-ghost" type="button" data-account-go="signup">Créer un compte</button>
-                <button class="btn btn-ghost" id="logoutBtn" type="button" hidden>Se déconnecter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel profile-form-card">
-            <p class="eyebrow">Informations profil</p>
-            <h3>Compléter mon profil</h3>
-            <form id="profileForm" class="auth-form profile-form">
-              <label>
-                Pseudo
-                <input type="text" id="profilePseudo" placeholder="Ton pseudo" />
-              </label>
-              <label>
-                Prénom
-                <input type="text" id="profileFirstname" placeholder="Ton prénom" />
-              </label>
-              <label>
-                Ville
-                <input type="text" id="profileCity" placeholder="Ta ville" />
-              </label>
-              <label>
-                Département préféré
-                <select id="profileDepartment">
-                  <option value="">À choisir plus tard</option>
-                  <option value="Finistère">Finistère</option>
-                  <option value="Côtes-d’Armor">Côtes-d’Armor</option>
-                  <option value="Morbihan">Morbihan</option>
-                  <option value="Ille-et-Vilaine">Ille-et-Vilaine</option>
-                  <option value="Loire-Atlantique">Loire-Atlantique</option>
-                </select>
-              </label>
-              <label>
-                Style de sortie préféré
-                <select id="profileStyle">
-                  <option value="">À choisir plus tard</option>
-                  <option value="balade-tranquille">Balade tranquille</option>
-                  <option value="famille">Famille</option>
-                  <option value="photo">Photo</option>
-                  <option value="patrimoine">Patrimoine</option>
-                  <option value="velo">Vélo / voie verte</option>
-                  <option value="rando">Randonnée</option>
-                </select>
-              </label>
-              <label>
-                Distance préférée
-                <select id="profileDistance">
-                  <option value="">À choisir plus tard</option>
-                  <option value="10">Moins de 10 km</option>
-                  <option value="25">Moins de 25 km</option>
-                  <option value="50">Moins de 50 km</option>
-                  <option value="100">Moins de 100 km</option>
-                  <option value="all">Peu importe</option>
-                </select>
-              </label>
-              <label>
-                Niveau préféré
-                <select id="profileLevel">
-                  <option value="">À choisir plus tard</option>
-                  <option value="facile">Facile</option>
-                  <option value="moyen">Moyen</option>
-                  <option value="sportif">Sportif</option>
-                </select>
-              </label>
-              <label class="profile-wide">
-                À propos / notes personnelles
-                <textarea id="profileBio" placeholder="Ex : j’aime les sorties photo, les villages anciens, les balades pas trop longues…"></textarea>
-              </label>
-              <button class="btn btn-primary" type="submit">Sauvegarder mon profil</button>
-            </form>
-          </article>
-
-          <article class="panel profile-stats-card">
-            <p class="eyebrow">Mes données locales</p>
-            <h3>Résumé</h3>
-            <div class="profile-stats-grid">
-              <div><b id="statFavorites">0</b><span>Favoris</span></div>
-              <div><b id="statLater">0</b><span>À visiter</span></div>
-              <div><b id="statVisited">0</b><span>Visités</span></div>
-              <div><b>71</b><span>Lieux disponibles</span></div>
-            </div>
-            <p class="auth-note">Ces informations restent sur cet appareil tant qu’aucun serveur n’est configuré.</p>
-          </article>
-        </div>
-      </section>
-
-</main>
+    </main>
 
     <footer class="footer">
       <span>Breizh’ Balade</span>
       <span>Nature · Patrimoine · Bretagne</span>
       <span>by cr3@tix dev’</span>
-    
-      <div class="creator-credit" aria-label="Créateur de l’application">
-        Créé par Kevin Labens
-      </div>
+      <div class="creator-credit" aria-label="Créateur de l’application">Créé par Kevin Labens</div>
     </footer>
   </div>
-
 
   <div class="location-prompt" id="locationPrompt" hidden role="dialog" aria-modal="true" aria-labelledby="locationPromptTitle">
     <div class="location-prompt__card">
@@ -600,12 +304,11 @@ Important pour GitHub Pages :
       <div class="location-prompt__content">
         <p class="eyebrow">Localisation</p>
         <h2 id="locationPromptTitle">Activer ta position ?</h2>
-        <p>Breizh’ Balade peut calculer les distances, estimer ton temps de route et afficher la marée probable à ton arrivée.</p>
+        <p>Ta position sert uniquement à classer les balades les plus proches et à calculer les distances.</p>
         <div class="location-prompt__actions">
           <button class="btn btn-primary" id="enableLocationStart" type="button">📍 Activer la localisation</button>
           <button class="btn btn-ghost" id="skipLocationStart" type="button">Plus tard</button>
         </div>
-        <small>Tu peux aussi l’activer ensuite avec le bouton “Autour de moi”.</small>
       </div>
     </div>
   </div>
@@ -618,18 +321,12 @@ Important pour GitHub Pages :
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <!-- Données des lieux : doit être chargé avant app.js pour que l’application connaisse les balades. -->
-  <script src="data/places.js?v=230"></script>
-  <!-- Stockage local : favoris, lieux à visiter, lieux visités. -->
-  <script src="js/storage.js?v=230"></script>
-  <!-- Géolocalisation : position utilisateur + calcul des distances. -->
-  <script src="js/geolocation.js?v=230"></script>
-  <!-- Cartes : affichage Leaflet / OpenStreetMap. -->
-  <script src="js/map.js?v=230"></script>
-  <!-- Compte local : inscription, connexion et profil sans serveur pour la V2.3.0. -->
-  <script src="js/auth-local.js?v=230"></script>
-  <!-- Logique principale : navigation, filtres, fiches, boutons et rendu de l’application. -->
-  <script src="js/app.js?v=230"></script>
-  <script src="js/tide-credit.js?v=230"></script>
+  <script src="data/places.js?v=240"></script>
+  <script src="js/storage.js?v=240"></script>
+  <script src="js/geolocation.js?v=240"></script>
+  <script src="js/map.js?v=240"></script>
+  <script src="js/auth-local.js?v=240"></script>
+  <script src="js/app.js?v=240"></script>
+  <script src="js/tide-credit.js?v=240"></script>
 </body>
 </html>
