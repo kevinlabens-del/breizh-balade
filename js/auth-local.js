@@ -30,6 +30,24 @@
     try { sessionStorage.removeItem('breizh.tideRequests.thisSession'); } catch (_) {}
   };
 
+  const protectTideButtonUntilLiveModule = () => {
+    document.addEventListener('click', event => {
+      const button = event.target.closest?.('[data-load-tides]');
+      if (!button || window.__BREIZH_LIVE_TIDES_LOADED__) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      const original = button.textContent;
+      button.textContent = '🌊 Module marées en chargement…';
+      button.disabled = true;
+      setTimeout(() => {
+        if (!button.isConnected) return;
+        button.disabled = false;
+        button.textContent = window.__BREIZH_LIVE_TIDES_LOADED__ ? '🌊 Estimer les marées' : (original || '🌊 Estimer les marées');
+      }, 700);
+    }, true);
+  };
+
   const makePublic = () => {
     document.body?.classList.remove('is-guest');
     document.body?.classList.add('is-authenticated');
@@ -81,6 +99,7 @@
   normalizePublicMetadata();
   disableAutomaticLocationPrompt();
   clearLegacyTideSessionLock();
+  protectTideButtonUntilLiveModule();
   makePublic();
   loadPublicServices();
 
