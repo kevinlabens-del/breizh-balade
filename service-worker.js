@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.4.1 — service worker */
-const CACHE_NAME = 'breizh-balade-v2.4.1-public';
+/* Breizh’ Balade V2.4.2 — service worker */
+const CACHE_NAME = 'breizh-balade-v2.4.2-public';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const APP_SHELL = [
   './css/map.css',
   './css/responsive.css',
   './js/app.js',
+  './js/tides-live.js',
   './js/tide-credit.js',
   './js/storage.js',
   './js/auth-local.js',
