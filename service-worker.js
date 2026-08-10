@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.4.3 — service worker stable */
-const CACHE_NAME = 'breizh-balade-v2.4.3-public';
+/* Breizh’ Balade V2.4.4 — service worker stable */
+const CACHE_NAME = 'breizh-balade-v2.4.4-public';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const APP_SHELL = [
   './css/responsive.css',
   './js/app.js',
   './js/storage.js',
-  './js/geolocation.js',
+  './js/geolocation.js?v=244',
   './js/map.js',
   './js/auth-local.js?v=243',
   './js/tides-live.js?v=243',
@@ -103,6 +103,10 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  if (url.pathname.endsWith('/js/geolocation.js')) {
+    event.respondWith(hotfixScript(request, new URL('./js/geolocation.js?v=244', self.location.href).href));
+    return;
+  }
   if (url.pathname.endsWith('/js/auth-local.js')) {
     event.respondWith(hotfixScript(request, new URL('./js/auth-local.js?v=243', self.location.href).href));
     return;
