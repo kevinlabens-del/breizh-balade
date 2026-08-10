@@ -131,3 +131,147 @@ Objectif :
 
   new MutationObserver(schedule).observe(document.documentElement, { childList:true, subtree:true });
 })();
+
+/*
+===============================================================================
+Correctif mobile — compteur de visiteurs
+===============================================================================
+Sur petit écran, les deux premières statistiques restent sur la première ligne
+et la troisième (utilisateur en ligne) passe proprement sur une seconde ligne.
+Le correctif détecte le compteur même s'il est ajouté dynamiquement.
+===============================================================================
+*/
+(() => {
+  const STYLE_ID = 'bb-visitor-counter-mobile-fix';
+
+  const ensureStyle = () => {
+    if (document.getElementById(STYLE_ID)) return;
+
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = `
+      .bb-visitor-counter-fix{
+        width:100% !important;
+        max-width:100% !important;
+        margin-inline:auto !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:3px !important;
+        text-align:center !important;
+        overflow:visible !important;
+        white-space:normal !important;
+        line-height:1.3 !important;
+        font-size:clamp(10px,2.8vw,13px) !important;
+      }
+
+      .bb-visitor-counter-fix .bb-visitor-counter-top{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:4px !important;
+        max-width:100% !important;
+        white-space:nowrap !important;
+      }
+
+      .bb-visitor-counter-fix .bb-visitor-counter-bottom{
+        display:block !important;
+        width:100% !important;
+        text-align:center !important;
+        white-space:nowrap !important;
+      }
+
+      @media (max-width:390px){
+        .bb-visitor-counter-fix{
+          font-size:10px !important;
+        }
+        .bb-visitor-counter-fix .bb-visitor-counter-top{
+          gap:3px !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
+  const normalizeText = value => String(value || '').replace(/\s+/g, ' ').trim();
+
+  const looksLikeVisitorCounter = element => {
+    const text = normalizeText(element?.textContent).toLowerCase();
+    return text.includes('visiteur') &&
+           text.includes('lancement') &&
+           text.includes("aujourd") &&
+           text.includes('en ligne');
+  };
+
+  const findVisitorCounter = () => {
+    const hero = document.querySelector('.hero');
+    if (!hero) return null;
+
+    const candidates = Array.from(hero.querySelectorAll('*')).filter(looksLikeVisitorCounter);
+    return candidates.find(element =>
+      !Array.from(element.children).some(looksLikeVisitorCounter)
+    ) || null;
+  };
+
+  const formatVisitorCounter = () => {
+    ensureStyle();
+
+    const counter = findVisitorCounter();
+    if (!counter) return;
+
+    counter.classList.add('bb-visitor-counter-fix');
+
+    const alreadyFormatted =
+      counter.querySelector(':scope > .bb-visitor-counter-top') &&
+      counter.querySelector(':scope > .bb-visitor-counter-bottom');
+
+    if (alreadyFormatted) return;
+
+    const parts = normalizeText(counter.textContent)
+      .split(/\s*(?:·|•|\|)\s*/)
+      .map(part => part.trim())
+      .filter(Boolean);
+
+    if (parts.length < 3) return;
+
+    const top = document.createElement('span');
+    top.className = 'bb-visitor-counter-top';
+
+    const first = document.createElement('span');
+    first.textContent = parts[0];
+
+    const separator = document.createElement('span');
+    separator.textContent = '·';
+    separator.setAttribute('aria-hidden', 'true');
+
+    const second = document.createElement('span');
+    second.textContent = parts[1];
+
+    const bottom = document.createElement('span');
+    bottom.className = 'bb-visitor-counter-bottom';
+    bottom.textContent = parts.slice(2).join(' · ');
+
+    top.append(first, separator, second);
+    counter.replaceChildren(top, bottom);
+    counter.setAttribute('aria-label', parts.join(' ; '));
+  };
+
+  let timer = null;
+  const scheduleVisitorFix = () => {
+    clearTimeout(timer);
+    timer = setTimeout(formatVisitorCounter, 60);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleVisitorFix);
+  } else {
+    scheduleVisitorFix();
+  }
+
+  new MutationObserver(scheduleVisitorFix).observe(document.documentElement, {
+    childList:true,
+    subtree:true,
+    characterData:true
+  });
+})();
