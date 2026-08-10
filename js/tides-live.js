@@ -1,4 +1,4 @@
-/* Breizh’ Balade V2.4.2 — marées API réelles via proxy Supabase.
+/* Breizh’ Balade V2.4.2 — marées API actualisées via proxy Supabase.
    Les anciennes estimations locales sont masquées pour le public.
    Les valeurs affichées proviennent de api-maree.fr (prévisions harmoniques Ifremer/PREVIMER).
 */
@@ -74,13 +74,17 @@
   };
 
   const polishButtons = () => {
-    document.querySelectorAll('[data-load-tides]').forEach(button => {
-      if (!button.dataset.bbLiveTides) {
-        button.dataset.bbLiveTides = '1';
-        button.textContent = '🌊 Afficher les marées en direct';
-        button.disabled = false;
-        button.removeAttribute('aria-disabled');
-      }
+    document.querySelectorAll('.tide-panel').forEach(panel => {
+      const button = panel.querySelector('.tide-load-btn');
+      const results = panel.querySelector('[data-tide-results]');
+      if (!button) return;
+      const placeId = button.dataset.loadTides || results?.dataset.tideResults;
+      if (!placeId) return;
+      button.dataset.loadTides = placeId;
+      button.dataset.bbLiveTides = '1';
+      button.textContent = '🌊 Charger les marées actualisées';
+      button.disabled = false;
+      button.removeAttribute('aria-disabled');
     });
   };
 
