@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.4.2 — service worker */
-const CACHE_NAME = 'breizh-balade-v2.4.2-public';
+/* Breizh’ Balade V2.4.3 — service worker stable */
+const CACHE_NAME = 'breizh-balade-v2.4.3-public';
 const APP_SHELL = [
   './',
   './index.html',
@@ -8,13 +8,13 @@ const APP_SHELL = [
   './css/map.css',
   './css/responsive.css',
   './js/app.js',
-  './js/tides-live.js',
-  './js/tide-credit.js',
   './js/storage.js',
-  './js/auth-local.js',
-  './js/analytics.js',
   './js/geolocation.js',
   './js/map.js',
+  './js/auth-local.js?v=243',
+  './js/tides-live.js?v=243',
+  './js/tide-credit.js?v=243',
+  './js/analytics.js?v=243',
   './data/places.js',
   './assets/logo/breizh-balade-icon-v12.png',
   './assets/logo/breizh-balade-logo.svg',
@@ -60,6 +60,22 @@ const networkFirst = async request => {
   }
 };
 
+const hotfixScript = async (originalRequest, target) => {
+  try {
+    const response = await fetch(target, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const cache = await caches.open(CACHE_NAME);
+    cache.put(originalRequest, response.clone()).catch(() => {});
+    return response;
+  } catch (error) {
+    const cachedTarget = await caches.match(target);
+    if (cachedTarget) return cachedTarget;
+    const cachedOriginal = await caches.match(originalRequest);
+    if (cachedOriginal) return cachedOriginal;
+    throw error;
+  }
+};
+
 const cacheFirst = async request => {
   const cached = await caches.match(request);
   if (cached) return cached;
@@ -86,6 +102,19 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (url.pathname.endsWith('/js/auth-local.js')) {
+    event.respondWith(hotfixScript(request, new URL('./js/auth-local.js?v=243', self.location.href).href));
+    return;
+  }
+  if (url.pathname.endsWith('/js/tide-credit.js')) {
+    event.respondWith(hotfixScript(request, new URL('./js/tide-credit.js?v=243', self.location.href).href));
+    return;
+  }
+  if (url.pathname.endsWith('/js/tides-live.js')) {
+    event.respondWith(hotfixScript(request, new URL('./js/tides-live.js?v=243', self.location.href).href));
+    return;
+  }
 
   const fresh = request.mode === 'navigate' || ['document', 'script', 'style', 'manifest'].includes(request.destination);
   event.respondWith(fresh ? networkFirst(request) : cacheFirst(request));
