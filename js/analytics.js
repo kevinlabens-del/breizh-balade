@@ -1,4 +1,4 @@
-/* Breizh’ Balade — statistiques anonymes V2.3.5
+/* Breizh’ Balade V2.4.0 — statistiques anonymes.
    Aucun nom, email ou compte. Un identifiant aléatoire local distingue les visiteurs. */
 (() => {
   const ENDPOINT = 'https://kokmqcqlpkruoewhewcb.supabase.co/functions/v1/breizh-analytics';
@@ -42,7 +42,7 @@
   const sessionId = getSessionId();
   const currentPath = () => `${location.pathname}${location.hash || ''}`.slice(0, 300);
 
-  const send = async (event) => {
+  const send = async event => {
     const payload = {
       event,
       visitorId,
@@ -50,6 +50,7 @@
       path: currentPath(),
       referrer: event === 'visit' ? (document.referrer || '') : ''
     };
+
     try {
       const response = await fetch(ENDPOINT, {
         method: 'POST',
@@ -68,50 +69,114 @@
   const formatNumber = value => Number(value || 0).toLocaleString('fr-FR');
   const plural = (value, singular, pluralForm) => Number(value || 0) === 1 ? singular : pluralForm;
 
+  const ensureStyle = () => {
+    if (document.getElementById('bb-public-stats-style')) return;
+    const style = document.createElement('style');
+    style.id = 'bb-public-stats-style';
+    style.textContent = `
+      #publicVisitorStats{
+        width:100%;
+        margin-top:7px;
+        display:grid;
+        justify-items:center;
+        gap:3px;
+        text-align:center;
+        font-size:clamp(10px,2.6vw,12px);
+        line-height:1.35;
+        font-weight:600;
+        letter-spacing:-.01em;
+        opacity:.74;
+        user-select:none;
+        overflow:visible;
+      }
+      #publicVisitorStats .bb-stats-top{
+        max-width:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:3px 5px;
+      }
+      #publicVisitorStats .bb-stats-item,
+      #publicVisitorStats .bb-stats-online{
+        white-space:nowrap;
+      }
+      #publicVisitorStats .bb-stats-online{
+        display:block;
+      }
+      @media (max-width:360px){
+        #publicVisitorStats{font-size:10px}
+        #publicVisitorStats .bb-stats-separator{display:none}
+        #publicVisitorStats .bb-stats-top{gap:2px 8px}
+      }
+    `;
+    document.head.appendChild(style);
+  };
+
   const createPublicStatsLine = () => {
-    if (document.getElementById('publicVisitorStats')) return document.getElementById('publicVisitorStats');
+    const existing = document.getElementById('publicVisitorStats');
+    if (existing) return existing;
+
     const actions = document.querySelector('.hero-actions');
     if (!actions) return null;
 
+    ensureStyle();
     const line = document.createElement('div');
     line.id = 'publicVisitorStats';
     line.setAttribute('aria-live', 'polite');
     line.setAttribute('aria-label', 'Fréquentation de Breizh Balade');
     line.textContent = '👥 chargement des visiteurs…';
-    Object.assign(line.style, {
-      width: '100%',
-      marginTop: '7px',
-      textAlign: 'center',
-      fontSize: 'clamp(9px, 2.35vw, 11.5px)',
-      lineHeight: '1.35',
-      fontWeight: '600',
-      letterSpacing: '-0.015em',
-      opacity: '0.72',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      userSelect: 'none'
-    });
     actions.insertAdjacentElement('afterend', line);
     return line;
+  };
+
+  const renderStats = (line, total, today, online) => {
+    const totalText = `👥 ${formatNumber(total)} ${plural(total, 'visiteur', 'visiteurs')} depuis le lancement`;
+    const todayText = `📅 ${formatNumber(today)} ${plural(today, 'visiteur', 'visiteurs')} aujourd’hui`;
+    const onlineText = `🟢 ${formatNumber(online)} ${plural(online, 'utilisateur', 'utilisateurs')} en ligne`;
+
+    const top = document.createElement('span');
+    top.className = 'bb-stats-top';
+
+    const totalNode = document.createElement('span');
+    totalNode.className = 'bb-stats-item';
+    totalNode.textContent = totalText;
+
+    const separator = document.createElement('span');
+    separator.className = 'bb-stats-separator';
+    separator.textContent = '·';
+    separator.setAttribute('aria-hidden', 'true');
+
+    const todayNode = document.createElement('span');
+    todayNode.className = 'bb-stats-item';
+    todayNode.textContent = todayText;
+
+    const onlineNode = document.createElement('span');
+    onlineNode.className = 'bb-stats-online';
+    onlineNode.textContent = onlineText;
+
+    top.append(totalNode, separator, todayNode);
+    line.replaceChildren(top, onlineNode);
+    line.setAttribute('aria-label', `${totalText}. ${todayText}. ${onlineText}.`);
   };
 
   const loadPublicStats = async () => {
     const line = createPublicStatsLine();
     if (!line) return;
+
     try {
       const response = await fetch(ENDPOINT, { cache: 'no-store' });
       if (!response.ok) throw new Error('stats');
       const data = await response.json();
-      const total = Number(data.total_visitors || 0);
-      const today = Number(data.visitors_today || 0);
-      const online = Number(data.online_now || 0);
-      line.textContent = `👥 ${formatNumber(total)} ${plural(total, 'visiteur', 'visiteurs')} depuis le lancement · 📅 ${formatNumber(today)} ${plural(today, 'visiteur', 'visiteurs')} aujourd’hui · 🟢 ${formatNumber(online)} ${plural(online, 'utilisateur', 'utilisateurs')} en ligne`;
-      line.style.visibility = 'visible';
-      line.style.opacity = '0.72';
+      renderStats(
+        line,
+        Number(data.total_visitors || 0),
+        Number(data.visitors_today || 0),
+        Number(data.online_now || 0)
+      );
+      line.style.opacity = '0.74';
     } catch (_) {
       line.textContent = '👥 statistiques momentanément indisponibles';
-      line.style.visibility = 'visible';
       line.style.opacity = '0.58';
     }
   };
@@ -134,7 +199,7 @@
   const initPublicStats = () => {
     createPublicStatsLine();
     loadPublicStats();
-    setInterval(loadPublicStats, 20000);
+    setInterval(loadPublicStats, 30000);
   };
 
   if (document.readyState === 'loading') {
