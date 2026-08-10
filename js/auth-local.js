@@ -1,9 +1,8 @@
-/* Breizh’ Balade V2.4.3 — accès public sans compte.
-   Couche de compatibilité pour l'ancien code qui appelle window.BreizhAuth. */
+/* Breizh’ Balade V2.4.5 — accès public + localisation demandée à l’arrivée. */
 (() => {
-  const RELEASE_VERSION = '2.4.3';
-  const ASSET_VERSION = '243';
-  const LOCATION_PROMPT_KEY = 'breizh.locationPromptDismissed';
+  const RELEASE_VERSION = '2.4.5';
+  const ASSET_VERSION = '245';
+  let startupLocationRequested = false;
 
   const normalizeLegacyHash = () => {
     const legacy = new Set(['login', 'signup', 'profile']);
@@ -20,14 +19,26 @@
     }
   };
 
-  const disableAutomaticLocationPrompt = () => {
-    try {
-      if (!localStorage.getItem(LOCATION_PROMPT_KEY)) localStorage.setItem(LOCATION_PROMPT_KEY, 'yes');
-    } catch (_) {}
-  };
-
   const clearLegacyTideSessionLock = () => {
     try { sessionStorage.removeItem('breizh.tideRequests.thisSession'); } catch (_) {}
+  };
+
+  const requestStartupLocation = async () => {
+    if (startupLocationRequested) return;
+    startupLocationRequested = true;
+
+    try {
+      if (typeof Geo === 'undefined' || !Geo?.getPosition) return;
+      const position = await Geo.getPosition();
+      try {
+        if (typeof BreizhMap !== 'undefined' && BreizhMap?.setUser) BreizhMap.setUser(position);
+      } catch (_) {}
+      try {
+        window.dispatchEvent(new CustomEvent('breizh:location-ready', { detail: position }));
+      } catch (_) {}
+    } catch (_) {
+      // Un refus ou un GPS désactivé ne bloque jamais le reste de l’application.
+    }
   };
 
   const protectTideButtonUntilLiveModule = () => {
@@ -97,16 +108,21 @@
 
   normalizeLegacyHash();
   normalizePublicMetadata();
-  disableAutomaticLocationPrompt();
   clearLegacyTideSessionLock();
   protectTideButtonUntilLiveModule();
   makePublic();
   loadPublicServices();
 
+  const start = () => {
+    normalizePublicMetadata();
+    makePublic();
+    // La localisation est demandée à l’arrivée pour que les fonctions liées à la position soient prêtes.
+    setTimeout(requestStartupLocation, 250);
+  };
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      normalizePublicMetadata();
-      makePublic();
-    }, { once: true });
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
   }
 })();
