@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.4.4 — service worker stable */
-const CACHE_NAME = 'breizh-balade-v2.4.4-public';
+/* Breizh’ Balade V2.4.5 — service worker stable */
+const CACHE_NAME = 'breizh-balade-v2.4.5-public';
 const APP_SHELL = [
   './',
   './index.html',
@@ -11,10 +11,10 @@ const APP_SHELL = [
   './js/storage.js',
   './js/geolocation.js?v=244',
   './js/map.js',
-  './js/auth-local.js?v=243',
-  './js/tides-live.js?v=243',
+  './js/auth-local.js?v=245',
+  './js/tides-live.js?v=245',
   './js/tide-credit.js?v=243',
-  './js/analytics.js?v=243',
+  './js/analytics.js?v=245',
   './data/places.js',
   './assets/logo/breizh-balade-icon-v12.png',
   './assets/logo/breizh-balade-logo.svg',
@@ -108,7 +108,7 @@ self.addEventListener('fetch', event => {
     return;
   }
   if (url.pathname.endsWith('/js/auth-local.js')) {
-    event.respondWith(hotfixScript(request, new URL('./js/auth-local.js?v=243', self.location.href).href));
+    event.respondWith(hotfixScript(request, new URL('./js/auth-local.js?v=245', self.location.href).href));
     return;
   }
   if (url.pathname.endsWith('/js/tide-credit.js')) {
@@ -116,7 +116,11 @@ self.addEventListener('fetch', event => {
     return;
   }
   if (url.pathname.endsWith('/js/tides-live.js')) {
-    event.respondWith(hotfixScript(request, new URL('./js/tides-live.js?v=243', self.location.href).href));
+    event.respondWith(hotfixScript(request, new URL('./js/tides-live.js?v=245', self.location.href).href));
+    return;
+  }
+  if (url.pathname.endsWith('/js/analytics.js')) {
+    event.respondWith(hotfixScript(request, new URL('./js/analytics.js?v=245', self.location.href).href));
     return;
   }
 
