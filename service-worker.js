@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.4.0 — service worker */
-const CACHE_NAME = 'breizh-balade-v2.4.0-public';
+/* Breizh’ Balade V2.4.1 — service worker */
+const CACHE_NAME = 'breizh-balade-v2.4.1-public';
 const APP_SHELL = [
   './',
   './index.html',
