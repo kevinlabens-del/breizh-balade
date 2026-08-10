@@ -1,8 +1,8 @@
-/* Breizh’ Balade V2.4.0 — accès public sans compte.
+/* Breizh’ Balade V2.4.2 — accès public sans compte.
    Couche de compatibilité pour l'ancien code qui appelle window.BreizhAuth. */
 (() => {
-  const RELEASE_VERSION = '2.4.0';
-  const ANALYTICS_VERSION = '240';
+  const RELEASE_VERSION = '2.4.2';
+  const ASSET_VERSION = '242';
   const LOCATION_PROMPT_KEY = 'breizh.locationPromptDismissed';
 
   const normalizeLegacyHash = () => {
@@ -59,20 +59,25 @@
   window.BreizhAuth = PublicAccess;
   window.BreizhPublicAccess = PublicAccess;
 
-  const loadAnonymousAnalytics = () => {
-    if (document.querySelector('script[data-breizh-analytics]')) return;
+  const loadScriptOnce = (src, dataName) => {
+    if (document.querySelector(`script[data-${dataName}]`)) return;
     const script = document.createElement('script');
-    script.src = `js/analytics.js?v=${ANALYTICS_VERSION}`;
+    script.src = src;
     script.async = true;
-    script.dataset.breizhAnalytics = '1';
+    script.setAttribute(`data-${dataName}`, '1');
     document.head.appendChild(script);
+  };
+
+  const loadPublicServices = () => {
+    loadScriptOnce(`js/analytics.js?v=${ASSET_VERSION}`, 'breizh-analytics');
+    loadScriptOnce(`js/tides-live.js?v=${ASSET_VERSION}`, 'breizh-tides-live');
   };
 
   normalizeLegacyHash();
   normalizePublicMetadata();
   disableAutomaticLocationPrompt();
   makePublic();
-  loadAnonymousAnalytics();
+  loadPublicServices();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
