@@ -1,63 +1,56 @@
-/* Breizh’ Balade V2.4.0 — sécurité des informations de marée.
-   Les anciennes estimations locales calculées sont neutralisées tant qu'une source fiable
-   n'est pas intégrée. L'application préfère afficher une absence de donnée plutôt qu'une
-   estimation pouvant être interprétée comme une information opérationnelle. */
+/* Breizh’ Balade V2.4.1 — avertissement marées non destructif.
+   Les estimations de marée restent disponibles :
+   - estimation actuelle ;
+   - estimation à l’arrivée calculée à partir du temps de trajet lorsque la position est disponible.
+   Ce fichier ajoute uniquement une mention de prudence et ne masque aucune donnée. */
 (() => {
-  const STYLE_ID = 'bb-tide-safety-style';
-  const SAFE_TEXT = 'Les estimations automatiques de marée sont temporairement désactivées. Vérifie les horaires officiels et les consignes locales avant toute sortie littorale.';
+  const CREDIT_CLASS = 'tide-credit-visible';
+  const CREDIT_TEXT = 'Estimation indicative : vérifie toujours les horaires officiels de marée, la météo et les consignes locales avant une sortie littorale.';
 
   const ensureStyle = () => {
-    if (document.getElementById(STYLE_ID)) return;
+    if (document.getElementById('bb-tide-credit-style')) return;
     const style = document.createElement('style');
-    style.id = STYLE_ID;
+    style.id = 'bb-tide-credit-style';
     style.textContent = `
-      .tide-strip{display:none!important}
-      .bb-tide-safe-message{
-        margin:0;
-        padding:12px 13px;
-        border-radius:16px;
-        border:1px solid rgba(255,255,255,.14);
-        background:rgba(255,255,255,.06);
-        line-height:1.5;
+      .${CREDIT_CLASS}{
+        margin:10px 0 0;
+        color:var(--muted, #6f817c);
+        font-size:.78rem;
+        line-height:1.45;
       }
-      .bb-tide-safe-message strong{display:block;margin-bottom:4px}
     `;
     document.head.appendChild(style);
   };
 
-  const neutralizeTidePanel = panel => {
-    if (!panel || panel.dataset.bbTideSafe === 'true') return;
-    panel.dataset.bbTideSafe = 'true';
-    panel.innerHTML = `
-      <div class="panel-title-row"><span>🌊</span><h3>Marées</h3></div>
-      <p class="bb-tide-safe-message">
-        <strong>Données automatiques non affichées</strong>
-        ${SAFE_TEXT}
-      </p>
-    `;
-  };
-
   const updateInfoCard = card => {
-    if (!card || card.dataset.bbTideSafe === 'true') return;
-    card.dataset.bbTideSafe = 'true';
-    const title = card.querySelector('h3');
-    if (title) title.textContent = 'Données de marée';
+    if (!card) return;
     const paragraphs = card.querySelectorAll('p:not(.eyebrow)');
-    if (paragraphs[0]) paragraphs[0].textContent = 'Les estimations automatiques sont temporairement désactivées tant qu’une source fiable n’est pas intégrée.';
-    if (paragraphs[1]) paragraphs[1].textContent = 'Pour toute sortie littorale, vérifie les horaires officiels et les consignes locales avant de partir.';
+    if (paragraphs[0]) {
+      paragraphs[0].textContent = 'Breizh’ Balade affiche une estimation de la marée actuelle et, lorsque ta position est activée, une estimation à ton arrivée calculée avec le temps de trajet.';
+    }
+    if (paragraphs[1]) {
+      paragraphs[1].textContent = 'Ces valeurs sont indicatives : vérifie toujours les horaires officiels de marée, la météo et les consignes locales avant une sortie littorale.';
+    }
   };
 
-  const applySafety = () => {
+  const addCredit = panel => {
+    if (!panel || panel.querySelector(`:scope > .${CREDIT_CLASS}`)) return;
+    const credit = document.createElement('p');
+    credit.className = CREDIT_CLASS;
+    credit.textContent = CREDIT_TEXT;
+    panel.appendChild(credit);
+  };
+
+  const apply = () => {
     ensureStyle();
-    document.querySelectorAll('.tide-strip').forEach(el => el.remove());
-    document.querySelectorAll('.tide-panel, .maree-panel, [data-tide-root], [data-maree-root]').forEach(neutralizeTidePanel);
+    document.querySelectorAll('.tide-panel, .maree-panel, [data-tide-root], [data-maree-root]').forEach(addCredit);
     document.querySelectorAll('.tide-credit-info-card').forEach(updateInfoCard);
   };
 
   let timer = null;
   const schedule = () => {
     clearTimeout(timer);
-    timer = setTimeout(applySafety, 50);
+    timer = setTimeout(apply, 60);
   };
 
   if (document.readyState === 'loading') {
