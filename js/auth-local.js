@@ -1,8 +1,8 @@
-/* Breizh’ Balade V2.4.2 — accès public sans compte.
+/* Breizh’ Balade V2.4.3 — accès public sans compte.
    Couche de compatibilité pour l'ancien code qui appelle window.BreizhAuth. */
 (() => {
-  const RELEASE_VERSION = '2.4.2';
-  const ASSET_VERSION = '242';
+  const RELEASE_VERSION = '2.4.3';
+  const ASSET_VERSION = '243';
   const LOCATION_PROMPT_KEY = 'breizh.locationPromptDismissed';
 
   const normalizeLegacyHash = () => {
@@ -24,6 +24,10 @@
     try {
       if (!localStorage.getItem(LOCATION_PROMPT_KEY)) localStorage.setItem(LOCATION_PROMPT_KEY, 'yes');
     } catch (_) {}
+  };
+
+  const clearLegacyTideSessionLock = () => {
+    try { sessionStorage.removeItem('breizh.tideRequests.thisSession'); } catch (_) {}
   };
 
   const makePublic = () => {
@@ -76,6 +80,7 @@
   normalizeLegacyHash();
   normalizePublicMetadata();
   disableAutomaticLocationPrompt();
+  clearLegacyTideSessionLock();
   makePublic();
   loadPublicServices();
 
