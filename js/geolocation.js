@@ -128,7 +128,7 @@ const Geo = (() => {
     }
   };
 
-  const requestBrowserPosition = () => new Promise((resolve, reject) => {
+  const requestBrowserPosition = (allowRetry = true) => new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       position => {
         const current = {
@@ -141,25 +141,41 @@ const Geo = (() => {
       },
       async error => {
         if (error?.code === 1) {
-          await showConsentDialog({
+          if (!allowRetry) {
+            reject(makeGeoError(1, 'Localisation refusée par l’utilisateur.', error));
+            return;
+          }
+          const retry = await showConsentDialog({
             title: 'Autorisation de localisation refusée',
-            text: 'Pour utiliser cette fonction GPS, autorise la localisation pour Breizh’ Balade dans les paramètres de ton navigateur ou de l’application, puis réessaie.',
+            text: 'Pour utiliser cette fonction GPS, autorise la localisation pour Breizh’ Balade dans les paramètres de ton navigateur ou de l’application.',
             primary: 'J’ai activé l’autorisation',
             secondary: 'Continuer sans localisation',
             help: 'Sur Android : paramètres du navigateur/app → Autorisations → Localisation → Autoriser pendant l’utilisation.'
           });
-          reject(makeGeoError(1, 'Localisation refusée par l’utilisateur.', error));
+          if (!retry) {
+            reject(makeGeoError(1, 'Localisation refusée par l’utilisateur.', error));
+            return;
+          }
+          requestBrowserPosition(false).then(resolve).catch(reject);
           return;
         }
 
         if (error?.code === 2) {
-          await showConsentDialog({
+          if (!allowRetry) {
+            reject(makeGeoError(2, 'Localisation de l’appareil indisponible.', error));
+            return;
+          }
+          const retry = await showConsentDialog({
             title: 'Localisation de l’appareil indisponible',
-            text: 'La localisation du téléphone semble désactivée ou momentanément indisponible. Active la localisation/GPS de l’appareil puis relance la fonction.',
+            text: 'La localisation du téléphone semble désactivée ou momentanément indisponible. Active la localisation/GPS de l’appareil pour continuer.',
             primary: 'J’ai activé le GPS',
             secondary: 'Continuer sans localisation'
           });
-          reject(makeGeoError(2, 'Localisation de l’appareil indisponible.', error));
+          if (!retry) {
+            reject(makeGeoError(2, 'Localisation de l’appareil indisponible.', error));
+            return;
+          }
+          requestBrowserPosition(false).then(resolve).catch(reject);
           return;
         }
 
