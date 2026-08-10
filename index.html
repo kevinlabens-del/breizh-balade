@@ -21,13 +21,13 @@
 
   <title>Breizh’ Balade — 71 idées de sorties en Bretagne</title>
 
-  <link rel="manifest" href="manifest.webmanifest?v=240" />
+  <link rel="manifest" href="manifest.webmanifest?v=241" />
   <link rel="icon" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=240" />
-  <link rel="stylesheet" href="css/map.css?v=240" />
-  <link rel="stylesheet" href="css/responsive.css?v=240" />
+  <link rel="stylesheet" href="css/style.css?v=241" />
+  <link rel="stylesheet" href="css/map.css?v=241" />
+  <link rel="stylesheet" href="css/responsive.css?v=241" />
 
   <script>
     (() => {
@@ -63,7 +63,7 @@
         root.classList.add(vh >= vw ? 'bb-portrait' : 'bb-landscape');
         root.dataset.bbDevice = phone ? 'phone' : tablet ? 'tablet' : 'desktop';
         root.dataset.bbMode = standalone ? 'installed' : 'browser';
-        root.dataset.bbVersion = '2.4.0';
+        root.dataset.bbVersion = '2.4.1';
         root.style.setProperty('--vh', `${vh * 0.01}px`);
         root.style.setProperty('--bb-screen-w', `${sw}px`);
         root.style.setProperty('--bb-viewport-w', `${vw}px`);
@@ -270,8 +270,8 @@
           <article class="panel info-card-v19 about-advice-card tide-credit-info-card">
             <p class="eyebrow">Marées</p>
             <h3>Données de marée</h3>
-            <p>Les estimations automatiques sont temporairement désactivées tant qu’une source fiable n’est pas intégrée.</p>
-            <p class="muted">Pour toute sortie littorale, vérifie les horaires officiels et les consignes locales avant de partir.</p>
+            <p>Breizh’ Balade affiche une estimation de la marée actuelle et, lorsque ta position est activée, une estimation à ton arrivée calculée avec le temps de trajet.</p>
+            <p class="muted">Ces valeurs sont indicatives : vérifie toujours les horaires officiels de marée, la météo et les consignes locales avant une sortie littorale.</p>
           </article>
 
           <article class="panel info-card-v19 about-advice-card">
@@ -298,6 +298,7 @@
     </footer>
   </div>
 
+  <!-- Conservé pour compatibilité avec la logique existante. L’application ne l’ouvre plus automatiquement. -->
   <div class="location-prompt" id="locationPrompt" hidden role="dialog" aria-modal="true" aria-labelledby="locationPromptTitle">
     <div class="location-prompt__card">
       <div class="location-prompt__icon">📍</div>
@@ -321,12 +322,12 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="data/places.js?v=240"></script>
-  <script src="js/storage.js?v=240"></script>
-  <script src="js/geolocation.js?v=240"></script>
-  <script src="js/map.js?v=240"></script>
-  <script src="js/auth-local.js?v=240"></script>
-  <script src="js/app.js?v=240"></script>
-  <script src="js/tide-credit.js?v=240"></script>
+  <script src="data/places.js?v=241"></script>
+  <script src="js/storage.js?v=241"></script>
+  <script src="js/geolocation.js?v=241"></script>
+  <script src="js/map.js?v=241"></script>
+  <script src="js/auth-local.js?v=241"></script>
+  <script src="js/app.js?v=241"></script>
+  <script src="js/tide-credit.js?v=241"></script>
 </body>
 </html>
