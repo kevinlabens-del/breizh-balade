@@ -86,11 +86,13 @@
 
   const requestPosition = async () => {
     try {
-      const existing = window.Geo?.getUserPosition?.();
+      const geo = typeof Geo !== 'undefined' ? Geo : window.Geo;
+      const mapApi = typeof BreizhMap !== 'undefined' ? BreizhMap : window.BreizhMap;
+      const existing = geo?.getUserPosition?.();
       if (existing) return existing;
-      if (!window.Geo?.getPosition) return null;
-      const pos = await window.Geo.getPosition();
-      try { window.BreizhMap?.setUser?.(pos); } catch (_) {}
+      if (!geo?.getPosition) return null;
+      const pos = await geo.getPosition();
+      try { mapApi?.setUser?.(pos); } catch (_) {}
       return pos;
     } catch (_) {
       return null;
@@ -134,9 +136,10 @@
     const place = places.find(item => item.id === placeId);
     if (!place) return;
 
-    const liveBox = document.querySelector(`[data-live-tide="${CSS.escape(placeId)}"]`);
-    const routeBox = document.querySelector(`[data-route-tide="${CSS.escape(placeId)}"]`);
-    const results = document.querySelector(`[data-tide-results="${CSS.escape(placeId)}"]`);
+    const selectorId = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(placeId) : String(placeId).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+    const liveBox = document.querySelector(`[data-live-tide="${selectorId}"]`);
+    const routeBox = document.querySelector(`[data-route-tide="${selectorId}"]`);
+    const results = document.querySelector(`[data-tide-results="${selectorId}"]`);
     if (!liveBox || !routeBox) return;
 
     if (results) results.hidden = false;
