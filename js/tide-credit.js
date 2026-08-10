@@ -1,59 +1,30 @@
-/* Breizh’ Balade V2.4.2 — crédits et sécurité des données de marée. */
+/* Breizh’ Balade V2.4.3 — information de source des marées, sans observateur global. */
 (() => {
-  const CREDIT_CLASS = 'tide-credit-visible';
-  const CREDIT_TEXT = 'Données fournies par api-maree.fr à partir de composantes harmoniques Ifremer / PREVIMER. Valeurs indicatives : vérifie aussi les informations officielles du SHOM, la météo et les consignes locales avant une sortie littorale.';
+  if (window.__BREIZH_TIDE_CREDIT_LOADED__) return;
+  window.__BREIZH_TIDE_CREDIT_LOADED__ = true;
 
   const ensureStyle = () => {
     if (document.getElementById('bb-tide-credit-style')) return;
     const style = document.createElement('style');
     style.id = 'bb-tide-credit-style';
     style.textContent = `
-      .${CREDIT_CLASS}{
-        margin:10px 0 0;
-        color:var(--muted, #6f817c);
-        font-size:.78rem;
-        line-height:1.45;
-      }
+      .tide-strip{display:none!important}
+      .local-tide-details{display:none!important}
+      .tide-credit-visible{margin:10px 0 0;color:var(--muted,#6f817c);font-size:.78rem;line-height:1.45}
     `;
     document.head.appendChild(style);
   };
 
-  const updateInfoCard = card => {
-    if (!card) return;
+  const updateInfoCard = () => {
+    const card = document.querySelector('.tide-credit-info-card');
+    if (!card || card.dataset.bbTideInfoUpdated === '1') return;
+    card.dataset.bbTideInfoUpdated = '1';
     const paragraphs = card.querySelectorAll('p:not(.eyebrow)');
-    if (paragraphs[0]) {
-      paragraphs[0].textContent = 'Breizh’ Balade interroge api-maree.fr pour afficher la hauteur de marée prévue au moment de la consultation et, lorsque ta position est activée, à l’heure d’arrivée estimée selon le temps de trajet.';
-    }
-    if (paragraphs[1]) {
-      paragraphs[1].textContent = 'Données calculées à partir de composantes harmoniques Ifremer / PREVIMER. Elles restent indicatives et ne remplacent pas les informations officielles du SHOM ni les consignes locales de sécurité.';
-    }
+    if (paragraphs[0]) paragraphs[0].textContent = 'Breizh’ Balade utilise api-maree.fr pour afficher une prévision de marée actualisée au moment de la consultation et, si ta position est autorisée, à l’heure d’arrivée estimée.';
+    if (paragraphs[1]) paragraphs[1].textContent = 'Ces données restent indicatives et ne remplacent pas les informations officielles du SHOM ni les consignes locales de sécurité.';
   };
 
-  const addCredit = panel => {
-    if (!panel || panel.querySelector(`:scope > .${CREDIT_CLASS}`)) return;
-    const credit = document.createElement('p');
-    credit.className = CREDIT_CLASS;
-    credit.textContent = CREDIT_TEXT;
-    panel.appendChild(credit);
-  };
-
-  const apply = () => {
-    ensureStyle();
-    document.querySelectorAll('.tide-panel, .maree-panel, [data-tide-root], [data-maree-root]').forEach(addCredit);
-    document.querySelectorAll('.tide-credit-info-card').forEach(updateInfoCard);
-  };
-
-  let timer = null;
-  const schedule = () => {
-    clearTimeout(timer);
-    timer = setTimeout(apply, 60);
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', schedule, { once:true });
-  } else {
-    schedule();
-  }
-
-  new MutationObserver(schedule).observe(document.documentElement, { childList:true, subtree:true });
+  ensureStyle();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateInfoCard, { once: true });
+  else updateInfoCard();
 })();
