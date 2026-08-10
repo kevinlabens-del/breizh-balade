@@ -1,11 +1,7 @@
-/* Breizh’ Balade V2.4.1 — avertissement marées non destructif.
-   Les estimations de marée restent disponibles :
-   - estimation actuelle ;
-   - estimation à l’arrivée calculée à partir du temps de trajet lorsque la position est disponible.
-   Ce fichier ajoute uniquement une mention de prudence et ne masque aucune donnée. */
+/* Breizh’ Balade V2.4.2 — crédits et sécurité des données de marée. */
 (() => {
   const CREDIT_CLASS = 'tide-credit-visible';
-  const CREDIT_TEXT = 'Estimation indicative : vérifie toujours les horaires officiels de marée, la météo et les consignes locales avant une sortie littorale.';
+  const CREDIT_TEXT = 'Données fournies par api-maree.fr à partir de composantes harmoniques Ifremer / PREVIMER. Valeurs indicatives : vérifie aussi les informations officielles du SHOM, la météo et les consignes locales avant une sortie littorale.';
 
   const ensureStyle = () => {
     if (document.getElementById('bb-tide-credit-style')) return;
@@ -26,10 +22,10 @@
     if (!card) return;
     const paragraphs = card.querySelectorAll('p:not(.eyebrow)');
     if (paragraphs[0]) {
-      paragraphs[0].textContent = 'Breizh’ Balade affiche une estimation de la marée actuelle et, lorsque ta position est activée, une estimation à ton arrivée calculée avec le temps de trajet.';
+      paragraphs[0].textContent = 'Breizh’ Balade interroge api-maree.fr pour afficher la hauteur de marée prévue au moment de la consultation et, lorsque ta position est activée, à l’heure d’arrivée estimée selon le temps de trajet.';
     }
     if (paragraphs[1]) {
-      paragraphs[1].textContent = 'Ces valeurs sont indicatives : vérifie toujours les horaires officiels de marée, la météo et les consignes locales avant une sortie littorale.';
+      paragraphs[1].textContent = 'Données calculées à partir de composantes harmoniques Ifremer / PREVIMER. Elles restent indicatives et ne remplacent pas les informations officielles du SHOM ni les consignes locales de sécurité.';
     }
   };
 
