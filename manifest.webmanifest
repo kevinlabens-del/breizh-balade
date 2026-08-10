@@ -1,9 +1,8 @@
 {
-  "_comment": "Manifest de Breizh’ Balade : permet l’installation de l’application sur mobile. Les champs name, short_name, icons, start_url et display sont utilisés par le navigateur.",
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
-  "description": "Breizh’ Balade V2.3.0 : 71 lieux, balades nature, patrimoine et découvertes en Bretagne.",
-  "start_url": "./index.html",
+  "description": "Breizh’ Balade : 71 idées de sorties, nature, patrimoine et découvertes en Bretagne.",
+  "start_url": "./#explore",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -24,10 +23,25 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": [
-    "travel",
-    "lifestyle",
-    "navigation"
-  ],
-  "screenshots": []
+  "categories": ["travel", "lifestyle", "navigation"],
+  "shortcuts": [
+    {
+      "name": "Explorer",
+      "short_name": "Explorer",
+      "url": "./#explore",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Carte",
+      "short_name": "Carte",
+      "url": "./#map",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Favoris",
+      "short_name": "Favoris",
+      "url": "./#favorites",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }
