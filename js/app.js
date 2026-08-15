@@ -470,14 +470,33 @@ Il gère notamment :
     profile: 'Profil'
   };
 
+  const syncNavigationControls = () => {
+    const menuOpen = Boolean(els.sideMenu?.classList.contains('is-open'));
+    const showBack = state.view !== 'explore' && !menuOpen;
+
+    if (els.back) {
+      els.back.hidden = !showBack;
+      els.back.setAttribute('aria-hidden', String(!showBack));
+    }
+
+    if (els.menuToggle) {
+      const icon = els.menuToggle.querySelector('.burger-icon');
+      const label = els.menuToggle.querySelector('.burger-label');
+      els.menuToggle.setAttribute('aria-expanded', String(menuOpen));
+      els.menuToggle.setAttribute('aria-label', menuOpen ? 'Fermer le menu' : 'Ouvrir le menu');
+      if (icon) icon.textContent = menuOpen ? '×' : '☰';
+      if (label) label.textContent = menuOpen ? 'Fermer' : 'Menu';
+    }
+  };
+
   const openMenu = () => {
     if (!els.sideMenu || !els.menuOverlay || !els.menuToggle) return;
     els.sideMenu.classList.add('is-open');
     els.menuOverlay.hidden = false;
     els.menuOverlay.classList.add('is-visible');
     els.sideMenu.setAttribute('aria-hidden', 'false');
-    els.menuToggle.setAttribute('aria-expanded', 'true');
     document.body.classList.add('menu-open');
+    syncNavigationControls();
   };
 
   const closeMenu = () => {
@@ -485,11 +504,19 @@ Il gère notamment :
     els.sideMenu.classList.remove('is-open');
     els.menuOverlay.classList.remove('is-visible');
     els.sideMenu.setAttribute('aria-hidden', 'true');
-    els.menuToggle.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('menu-open');
+    syncNavigationControls();
     setTimeout(() => {
       if (!els.sideMenu.classList.contains('is-open')) els.menuOverlay.hidden = true;
     }, 220);
+  };
+
+  const toggleMenu = () => {
+    if (els.sideMenu?.classList.contains('is-open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   };
 
   const populateFilters = () => {
@@ -1689,7 +1716,7 @@ Il gère notamment :
       showToast('Localisation ignorée pour le moment');
     });
     if (els.back) els.back.addEventListener('click', navigateBack);
-    if (els.menuToggle) els.menuToggle.addEventListener('click', openMenu);
+    if (els.menuToggle) els.menuToggle.addEventListener('click', toggleMenu);
     if (els.menuClose) els.menuClose.addEventListener('click', closeMenu);
     if (els.menuOverlay) els.menuOverlay.addEventListener('click', closeMenu);
     window.addEventListener('keydown', event => {
