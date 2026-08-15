@@ -452,7 +452,7 @@ Il gère notamment :
   };
 
   const viewLabels = {
-    explore: 'Explorer',
+    explore: 'Toutes les balades',
     map: 'Carte',
     favorites: 'Favoris',
     later: 'À visiter',
@@ -668,7 +668,13 @@ Il gère notamment :
     }
     state.view = view;
     if (els.currentViewLabel) els.currentViewLabel.textContent = viewLabels[view] || 'Menu';
-    els.tabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.view === view));
+    els.tabs.forEach(tab => {
+      const isCurrentView = tab.dataset.view === view;
+      tab.classList.toggle('is-active', isCurrentView);
+      if (tab.dataset.view === 'explore') {
+        tab.hidden = view === 'explore';
+      }
+    });
     els.views.forEach(section => section.classList.toggle('is-visible', section.id === `view-${view}`));
     closeMenu();
     if (view === 'map') {
