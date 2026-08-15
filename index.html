@@ -112,7 +112,7 @@ Important pour GitHub Pages :
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="stylesheet" href="css/style.css?v=21613" />
   <link rel="stylesheet" href="css/map.css?v=21611" />
-  <link rel="stylesheet" href="css/responsive.css?v=21611" />
+  <link rel="stylesheet" href="css/responsive.css?v=21614" />
 </head>
 <body class="is-guest">
   <!-- Bannière hors ligne : apparaît si le navigateur détecte une perte de connexion. -->
@@ -150,13 +150,13 @@ Important pour GitHub Pages :
     </header>
 
     <div class="burger-bar" aria-label="Navigation principale">
-      <button class="back-btn" id="backBtn" type="button" aria-label="Revenir à la page précédente">
+      <button class="burger-btn" id="menuToggle" type="button" aria-controls="sideMenu" aria-expanded="false" aria-label="Ouvrir le menu">
+        <span class="burger-icon" aria-hidden="true">☰</span>
+        <span class="burger-label">Menu</span>
+      </button>
+      <button class="back-btn" id="backBtn" type="button" aria-label="Revenir à la page précédente" hidden>
         <span class="back-icon" aria-hidden="true">←</span>
         <span>Retour</span>
-      </button>
-      <button class="burger-btn" id="menuToggle" type="button" aria-controls="sideMenu" aria-expanded="false">
-        <span class="burger-icon" aria-hidden="true">☰</span>
-        <span>Menu</span>
       </button>
     </div>
 
@@ -627,7 +627,7 @@ Important pour GitHub Pages :
   <!-- Compte local : inscription, connexion et profil sans serveur pour la V2.1.6.11. -->
   <script src="js/auth-local.js?v=21611"></script>
   <!-- Logique principale : navigation, filtres, fiches, boutons et rendu de l’application. -->
-  <script src="js/app.js?v=21613"></script>
+  <script src="js/app.js?v=21614"></script>
   <script src="js/tide-credit.js?v=21611"></script>
 </body>
 </html>

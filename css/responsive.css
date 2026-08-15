@@ -1636,3 +1636,85 @@ html.device-phone .brand-lockup h1{
   }
 }
 
+
+
+/*
+===============================================================================
+V2.4.7 — Navigation flottante sans barre
+===============================================================================
+*/
+
+.burger-bar,
+html.bb-phone .burger-bar,
+html.device-phone .burger-bar{
+  position:fixed !important;
+  top:calc(env(safe-area-inset-top, 0px) + 10px) !important;
+  left:50% !important;
+  right:auto !important;
+  width:min(1180px, calc(100vw - 20px)) !important;
+  max-width:none !important;
+  min-height:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transform:translateX(-50%) !important;
+  pointer-events:none !important;
+  z-index:4500 !important;
+}
+
+.burger-bar > button{
+  pointer-events:auto !important;
+}
+
+.burger-btn,
+.back-btn{
+  flex:0 0 auto !important;
+  min-height:44px !important;
+  margin:0 !important;
+  border:1px solid rgba(25,92,78,.20) !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.94) !important;
+  color:#173f38 !important;
+  box-shadow:0 10px 26px rgba(18,62,53,.20) !important;
+  backdrop-filter:blur(10px) !important;
+  -webkit-backdrop-filter:blur(10px) !important;
+}
+
+.burger-btn{
+  order:1 !important;
+}
+
+.back-btn{
+  order:2 !important;
+  margin-left:auto !important;
+}
+
+.back-btn[hidden],
+body.menu-open .back-btn{
+  display:none !important;
+}
+
+.side-menu{
+  padding-top:calc(env(safe-area-inset-top, 0px) + 70px) !important;
+}
+
+.app-shell{
+  padding-top:18px !important;
+}
+
+@media (max-width:640px){
+  html.bb-phone .app-shell,
+  html.device-phone .app-shell,
+  .app-shell{
+    padding-top:10px !important;
+  }
+}
