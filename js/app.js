@@ -309,9 +309,11 @@ Il gère notamment :
     dialog: document.getElementById('placeDialog'),
     dialogContent: document.getElementById('placeDialogContent'),
     closeDialog: document.getElementById('closeDialogBtn'),
+    dialogBack: document.getElementById('dialogBackBtn'),
     toast: document.getElementById('toast'),
     install: document.getElementById('installBtn'),
     offline: document.getElementById('offlineBanner'),
+    back: document.getElementById('backBtn'),
     menuToggle: document.getElementById('menuToggle'),
     menuClose: document.getElementById('menuClose'),
     menuOverlay: document.getElementById('menuOverlay'),
@@ -334,7 +336,11 @@ Il gère notamment :
     sort: 'smart',
     quick: new Set(),
     mood: 'all',
-    filtered: []
+    filtered: [],
+    viewHistory: [],
+    placeHistory: [],
+    currentPlaceId: null,
+    dialogOriginView: null
   };
 
   let deferredInstallPrompt = null;
@@ -659,13 +665,20 @@ Il gère notamment :
     renderList(container, list, emptyText);
   };
 
-  const setView = view => {
-    // Connexion obligatoire avant setView — V2.1.6.11
+  const setView = (view, options = {}) => {
+    const { recordHistory = true, restoreScroll = null, updateHash = true } = options;
     const publicViews = ['login', 'signup'];
     if (window.BreizhAuth && !window.BreizhAuth.isConnected() && !publicViews.includes(view)) {
       window.BreizhAuth.go('login');
       return;
     }
+
+    const isViewChange = state.view !== view;
+    if (recordHistory && isViewChange && state.view) {
+      state.viewHistory.push({ view: state.view, scrollY: window.scrollY });
+      if (state.viewHistory.length > 40) state.viewHistory.shift();
+    }
+
     state.view = view;
     if (els.currentViewLabel) els.currentViewLabel.textContent = viewLabels[view] || 'Menu';
     els.tabs.forEach(tab => {
@@ -677,6 +690,7 @@ Il gère notamment :
     });
     els.views.forEach(section => section.classList.toggle('is-visible', section.id === `view-${view}`));
     closeMenu();
+
     if (view === 'map') {
       BreizhMap.init();
       BreizhMap.invalidate();
@@ -684,7 +698,69 @@ Il gère notamment :
         BreizhMap.renderMarkers(getMapOverviewPlaces(), openPlace, { overview: true });
       }, 140);
     }
-    window.location.hash = view;
+
+    if (updateHash && window.location.hash !== `#${view}`) {
+      window.location.hash = view;
+    }
+
+    if (isViewChange) {
+      const targetScroll = Number.isFinite(restoreScroll) ? Math.max(0, restoreScroll) : 0;
+      requestAnimationFrame(() => window.scrollTo(0, targetScroll));
+    }
+  };
+
+  const replaceViewHash = view => {
+    const nextHash = `#${view}`;
+    if (window.location.hash !== nextHash) {
+      window.history.replaceState(null, '', nextHash);
+    }
+  };
+
+  const closePlaceDialog = () => {
+    const originView = state.dialogOriginView;
+    if (els.dialog?.open) els.dialog.close();
+
+    if (originView && state.view !== originView && document.getElementById(`view-${originView}`)) {
+      setView(originView, { recordHistory: false, updateHash: false });
+      replaceViewHash(originView);
+    }
+  };
+
+  const navigateBack = () => {
+    closeMenu();
+
+    if (els.dialog?.open) {
+      const previousPlaceId = state.placeHistory.pop();
+      if (previousPlaceId) {
+        openPlace(previousPlaceId, { recordHistory: false });
+      } else {
+        closePlaceDialog();
+      }
+      return;
+    }
+
+    let previous = state.viewHistory.pop();
+    while (previous && previous.view === state.view) {
+      previous = state.viewHistory.pop();
+    }
+
+    if (previous && document.getElementById(`view-${previous.view}`)) {
+      setView(previous.view, {
+        recordHistory: false,
+        restoreScroll: previous.scrollY,
+        updateHash: false
+      });
+      replaceViewHash(previous.view);
+      return;
+    }
+
+    if (state.view !== 'explore' && document.getElementById('view-explore')) {
+      setView('explore', { recordHistory: false, updateHash: false });
+      replaceViewHash('explore');
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
   const googleMapsUrl = place => `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`;
@@ -1272,9 +1348,19 @@ Il gère notamment :
     </button>
   `).join('');
 
-  const openPlace = id => {
+  const openPlace = (id, options = {}) => {
     const place = places.find(item => item.id === id);
     if (!place) return;
+
+    const { recordHistory = true } = options;
+    if (!els.dialog.open) {
+      state.placeHistory = [];
+      state.dialogOriginView = state.view;
+    } else if (recordHistory && state.currentPlaceId && state.currentPlaceId !== id) {
+      state.placeHistory.push(state.currentPlaceId);
+      if (state.placeHistory.length > 40) state.placeHistory.shift();
+    }
+    state.currentPlaceId = id;
     const enriched = enrichPlace(place);
     const fav = Store.isFavorite(id);
     const later = Store.isLater(id);
@@ -1606,6 +1692,7 @@ Il gère notamment :
       hideLocationPrompt();
       showToast('Localisation ignorée pour le moment');
     });
+    if (els.back) els.back.addEventListener('click', navigateBack);
     if (els.menuToggle) els.menuToggle.addEventListener('click', openMenu);
     if (els.menuClose) els.menuClose.addEventListener('click', closeMenu);
     if (els.menuOverlay) els.menuOverlay.addEventListener('click', closeMenu);
@@ -1646,21 +1733,38 @@ Il gère notamment :
       BreizhMap.renderMarkers(getMapOverviewPlaces(), openPlace, { overview: true });
       showToast('Carte recentrée sur toutes les balades de Bretagne 🗺️');
     });
-    els.closeDialog.addEventListener('click', () => els.dialog.close());
+    if (els.closeDialog) els.closeDialog.addEventListener('click', closePlaceDialog);
+    if (els.dialogBack) els.dialogBack.addEventListener('click', navigateBack);
+    els.dialog.addEventListener('close', () => {
+      state.placeHistory = [];
+      state.currentPlaceId = null;
+      state.dialogOriginView = null;
+    });
+    els.dialog.addEventListener('cancel', event => {
+      event.preventDefault();
+      navigateBack();
+    });
     els.dialog.addEventListener('click', event => {
       const rect = els.dialog.getBoundingClientRect();
       const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
-      if (outside) els.dialog.close();
+      if (outside) closePlaceDialog();
     });
     window.addEventListener('hashchange', () => {
       const view = window.location.hash.replace('#', '');
-      // Connexion obligatoire avant hashchange — V2.1.6.11
       const publicViews = ['login', 'signup'];
       if (window.BreizhAuth && !window.BreizhAuth.isConnected() && view && !publicViews.includes(view)) {
         window.BreizhAuth.go('login');
         return;
       }
-      if (view && document.getElementById(`view-${view}`)) setView(view);
+      if (view && document.getElementById(`view-${view}`) && view !== state.view) {
+        const previousEntry = state.viewHistory[state.viewHistory.length - 1];
+        const restoreEntry = previousEntry?.view === view ? state.viewHistory.pop() : null;
+        setView(view, {
+          recordHistory: false,
+          updateHash: false,
+          restoreScroll: restoreEntry?.scrollY ?? null
+        });
+      }
     });
     const updateOfflineState = () => {
       if (!els.offline) return;
@@ -1730,7 +1834,9 @@ Il gère notamment :
     renderAll();
     checkLocationAtStartup();
     const initialView = window.location.hash.replace('#', '') || ((window.BreizhAuth && window.BreizhAuth.isConnected()) ? 'explore' : 'login');
-    if (document.getElementById(`view-${initialView}`)) setView(initialView);
+    if (document.getElementById(`view-${initialView}`)) {
+      setView(initialView, { recordHistory: false });
+    }
     registerServiceWorker();
     if (!window.L) {
       const fallback = document.getElementById('mapFallback');
