@@ -25,7 +25,7 @@
   <link rel="icon" href="assets/icons/icon-192.png" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=241" />
+  <link rel="stylesheet" href="css/style.css?v=2462" />
   <link rel="stylesheet" href="css/map.css?v=241" />
   <link rel="stylesheet" href="css/responsive.css?v=241" />
 
@@ -108,6 +108,10 @@
     </header>
 
     <div class="burger-bar" aria-label="Navigation principale">
+      <button class="back-btn" id="backBtn" type="button" aria-label="Revenir à la page précédente">
+        <span class="back-icon" aria-hidden="true">←</span>
+        <span>Retour</span>
+      </button>
       <button class="burger-btn" id="menuToggle" type="button" aria-controls="sideMenu" aria-expanded="false">
         <span class="burger-icon" aria-hidden="true">☰</span>
         <span>Menu</span>
@@ -314,6 +318,10 @@
   </div>
 
   <dialog class="place-dialog" id="placeDialog">
+    <button class="dialog-back" id="dialogBackBtn" type="button" aria-label="Revenir à la page précédente">
+      <span aria-hidden="true">←</span>
+      <span>Retour</span>
+    </button>
     <button class="dialog-close" id="closeDialogBtn" type="button" aria-label="Fermer">×</button>
     <div id="placeDialogContent"></div>
   </dialog>
@@ -326,7 +334,7 @@
   <script src="js/geolocation.js?v=241"></script>
   <script src="js/map.js?v=241"></script>
   <script src="js/auth-local.js?v=241"></script>
-  <script src="js/app.js?v=2451"></script>
+  <script src="js/app.js?v=2462"></script>
   <script src="js/tide-credit.js?v=241"></script>
 </body>
 </html>
