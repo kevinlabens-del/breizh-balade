@@ -711,9 +711,7 @@ Il gère notamment :
     els.tabs.forEach(tab => {
       const isCurrentView = tab.dataset.view === view;
       tab.classList.toggle('is-active', isCurrentView);
-      if (tab.dataset.view === 'explore') {
-        tab.hidden = view === 'explore';
-      }
+      if (tab.dataset.view === 'explore') tab.hidden = false;
     });
     els.views.forEach(section => section.classList.toggle('is-visible', section.id === `view-${view}`));
     closeMenu();
