@@ -19,12 +19,9 @@ Attention :
 
 .map-overview-note{margin:-4px 0 12px;color:var(--muted);font-weight:850;line-height:1.4}
 
-
 /*
 ===============================================================================
 BREIZH’ BALLADE — V2.1.6.11 couleurs joyeuses pour la carte
-===============================================================================
-Adapte les bulles Leaflet et les fonds de carte à la nouvelle palette claire.
 ===============================================================================
 */
 .map-shell{
@@ -63,10 +60,9 @@ Adapte les bulles Leaflet et les fonds de carte à la nouvelle palette claire.
 ===============================================================================
 V2.1.6.12 — Splash universel pour installations existantes
 ===============================================================================
-Ce splash est volontairement porté par map.css car les anciennes versions de
-Breizh’ Balade chargent déjà ce fichier et leur service worker le demande en
-network-first. Il peut donc arriver sur une installation existante sans obliger
-l'utilisateur à désinstaller/reinstaller l'application.
+Chargé par un CSS déjà présent dans toutes les anciennes installations.
+Le délai est volontaire : Android affiche d'abord son écran système natif.
+Le splash Breizh Balade reste donc visible assez longtemps APRES cet écran.
 ===============================================================================
 */
 body::before,
@@ -74,7 +70,8 @@ body::after{
   position:fixed;
   pointer-events:none;
   opacity:1;
-  animation:bbStartupSplashOut 2.05s ease forwards;
+  visibility:visible;
+  animation:bbStartupSplashOut 2.05s ease 1.8s forwards;
 }
 
 body::before{
@@ -113,5 +110,8 @@ body::after{
 }
 
 @media (prefers-reduced-motion:reduce){
-  body::before,body::after{animation-duration:1.7s}
+  body::before,body::after{
+    animation-duration:1.6s;
+    animation-delay:1.4s;
+  }
 }
