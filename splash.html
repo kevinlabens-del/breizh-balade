@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff8ed">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Breizh’ Balade</title>
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#fff8ed;overflow:hidden}
+    #bbSplash{position:fixed;inset:0;z-index:2147483647;background:#fff8ed;display:flex;align-items:stretch;justify-content:center;opacity:1;transition:opacity .38s ease}
+    #bbSplash.out{opacity:0}
+    #bbSplash img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+    @media (min-aspect-ratio:3/4){#bbSplash img{object-fit:contain}}
+  </style>
+</head>
+<body>
+  <div id="bbSplash" role="img" aria-label="Breizh Balade — Explorez la Bretagne autrement">
+    <img src="./assets/splash/breizh-balade-splash.jpg?v=247" alt="Breizh Balade — Explorez la Bretagne autrement">
+  </div>
+  <script>
+    (()=>{
+      const splash=document.getElementById('bbSplash');
+      const currentHash=(location.hash||'#explore');
+      let done=false;
+      const openApp=()=>{
+        if(done)return; done=true;
+        splash.classList.add('out');
+        setTimeout(()=>location.replace('./?bb_splash=done&v=247'+currentHash),380);
+      };
+      const started=performance.now();
+      const schedule=()=>setTimeout(openApp,Math.max(0,1900-(performance.now()-started)));
+      if(document.readyState==='complete')schedule();else addEventListener('load',schedule,{once:true});
+      setTimeout(openApp,3600);
+    })();
+  </script>
+</body>
+</html>
