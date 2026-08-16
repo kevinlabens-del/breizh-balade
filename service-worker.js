@@ -16,11 +16,18 @@ Attention :
 - en test, il faut parfois vider le cache ou changer le numéro de version.
 ===============================================================================
 */
-/* Nom du cache : à modifier quand on veut forcer une nouvelle version. */
+/*
+ * IMPORTANT : le nom du cache reste volontairement en v2.1.6.11.
+ * index.html supprime actuellement tous les caches Breizh Balade qui ne portent
+ * pas cette version. Le changer ici ferait supprimer le nouveau cache au prochain
+ * lancement. Le code du service worker, lui, est tout de même mis à jour par le
+ * navigateur et skipWaiting() + clients.claim() activent immédiatement la correction.
+ */
 const CACHE_NAME = 'breizh-balade-v2.1.6.11-stable-auth-api';
 const APP_SHELL = [
   './',
   './index.html',
+  './splash.html',
   './manifest.webmanifest',
   './css/style.css',
   './css/map.css',
@@ -139,6 +146,34 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
   const isLocal = url.origin === location.origin;
+
+  /*
+   * Splash robuste pour les installations existantes.
+   * Certaines installations Android conservent l'ancien start_url (index.html)
+   * même après modification du manifest. Si l'utilisateur ouvre directement
+   * index.html ou la racine de l'application, on sert donc splash.html.
+   * splash.html redirige ensuite vers index.html?splash=done, ce marqueur évite
+   * toute boucle et laisse l'application se charger normalement.
+   */
+  if (isLocal && request.mode === 'navigate') {
+    const scopePath = new URL('./', self.registration.scope).pathname;
+    const isAppEntry = url.pathname === scopePath || url.pathname === `${scopePath}index.html`;
+    const splashAlreadyShown = url.searchParams.get('splash') === 'done';
+
+    if (isAppEntry && !splashAlreadyShown) {
+      event.respondWith(
+        fetch('./splash.html', { cache: 'no-store' })
+          .then(response => {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put('./splash.html', copy));
+            return response;
+          })
+          .catch(() => caches.match('./splash.html').then(cached => cached || caches.match('./index.html')))
+      );
+      return;
+    }
+  }
+
   const freshTypes = ['document', 'script', 'style', 'manifest'];
   const isFreshLocal = isLocal && (freshTypes.includes(request.destination) || url.pathname.endsWith('/data/places.js'));
 
@@ -169,6 +204,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
+// v2.1.6.11-splash-startup-fix — splash fiable pour nouvelles + anciennes installations
 // v2.1.6.11-visuels-35-croquis — cache refresh for corrected new visuals
 // v1.9.11-cleanup
 self.addEventListener('activate', event => {
