@@ -19,111 +19,43 @@ Attention :
 
 .map-overview-note{margin:-4px 0 12px;color:var(--muted);font-weight:850;line-height:1.4}
 
-
 /*
 ===============================================================================
 BREIZH’ BALLADE — V2.1.6.11 couleurs joyeuses pour la carte
 ===============================================================================
-Adapte les bulles Leaflet et les fonds de carte à la nouvelle palette claire.
-===============================================================================
 */
-.map-shell{
-  background:rgba(255,255,255,.72);
-  border-color:rgba(25,92,78,.18);
-  box-shadow:0 18px 46px rgba(24,94,80,.11);
-}
-.map-fallback{
-  color:#5f7a72;
-  background:rgba(255,248,237,.92);
-}
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip{
-  background:#fffdf6;
-  color:#173832;
-  border:1px solid rgba(25,92,78,.18);
-  box-shadow:0 14px 34px rgba(24,94,80,.16);
-}
+.map-shell{background:rgba(255,255,255,.72);border-color:rgba(25,92,78,.18);box-shadow:0 18px 46px rgba(24,94,80,.11)}
+.map-fallback{color:#5f7a72;background:rgba(255,248,237,.92)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fffdf6;color:#173832;border:1px solid rgba(25,92,78,.18);box-shadow:0 14px 34px rgba(24,94,80,.16)}
 .leaflet-container a{color:#0f8f7e}
 .popup-card p{color:#385c54}
-.popup-card button{
-  border-color:rgba(35,183,164,.28);
-  background:linear-gradient(135deg,#23b7a4,#9ff2df);
-  color:#173832;
-}
-.marker-pin{
-  background:#ff735d;
-  box-shadow:0 8px 20px rgba(255,115,93,.28);
-}
-.user-marker{
-  background:#23b7a4;
-  box-shadow:0 0 0 8px rgba(35,183,164,.22);
-}
+.popup-card button{border-color:rgba(35,183,164,.28);background:linear-gradient(135deg,#23b7a4,#9ff2df);color:#173832}
+.marker-pin{background:#ff735d;box-shadow:0 8px 20px rgba(255,115,93,.28)}
+.user-marker{background:#23b7a4;box-shadow:0 0 0 8px rgba(35,183,164,.22)}
 
-/*
-===============================================================================
-V2.5.0 — Filtres uniquement sur la page « Toutes les balades »
-===============================================================================
-Le panneau recherche / tri / filtres / ambiances reste visible sur Explorer.
-Dès qu'une autre vue devient active (Carte, Favoris, À visiter, Visités, Infos),
-il est totalement masqué afin de libérer l'espace vertical.
-===============================================================================
-*/
-body:has(#view-explore:not(.is-visible)) .search-panel{
-  display:none !important;
-}
+/* V2.5.0 — filtres uniquement sur Toutes les balades */
+body:has(#view-explore:not(.is-visible)) .search-panel{display:none!important}
 
-/*
-===============================================================================
-V2.5.1 — Accordéon « Recherche avancée »
-===============================================================================
-Le panneau complet reste rangé par défaut dans un bouton compact sur Explorer.
-===============================================================================
-*/
-.advanced-search-panel{
-  padding:0 !important;
-  overflow:hidden;
-}
-.advanced-search-toggle{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  border:0;
-  background:transparent;
-  color:#173832;
-  padding:18px 22px;
-  font:800 1.05rem/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  cursor:pointer;
-  text-align:left;
-}
-.advanced-search-toggle:focus-visible{
-  outline:3px solid rgba(35,183,164,.35);
-  outline-offset:-3px;
-}
-.advanced-search-toggle__chevron{
-  display:inline-grid;
-  place-items:center;
-  flex:0 0 36px;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:rgba(35,183,164,.12);
-  color:#0f8f7e;
-  font-size:1.35rem;
-  line-height:1;
-}
-.advanced-search-content{
-  padding:0 20px 20px;
-}
-.advanced-search-content[hidden]{
-  display:none !important;
-}
-.advanced-search-panel.is-open .advanced-search-toggle{
-  border-bottom:1px solid rgba(25,92,78,.12);
-  margin-bottom:18px;
-}
+/* V2.5.1 — accordéon Recherche avancée */
+.advanced-search-panel{padding:0!important;overflow:hidden;min-width:0;max-width:100%}
+.advanced-search-toggle{width:100%;max-width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;border:0;background:transparent;color:#173832;padding:18px 22px;font:800 1.05rem/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;text-align:left}
+.advanced-search-toggle:focus-visible{outline:3px solid rgba(35,183,164,.35);outline-offset:-3px}
+.advanced-search-toggle__label{min-width:0;overflow-wrap:anywhere}
+.advanced-search-toggle__chevron{display:inline-grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:50%;background:rgba(35,183,164,.12);color:#0f8f7e;font-size:1.35rem;line-height:1}
+.advanced-search-content{width:100%;max-width:100%;min-width:0;padding:0 20px 20px;overflow-x:hidden}
+.advanced-search-content[hidden]{display:none!important}
+.advanced-search-panel.is-open .advanced-search-toggle{border-bottom:1px solid rgba(25,92,78,.12);margin-bottom:18px}
+.advanced-search-content>*{min-width:0;max-width:100%}
+.advanced-search-content .search-row,.advanced-search-content .filter-grid,.advanced-search-content .quick-filters,.advanced-search-content .mood-filters,.advanced-search-content .status-line{width:100%;max-width:100%;min-width:0}
+.advanced-search-content .input-wrap,.advanced-search-content input,.advanced-search-content select{min-width:0;max-width:100%;width:100%}
+.advanced-search-content .quick-filters,.advanced-search-content .mood-filters{overflow-x:hidden;flex-wrap:wrap}
+.advanced-search-content .chip{max-width:100%}
+
 @media (max-width:560px){
   .advanced-search-toggle{padding:16px 18px;font-size:1rem}
-  .advanced-search-content{padding:0 16px 18px}
+  .advanced-search-content{padding:0 14px 16px}
+  .advanced-search-content .search-row{grid-template-columns:minmax(0,1fr)!important}
+  .advanced-search-content .filter-grid{grid-template-columns:minmax(0,1fr)!important}
+  .advanced-search-content .quick-filters,.advanced-search-content .mood-filters{display:flex;flex-wrap:wrap;gap:8px;overflow:visible}
+  .advanced-search-content .chip{flex:0 1 auto;white-space:normal}
 }
