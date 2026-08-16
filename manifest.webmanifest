@@ -1,9 +1,9 @@
 {
-  "_comment": "Manifest de Breizh’ Balade : permet l’installation de l’application sur mobile. Les champs name, short_name, icons, start_url et display sont utilisés par le navigateur.",
+  "_comment": "Manifest de Breizh’ Balade : permet l’installation de l’application sur mobile. Le lancement passe par splash.html avant l’accueil.",
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
   "description": "Application mobile de balades, lieux naturels, patrimoine et découvertes en Bretagne.",
-  "start_url": "./splash.html",
+  "start_url": "./splash.html?v=21612",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
