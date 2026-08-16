@@ -4,12 +4,8 @@ BREIZH’ BALLADE — css/map.css
 ===============================================================================
 
 Ce fichier contient les styles liés aux cartes.
-
-L’application utilise Leaflet avec des tuiles OpenStreetMap.
-Attention :
-- les images de tuiles Leaflet ne doivent pas toujours suivre les règles globales
-  d’images classiques ;
-- certains correctifs empêchent les tuiles ou marqueurs d’être déformés.
+L’ancien splash CSS de secours a été retiré : le vrai splash est désormais
+servi par index.html / splash.html avec le visuel officiel du pack.
 ===============================================================================
 */
 .map-shell{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.05);min-height:650px;box-shadow:0 18px 55px rgba(0,0,0,.22)}
@@ -19,11 +15,7 @@ Attention :
 
 .map-overview-note{margin:-4px 0 12px;color:var(--muted);font-weight:850;line-height:1.4}
 
-/*
-===============================================================================
-BREIZH’ BALLADE — V2.1.6.11 couleurs joyeuses pour la carte
-===============================================================================
-*/
+/* Breizh’ Balade — palette claire */
 .map-shell{
   background:rgba(255,255,255,.72);
   border-color:rgba(25,92,78,.18);
@@ -54,64 +46,4 @@ BREIZH’ BALLADE — V2.1.6.11 couleurs joyeuses pour la carte
 .user-marker{
   background:#23b7a4;
   box-shadow:0 0 0 8px rgba(35,183,164,.22);
-}
-
-/*
-===============================================================================
-V2.1.6.12 — Splash universel pour installations existantes
-===============================================================================
-Chargé par un CSS déjà présent dans toutes les anciennes installations.
-Le délai est volontaire : Android affiche d'abord son écran système natif.
-Le splash Breizh Balade reste donc visible assez longtemps APRES cet écran.
-===============================================================================
-*/
-body::before,
-body::after{
-  position:fixed;
-  pointer-events:none;
-  opacity:1;
-  visibility:visible;
-  animation:bbStartupSplashOut 2.05s ease 1.8s forwards;
-}
-
-body::before{
-  content:"";
-  inset:0;
-  z-index:2147483645;
-  background:
-    url("../assets/logo/breizh-balade-icon-v12.png") center 31% / 126px 126px no-repeat,
-    linear-gradient(rgba(255,248,237,.955),rgba(255,248,237,.955)),
-    url("../assets/logo/breizh-pattern.svg") center / 520px auto repeat,
-    #fff8ed;
-}
-
-body::after{
-  content:"BREIZH’ BALADE\A Explorez la Bretagne autrement\A\A Nature & patrimoine";
-  white-space:pre-line;
-  inset:0;
-  z-index:2147483646;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:140px 28px 0;
-  text-align:center;
-  color:#173f38;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:clamp(18px,5.2vw,25px);
-  line-height:1.55;
-  letter-spacing:.018em;
-  text-shadow:0 2px 0 rgba(255,255,255,.8);
-}
-
-@keyframes bbStartupSplashOut{
-  0%,68%{opacity:1;visibility:visible}
-  86%{opacity:0;visibility:visible}
-  100%{opacity:0;visibility:hidden}
-}
-
-@media (prefers-reduced-motion:reduce){
-  body::before,body::after{
-    animation-duration:1.6s;
-    animation-delay:1.4s;
-  }
 }
