@@ -3,9 +3,11 @@
 BREIZH’ BALLADE — service-worker.js
 ===============================================================================
 Service worker de mise à jour + cache + splash universel.
+Le nom du cache conserve volontairement v2.1.6.11 car les anciennes pages
+suppriment les caches Breizh Balade qui ne contiennent pas cette chaîne.
 ===============================================================================
 */
-const CACHE_NAME = 'breizh-balade-v2.1.6.14-universal-splash';
+const CACHE_NAME = 'breizh-balade-v2.1.6.11-universal-splash-21614';
 
 const APP_SHELL = [
   './',
@@ -65,13 +67,8 @@ self.addEventListener('fetch', event => {
   const insideScope = sameOrigin && url.pathname.startsWith(scopeUrl.pathname);
 
   /*
-   * SPLASH UNIVERSEL :
-   * Une ancienne installation peut avoir mémorisé n'importe quelle URL de
-   * lancement (/, index.html, app.html, ancienne page, URL avec hash, etc.).
-   * Toute navigation HTML à l'intérieur du scope est donc envoyée vers le
-   * splash, sauf si :
-   * - on est déjà sur splash.html ;
-   * - le splash vient de rediriger vers l'application avec bb_splash=done.
+   * SPLASH UNIVERSEL : toutes les anciennes URL de lancement sont couvertes.
+   * Le paramètre bb_splash=done permet à splash.html d'ouvrir app.html sans boucle.
    */
   if (insideScope && request.mode === 'navigate') {
     const isSplashPage = url.pathname.endsWith('/splash.html');
