@@ -58,3 +58,60 @@ Adapte les bulles Leaflet et les fonds de carte à la nouvelle palette claire.
   background:#23b7a4;
   box-shadow:0 0 0 8px rgba(35,183,164,.22);
 }
+
+/*
+===============================================================================
+V2.1.6.12 — Splash universel pour installations existantes
+===============================================================================
+Ce splash est volontairement porté par map.css car les anciennes versions de
+Breizh’ Balade chargent déjà ce fichier et leur service worker le demande en
+network-first. Il peut donc arriver sur une installation existante sans obliger
+l'utilisateur à désinstaller/reinstaller l'application.
+===============================================================================
+*/
+body::before,
+body::after{
+  position:fixed;
+  pointer-events:none;
+  opacity:1;
+  animation:bbStartupSplashOut 2.05s ease forwards;
+}
+
+body::before{
+  content:"";
+  inset:0;
+  z-index:2147483645;
+  background:
+    url("../assets/logo/breizh-balade-icon-v12.png") center 31% / 126px 126px no-repeat,
+    linear-gradient(rgba(255,248,237,.955),rgba(255,248,237,.955)),
+    url("../assets/logo/breizh-pattern.svg") center / 520px auto repeat,
+    #fff8ed;
+}
+
+body::after{
+  content:"BREIZH’ BALADE\A Explorez la Bretagne autrement\A\A Nature & patrimoine";
+  white-space:pre-line;
+  inset:0;
+  z-index:2147483646;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:140px 28px 0;
+  text-align:center;
+  color:#173f38;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(18px,5.2vw,25px);
+  line-height:1.55;
+  letter-spacing:.018em;
+  text-shadow:0 2px 0 rgba(255,255,255,.8);
+}
+
+@keyframes bbStartupSplashOut{
+  0%,68%{opacity:1;visibility:visible}
+  86%{opacity:0;visibility:visible}
+  100%{opacity:0;visibility:hidden}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body::before,body::after{animation-duration:1.7s}
+}
