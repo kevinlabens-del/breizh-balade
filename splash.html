@@ -5,53 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff8ed">
   <title>Breizh’ Balade</title>
-  <style>
-    :root{--cream:#fff8ed;--green:#123f35;--teal:#2fb7b3;--ink:#173b34}
-    *{box-sizing:border-box}
-    html,body{margin:0;width:100%;height:100%;background:var(--cream)}
-    body{overflow:hidden;font-family:Georgia,'Times New Roman',serif;color:var(--ink)}
-    .splash{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(rgba(255,248,237,.94),rgba(255,248,237,.94)),url('./assets/logo/breizh-pattern.svg') center/520px auto repeat;opacity:1;transition:opacity .34s ease}
-    .splash.out{opacity:0}
-    .card{width:min(88vw,430px);text-align:center;padding:32px 22px 26px;animation:enter .7s cubic-bezier(.2,.7,.2,1) both}
-    .scene{position:relative;width:100%;height:210px;margin:0 auto 18px;overflow:hidden;border-radius:28px;background:#f7efdf}
-    .scene:before{content:'';position:absolute;inset:0;background:url('./assets/places/coast.svg') center/cover no-repeat;filter:saturate(.72) brightness(1.17);opacity:.9}
-    .scene:after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,248,237,.12),rgba(255,248,237,.36))}
-    .logo-wrap{position:absolute;inset:0;display:grid;place-items:center;z-index:2}
-    .logo-wrap img{width:94px;height:94px;object-fit:contain;filter:drop-shadow(0 7px 13px rgba(8,49,43,.18))}
-    h1{margin:0;font-size:clamp(42px,12vw,62px);line-height:.92;letter-spacing:.035em;font-weight:700;color:var(--green)}
-    .divider{display:flex;align-items:center;gap:14px;margin:18px auto 14px;width:88%}
-    .divider i{height:1px;flex:1;background:var(--teal);opacity:.75}
-    .divider b{font-size:24px;color:var(--teal);font-weight:400}
-    p{margin:0;font-size:clamp(18px,5vw,23px);letter-spacing:.01em;color:#31584f}
-    .wave{position:absolute;left:-8%;right:-8%;bottom:-24px;height:135px;background:linear-gradient(180deg,rgba(47,183,179,.08),rgba(47,183,179,.35));border-radius:50% 50% 0 0/35% 35% 0 0}
-    .brand{position:absolute;left:0;right:0;bottom:max(22px,env(safe-area-inset-bottom));text-align:center;color:#55746d;font:600 11px/1.2 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase}
-    @keyframes enter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
-    @media (prefers-reduced-motion:reduce){.card{animation:none}.splash{transition:none}}
-  </style>
+  <style>html,body{margin:0;width:100%;height:100%;background:#fff8ed}</style>
+  <script>location.replace('./app.html');</script>
+  <noscript><meta http-equiv="refresh" content="0;url=./app.html"></noscript>
 </head>
-<body>
-  <main class="splash" id="splash" aria-label="Ouverture de Breizh Balade">
-    <div class="card">
-      <div class="scene" aria-hidden="true"><div class="logo-wrap"><img src="./assets/logo/breizh-balade-icon-v12.png" alt=""></div></div>
-      <h1>BREIZH<br>BALADE</h1>
-      <div class="divider" aria-hidden="true"><i></i><b>❖</b><i></i></div>
-      <p>Explorez la Bretagne autrement</p>
-    </div>
-    <div class="wave" aria-hidden="true"></div>
-    <div class="brand">Nature &amp; patrimoine</div>
-  </main>
-  <script>
-    (()=>{
-      const splash=document.getElementById('splash');
-      const go=()=>location.replace('./app.html');
-      const start=performance.now();
-      const leave=()=>{
-        const wait=Math.max(0,1450-(performance.now()-start));
-        setTimeout(()=>{splash.classList.add('out');setTimeout(go,340)},wait);
-      };
-      if(document.readyState==='complete') leave(); else addEventListener('load',leave,{once:true});
-      setTimeout(go,3200);
-    })();
-  </script>
-</body>
+<body></body>
 </html>
