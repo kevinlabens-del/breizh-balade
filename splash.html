@@ -17,7 +17,7 @@
 </head>
 <body>
   <div id="bbSplash" role="img" aria-label="Breizh Balade — Explorez la Bretagne autrement">
-    <img src="./assets/splash/breizh-balade-splash.jpg?v=247" alt="Breizh Balade — Explorez la Bretagne autrement">
+    <img src="./assets/splash/breizh-balade-splash.jpg?v=248" alt="Breizh Balade — Explorez la Bretagne autrement">
   </div>
   <script>
     (()=>{
@@ -27,7 +27,7 @@
       const openApp=()=>{
         if(done)return; done=true;
         splash.classList.add('out');
-        setTimeout(()=>location.replace('./?bb_splash=done&v=247'+currentHash),380);
+        setTimeout(()=>location.replace('./?bb_splash=done&v=248'+currentHash),380);
       };
       const started=performance.now();
       const schedule=()=>setTimeout(openApp,Math.max(0,1900-(performance.now()-started)));
