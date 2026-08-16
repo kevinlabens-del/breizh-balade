@@ -71,3 +71,59 @@ il est totalement masqué afin de libérer l'espace vertical.
 body:has(#view-explore:not(.is-visible)) .search-panel{
   display:none !important;
 }
+
+/*
+===============================================================================
+V2.5.1 — Accordéon « Recherche avancée »
+===============================================================================
+Le panneau complet reste rangé par défaut dans un bouton compact sur Explorer.
+===============================================================================
+*/
+.advanced-search-panel{
+  padding:0 !important;
+  overflow:hidden;
+}
+.advanced-search-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border:0;
+  background:transparent;
+  color:#173832;
+  padding:18px 22px;
+  font:800 1.05rem/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  cursor:pointer;
+  text-align:left;
+}
+.advanced-search-toggle:focus-visible{
+  outline:3px solid rgba(35,183,164,.35);
+  outline-offset:-3px;
+}
+.advanced-search-toggle__chevron{
+  display:inline-grid;
+  place-items:center;
+  flex:0 0 36px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:rgba(35,183,164,.12);
+  color:#0f8f7e;
+  font-size:1.35rem;
+  line-height:1;
+}
+.advanced-search-content{
+  padding:0 20px 20px;
+}
+.advanced-search-content[hidden]{
+  display:none !important;
+}
+.advanced-search-panel.is-open .advanced-search-toggle{
+  border-bottom:1px solid rgba(25,92,78,.12);
+  margin-bottom:18px;
+}
+@media (max-width:560px){
+  .advanced-search-toggle{padding:16px 18px;font-size:1rem}
+  .advanced-search-content{padding:0 16px 18px}
+}
