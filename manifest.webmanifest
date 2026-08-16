@@ -2,7 +2,7 @@
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
   "description": "Breizh’ Balade : 71 idées de sorties, nature, patrimoine et découvertes en Bretagne.",
-  "start_url": "./#explore",
+  "start_url": "./splash.html#explore",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -28,19 +28,19 @@
     {
       "name": "Explorer",
       "short_name": "Explorer",
-      "url": "./#explore",
+      "url": "./splash.html#explore",
       "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Carte",
       "short_name": "Carte",
-      "url": "./#map",
+      "url": "./splash.html#map",
       "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Favoris",
       "short_name": "Favoris",
-      "url": "./#favorites",
+      "url": "./splash.html#favorites",
       "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
