@@ -8,26 +8,49 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Breizh’ Balade</title>
   <style>
-    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#fff8ed;overflow:hidden}
-    #bbSplash{position:fixed;inset:0;z-index:2147483647;background:#fff8ed;display:flex;align-items:stretch;justify-content:center;opacity:1;transition:opacity .38s ease}
+    :root{--cream:#fff8ed;--green:#123f35;--teal:#2fb7b3;--ink:#31584f}
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;background:var(--cream);overflow:hidden}
+    body{font-family:Georgia,"Times New Roman",serif;color:var(--green)}
+    #bbSplash{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:linear-gradient(rgba(255,248,237,.95),rgba(255,248,237,.95)),url('./assets/logo/breizh-pattern.svg') center/520px auto repeat;opacity:1;transition:opacity .38s ease}
     #bbSplash.out{opacity:0}
-    #bbSplash img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-    @media (min-aspect-ratio:3/4){#bbSplash img{object-fit:contain}}
+    .bb-card{width:min(88vw,430px);text-align:center;padding:28px 22px 34px;animation:bb-enter .65s cubic-bezier(.2,.7,.2,1) both}
+    .bb-scene{position:relative;width:100%;height:220px;margin:0 auto 20px;overflow:hidden;border-radius:30px;background:linear-gradient(180deg,#faf1df,#eaf8f1)}
+    .bb-scene:before{content:"";position:absolute;inset:0;background:url('./assets/places/coast.svg') center/cover no-repeat;filter:saturate(.75) brightness(1.16);opacity:.96;transform:scale(1.03)}
+    .bb-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,248,237,.04),rgba(255,248,237,.28))}
+    .bb-logo{position:absolute;inset:0;z-index:2;display:grid;place-items:center}
+    .bb-logo img{width:100px;height:100px;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(8,49,43,.18))}
+    h1{margin:0;font-size:clamp(42px,12vw,62px);line-height:.92;letter-spacing:.035em;color:var(--green);font-weight:700}
+    .bb-divider{display:flex;align-items:center;gap:14px;margin:18px auto 14px;width:88%}
+    .bb-divider i{height:1px;flex:1;background:var(--teal);opacity:.8}
+    .bb-divider b{font-size:24px;color:var(--teal);font-weight:400}
+    .bb-sub{margin:0;font-size:clamp(18px,5vw,23px);color:var(--ink)}
+    .bb-wave{position:absolute;left:-10%;right:-10%;bottom:-36px;height:150px;background:linear-gradient(180deg,rgba(47,183,179,.08),rgba(47,183,179,.36));border-radius:50% 50% 0 0/36% 36% 0 0}
+    .bb-brand{position:absolute;left:0;right:0;bottom:max(22px,env(safe-area-inset-bottom));text-align:center;color:#55746d;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+    @keyframes bb-enter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+    @media (prefers-reduced-motion:reduce){.bb-card{animation:none}#bbSplash{transition:none}}
   </style>
 </head>
 <body>
-  <div id="bbSplash" role="img" aria-label="Breizh Balade — Explorez la Bretagne autrement">
-    <img src="./assets/splash/breizh-balade-splash.jpg?v=248" alt="Breizh Balade — Explorez la Bretagne autrement">
-  </div>
+  <main id="bbSplash" aria-label="Ouverture de Breizh Balade">
+    <div class="bb-card">
+      <div class="bb-scene" aria-hidden="true"><div class="bb-logo"><img src="./assets/logo/breizh-balade-icon-v12.png" alt=""></div></div>
+      <h1>BREIZH<br>BALADE</h1>
+      <div class="bb-divider" aria-hidden="true"><i></i><b>❖</b><i></i></div>
+      <p class="bb-sub">Explorez la Bretagne autrement</p>
+    </div>
+    <div class="bb-wave" aria-hidden="true"></div>
+    <div class="bb-brand">Nature &amp; patrimoine</div>
+  </main>
   <script>
     (()=>{
       const splash=document.getElementById('bbSplash');
-      const currentHash=(location.hash||'#explore');
+      const currentHash=location.hash||'#explore';
       let done=false;
       const openApp=()=>{
         if(done)return; done=true;
         splash.classList.add('out');
-        setTimeout(()=>location.replace('./?bb_splash=done&v=248'+currentHash),380);
+        setTimeout(()=>location.replace('./?bb_splash=done&v=249'+currentHash),380);
       };
       const started=performance.now();
       const schedule=()=>setTimeout(openApp,Math.max(0,1900-(performance.now()-started)));
