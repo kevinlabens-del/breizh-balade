@@ -1,9 +1,9 @@
 {
-  "_comment": "Manifest de Breizh’ Balade : l'application démarre toujours par index.html, qui affiche le splash puis ouvre app.html.",
+  "_comment": "Manifest de Breizh’ Balade : l'application démarre par index.html, qui affiche le splash officiel puis ouvre app.html.",
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
   "description": "Application mobile de balades, lieux naturels, patrimoine et découvertes en Bretagne.",
-  "start_url": "./index.html?v=21613",
+  "start_url": "./index.html?v=21616",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -11,23 +11,9 @@
   "theme_color": "#fff8ed",
   "lang": "fr-FR",
   "icons": [
-    {
-      "src": "assets/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "assets/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src":"assets/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ],
-  "categories": [
-    "travel",
-    "lifestyle",
-    "navigation"
-  ],
-  "screenshots": []
+  "categories":["travel","lifestyle","navigation"],
+  "screenshots":[]
 }
