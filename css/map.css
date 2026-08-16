@@ -58,3 +58,16 @@ Adapte les bulles Leaflet et les fonds de carte à la nouvelle palette claire.
   background:#23b7a4;
   box-shadow:0 0 0 8px rgba(35,183,164,.22);
 }
+
+/*
+===============================================================================
+V2.5.0 — Filtres uniquement sur la page « Toutes les balades »
+===============================================================================
+Le panneau recherche / tri / filtres / ambiances reste visible sur Explorer.
+Dès qu'une autre vue devient active (Carte, Favoris, À visiter, Visités, Infos),
+il est totalement masqué afin de libérer l'espace vertical.
+===============================================================================
+*/
+body:has(#view-explore:not(.is-visible)) .search-panel{
+  display:none !important;
+}
