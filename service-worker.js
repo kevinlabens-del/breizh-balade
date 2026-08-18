@@ -1,5 +1,5 @@
 /* Breizh’ Balade V2.5.2 — splash + recherche avancée responsive + SEO bypass */
-const CACHE_NAME = 'breizh-balade-v2.5.2-public-seobypass2';
+const CACHE_NAME = 'breizh-balade-v2.5.2-public-seobypass3';
 const APP_SHELL = [
   './','./index.html','./splash.html','./manifest.webmanifest',
   './css/style.css','./css/map.css','./css/responsive.css',
@@ -61,12 +61,14 @@ self.addEventListener('fetch',event=>{
   const url=new URL(request.url);if(url.origin!==self.location.origin)return;
   const scopePath=new URL(self.registration.scope).pathname;const insideScope=url.pathname.startsWith(scopePath);
 
-  // Search Console + SEO files must bypass the app splash and all caches.
-  const rawSeoFile =
+  // Search Console + SEO resources must bypass the app splash and all caches.
+  const rawSeoResource =
     url.pathname.endsWith('/google3d396320ab0fc2d7.html') ||
     url.pathname.endsWith('/sitemap.xml') ||
-    url.pathname.endsWith('/robots.txt');
-  if(rawSeoFile){
+    url.pathname.endsWith('/sitemap.txt') ||
+    url.pathname.endsWith('/robots.txt') ||
+    url.pathname.endsWith('/guide-bretagne.html');
+  if(rawSeoResource){
     event.respondWith(fetch(request,{cache:'no-store'}));
     return;
   }
