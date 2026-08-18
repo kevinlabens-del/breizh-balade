@@ -1,5 +1,5 @@
-/* Breizh’ Balade V2.5.2 — splash + recherche avancée responsive */
-const CACHE_NAME = 'breizh-balade-v2.5.2-public';
+/* Breizh’ Balade V2.5.2 — splash + recherche avancée responsive + Google verification bypass */
+const CACHE_NAME = 'breizh-balade-v2.5.2-public-googleverify1';
 const APP_SHELL = [
   './','./index.html','./splash.html','./manifest.webmanifest',
   './css/style.css','./css/map.css','./css/responsive.css',
@@ -60,6 +60,13 @@ self.addEventListener('fetch',event=>{
   const request=event.request;if(request.method!=='GET')return;
   const url=new URL(request.url);if(url.origin!==self.location.origin)return;
   const scopePath=new URL(self.registration.scope).pathname;const insideScope=url.pathname.startsWith(scopePath);
+
+  // Search Console verification must bypass the app splash and all caches.
+  if(url.pathname.endsWith('/google3d396320ab0fc2d7.html')){
+    event.respondWith(fetch(request,{cache:'no-store'}));
+    return;
+  }
+
   if(insideScope&&request.mode==='navigate'){
     const bypassSplash=url.searchParams.get('bb_splash')==='done';const isSplashFile=url.pathname.endsWith('/splash.html');
     if(!bypassSplash&&!isSplashFile){event.respondWith(serveSplash());return;}
