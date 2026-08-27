@@ -43,8 +43,18 @@
     @media (min-aspect-ratio:3/4){#bbSplash img{object-fit:contain}}
   </style>
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js?v=21617', { updateViaCache: 'none' })
+          .then(reg => reg.update())
+          .catch(() => {});
+      }, { once: true });
+    }
+  </script>
+
   <!-- CR3@TIX ANALYTIX -->
-  <script async src="https://kevinlabens-del.github.io/CR3-TIX-ANALYTIX./analytics.js" data-project-id="6892d604-4656-4843-80cc-553f612d953a" data-project-key="fb828468-6a49-4d0b-9526-32125ee69254"></script>
+  <script async src="https://kevinlabens-del.github.io/CR3-TIX-ANALYTIX./analytics.js?v=breizh-21617" data-project-id="6892d604-4656-4843-80cc-553f612d953a" data-project-key="fb828468-6a49-4d0b-9526-32125ee69254"></script>
 </head>
 <body>
   <main id="seoContent">
@@ -55,7 +65,7 @@
   </main>
 
   <div id="bbSplash" role="img" aria-label="Breizh Balade — Explorez la Bretagne autrement">
-    <img src="./assets/splash/breizh-balade-splash.jpg?v=21616" alt="Breizh Balade — Explorez la Bretagne autrement">
+    <img src="./assets/splash/breizh-balade-splash.jpg?v=21617" alt="Breizh Balade — Explorez la Bretagne autrement">
   </div>
   <script>
     (()=>{
@@ -65,7 +75,7 @@
         if(done)return;
         done=true;
         splash.classList.add('out');
-        setTimeout(()=>location.replace('./app.html?bb_splash=done&v=21616'),380);
+        setTimeout(()=>location.replace('./app.html?bb_splash=done&v=21617'),380);
       };
       const start=performance.now();
       const schedule=()=>setTimeout(openApp,Math.max(0,1900-(performance.now()-start)));
