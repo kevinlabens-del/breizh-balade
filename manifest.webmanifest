@@ -3,7 +3,7 @@
   "name": "Breizh’ Balade",
   "short_name": "Breizh Balade",
   "description": "Application mobile de balades, lieux naturels, patrimoine et découvertes en Bretagne.",
-  "start_url": "./index.html?v=21616",
+  "start_url": "./index.html?v=21617",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
