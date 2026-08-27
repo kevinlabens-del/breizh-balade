@@ -16,21 +16,34 @@
 </head>
 <body>
   <div id="bbSplash" role="img" aria-label="Breizh Balade — Explorez la Bretagne autrement">
-    <img src="./assets/splash/breizh-balade-splash.jpg?v=21616" alt="Breizh Balade — Explorez la Bretagne autrement">
+    <img src="./assets/splash/breizh-balade-splash.jpg?v=21617" alt="Breizh Balade — Explorez la Bretagne autrement">
   </div>
   <script>
     (()=>{
       const splash=document.getElementById('bbSplash');
       let done=false;
+
+      const refreshRuntime=async()=>{
+        if(!('serviceWorker' in navigator))return;
+        try{
+          const reg=await navigator.serviceWorker.register('./service-worker.js?v=21617',{updateViaCache:'none'});
+          await reg.update();
+        }catch(_){ }
+      };
+
       const openApp=()=>{
         if(done)return;
         done=true;
         splash.classList.add('out');
-        setTimeout(()=>location.replace('./app.html?bb_splash=done&v=21616'),380);
+        setTimeout(()=>location.replace('./app.html?bb_splash=done&v=21617'),380);
       };
+
       const start=performance.now();
       const schedule=()=>setTimeout(openApp,Math.max(0,1900-(performance.now()-start)));
-      if(document.readyState==='complete')schedule();else addEventListener('load',schedule,{once:true});
+      refreshRuntime().finally(()=>{
+        if(document.readyState==='complete')schedule();
+        else addEventListener('load',schedule,{once:true});
+      });
       setTimeout(openApp,3600);
     })();
   </script>
