@@ -1,6 +1,6 @@
 /* BREIZH’ BALADE — service-worker.js
-   V2.1.6.17 : refresh forcé pour garantir la livraison du tracker ANALYTIX. */
-const CACHE_NAME = 'breizh-balade-v2.1.6.17-analytix';
+   V2.1.6.18 : navigation du partage corrigée sans toucher au tracker ANALYTIX. */
+const CACHE_NAME = 'breizh-balade-v2.1.6.18-share-fix';
 const APP_SHELL = [
   './','./index.html','./app.html','./splash.html','./manifest.webmanifest',
   './assets/splash/breizh-balade-splash.jpg',
@@ -34,7 +34,7 @@ self.addEventListener('fetch', event => {
     const isSplash = url.pathname.endsWith('/splash.html');
     if (!splashDone && !isSplash) {
       event.respondWith(
-        fetch('./splash.html?v=21617', {cache:'no-store'})
+        fetch('./splash.html?v=21618', {cache:'no-store'})
           .then(r => r.ok ? r : Promise.reject(new Error('splash unavailable')))
           .catch(() => caches.match('./splash.html').then(r => r || caches.match('./index.html')))
       );
