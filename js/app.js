@@ -1706,7 +1706,11 @@ Il gère notamment :
   };
 
   const bindEvents = () => {
-    els.tabs.forEach(tab => tab.addEventListener('click', () => setView(tab.dataset.view)));
+    els.tabs.forEach(tab => {
+      const targetView = tab.dataset.view;
+      if (!targetView) return;
+      tab.addEventListener('click', () => setView(targetView));
+    });
     if (els.enableLocationStart) els.enableLocationStart.addEventListener('click', async () => {
       hideLocationPrompt();
       localStorage.removeItem(locationPromptStorageKey);
