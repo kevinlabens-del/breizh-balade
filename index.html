@@ -18,6 +18,9 @@
   <meta property="og:url" content="https://kevinlabens-del.github.io/breizh-balade/" />
   <meta property="og:image" content="https://kevinlabens-del.github.io/breizh-balade/assets/icons/icon-512.png" />
   <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Breizh’ Balade — 71 idées de sorties en Bretagne" />
+  <meta name="twitter:description" content="Explore 71 lieux bretons : mer, forêt, patrimoine, villages, îles, balades et spots photo." />
+  <meta name="twitter:image" content="https://kevinlabens-del.github.io/breizh-balade/assets/icons/icon-512.png" />
 
   <title>Breizh’ Balade — 71 idées de sorties en Bretagne</title>
 
@@ -139,6 +142,7 @@
         <button class="tab side-tab" data-view="later" data-access="public">📌 À visiter</button>
         <button class="tab side-tab" data-view="visited" data-access="public">✅ Visités</button>
         <button class="tab side-tab" data-view="about" data-access="public">ℹ️ Infos</button>
+        <button class="tab side-tab" id="shareAppBtn" type="button" data-access="public" aria-label="Partager Breizh’ Balade" title="Partager l’application">↗️ Partager l’application</button>
       </nav>
     </aside>
 
@@ -339,5 +343,57 @@
   <script src="js/auth-local.js?v=241"></script>
   <script src="js/app.js?v=2464"></script>
   <script src="js/tide-credit.js?v=241"></script>
+  <script>
+  /* CR3ATIX_SHARE_V1 — partage uniquement l'URL publique, jamais la position ni les listes locales. */
+  (() => {
+    const button = document.getElementById('shareAppBtn');
+    const toast = document.getElementById('toast');
+    if (!button) return;
+    const url = 'https://kevinlabens-del.github.io/breizh-balade/';
+    const notify = (message) => {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.setTimeout(() => toast.classList.remove('show'), 2400);
+    };
+    const fallback = async () => {
+      try {
+        if (window.isSecureContext && navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+          notify('Lien de Breizh’ Balade copié');
+          return;
+        }
+      } catch {}
+      const field = document.createElement('textarea');
+      field.value = url;
+      field.readOnly = true;
+      field.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(field);
+      field.select();
+      field.setSelectionRange(0, field.value.length);
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch {}
+      field.remove();
+      if (copied) notify('Lien de Breizh’ Balade copié');
+      else window.prompt('Copie ce lien pour partager Breizh’ Balade :', url);
+    };
+    button.addEventListener('click', async () => {
+      document.getElementById('menuClose')?.click();
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Breizh’ Balade',
+            text: 'Découvre Breizh’ Balade pour trouver des balades, lieux et sorties partout en Bretagne.',
+            url
+          });
+          return;
+        } catch (error) {
+          if (error && error.name === 'AbortError') return;
+        }
+      }
+      await fallback();
+    });
+  })();
+  </script>
 </body>
 </html>
